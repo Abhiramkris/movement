@@ -1,0 +1,21 @@
+
+// Serve the check-slot.html page
+app.get('/checkslot', (req, res) => {
+    res.sendFile(path.join(__dirname,'checkslot.html'));
+});
+
+// Serve the OTP verify page
+app.get('/otp-verify', (req, res) => {
+    if (!req.session.otp_requested) {
+        return res.redirect('/');
+    }
+    res.sendFile(path.join(__dirname,'otp-verify.html'));
+});
+
+// Serve the add appointment page
+app.get('/add-appointment', (req, res) => {
+    if (!req.session.otp_verified) {
+        return res.redirect('/');
+    }
+    res.sendFile(path.join(__dirname,'add-appointment.html'));
+});
