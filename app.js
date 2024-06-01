@@ -35,12 +35,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 app.get('/checkslot', (req, res) => {
-    res.sendFile(path.join(__dirname, 'check-slot.html'));
-});
-
-// Serve the check-slot.html page
-app.get('/checkslot', (req, res) => {
-    res.sendFile(path.join(__dirname, 'check-slot.html'));
+    res.sendFile(path.join(__dirname, 'checkslot.html'));
 });
 
 // Serve the OTP verify page
