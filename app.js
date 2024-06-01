@@ -42,6 +42,11 @@ app.use(session({
     saveUninitialized: true
 }));
 
+app.get('/checkslot', (req, res) => {
+    res.sendFile(__dirname + '/checkslot.html');
+});
+
+
 // Routes
 app.post('/checkslot', [
     body('date').isISO8601().withMessage('Date must be a valid date')
