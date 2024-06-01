@@ -38,7 +38,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(session({
     secret: 'hellosos12',
-    resave: false,
+    resave: true,
     saveUninitialized: true
 }));
 
@@ -93,6 +93,10 @@ app.post('/checkslot', [
             res.status(400).json({ error: 'Slot not available for the selected date' });
         }
     });
+});
+
+app.get('/verify-otp', (req, res) => {
+    res.sendFile(__dirname + '/ok.html');
 });
 
 app.get('/verify-otp', (req, res) => {
