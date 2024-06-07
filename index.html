@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,25 +9,26 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
 
   <script>
-      document.addEventListener('DOMContentLoaded', function() {
-          gsap.registerPlugin(ScrollTrigger);
+    document.addEventListener('DOMContentLoaded', function () {
+      gsap.registerPlugin(ScrollTrigger);
 
-          gsap.from("#animateMe", {
-              opacity: 0,
-              y: 50,
-              duration: 1,
-              scrollTrigger: {
-                  trigger: "#animateMe",
-                  start: "top 80%",
-                  end: "top 60%",
-                  toggleActions: "play none none none"
-              }
-          });
+      gsap.from("#animateMe", {
+        opacity: 0,
+        y: 50,
+        duration: 1,
+        scrollTrigger: {
+          trigger: "#animateMe",
+          start: "top 80%",
+          end: "top 60%",
+          toggleActions: "play none none none"
+        }
       });
+    });
   </script>
 
   <title>Document</title>
 </head>
+
 <body>
 
   <section class="showcase">
@@ -37,452 +39,442 @@
     <video src="/explore.mp4" muted loop autoplay></video>
     <div class="overlay"></div>
     <div class="text">
-      <h2>Never Stop To </h2> 
-      <h3>Exploring The World</h3>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-      consequat.</p>
+      <h3>PERSONALIZED THERAPY <br>
+      ALL PAINS TREATED, EVERY PATIENT VALUED.</h3>
+      <p>"From back pain to sports injuries, our expert physiotherapists provide tailored treatments to
+         get you back to your best. Experience compassionate care and innovative therapies designed to fit your busy
+         schedule and budget."</p>
       <a href="#">Explore</a>
     </div>
     <br><br><br>
   </section>
 
   <style>
+
     @import url('https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap');
-  *
+*
+{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+header
+{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 40px 100px;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+header .logo
+{
+  color: #fff;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.toggle
+{
+  position: relative;
+  width: 60px;
+  height: 60px;
+  background: url(https://i.ibb.co/HrfVRcx/menu.png);
+  background-repeat: no-repeat;
+  background-size: 30px;
+  background-position: center;
+  cursor: pointer;
+}
+.toggle.active
+{
+  background: url(https://i.ibb.co/rt3HybH/close.png);
+  background-repeat: no-repeat;
+  background-size: 25px;
+  background-position: center;
+  cursor: pointer;
+}
+.showcase
+{
+  position: relative;
+  right: 0;
+  width: 100%;
+  min-height: 100vh;
+  padding: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111;
+  transition: 0.5s;
+  z-index: 2;
+}
+.showcase.active
+{
+  right: 300px;
+}
+
+.showcase video
+{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+}
+.overlay
+{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #03a9f4;
+  mix-blend-mode: overlay;
+}
+.text
+{
+  position: relative;
+  z-index: 10;
+}
+
+.text h3
+{
+  font-size: 4em;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1em;
+  text-transform: uppercase;
+}
+.text h4
+{
+  font-size: 3em;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1em;
+  text-transform: uppercase;
+}
+.text p
+{
+  font-size: 1.1em;
+  color: #fff;
+  margin: 20px 0;
+  font-weight: 400;
+  max-width: 700px;
+}
+.text a
+{
+  display: inline-block;
+  font-size: 1em;
+  background: #fff;
+  padding: 10px 30px;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-weight: 500;
+  margin-top: 10px;
+  color: #111;
+  letter-spacing: 2px;
+  transition: 0.2s;
+}
+.text a:hover
+{
+  letter-spacing: 2px;
+}
+
+@media (max-width: 991px)
+{
+  .showcase,
+  .showcase header
   {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-  }
-  header
-  {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 40px 100px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  header .logo
-  {
-    color: #fff;
-    text-transform: uppercase;
-    cursor: pointer;
-  }
-   
-  .showcase
-  {
-    position: relative;
-    right: 0;
-    width: 100%;
-    min-height: 100vh;
-    padding: 100px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #111111;
-    transition: 0.5s;
-    z-index: 2;
-  }
-  .showcase.active
-  {
-    right: 300px;
-  }
-  
-  .showcase video
-  {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 1;
-  }
-  .overlay
-  {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #03a9f4;
-    mix-blend-mode: overlay;
-    
-  }
-  .text
-  {
-    position: relative;
-    z-index: 10;
-  }
-  
-  .text h2
-  {
-    font-size: 5em;
-    font-weight: 800;
-    color: #fff;
-    line-height: 1em;
-    text-transform: uppercase;
+    padding: 40px;
   }
   .text h3
   {
-    font-size: 4em;
-    font-weight: 700;
-    color: #fff;
-    line-height: 1em;
-    text-transform: uppercase;
+    font-size: 27px;
+  }
+  .text h4
+  {
+    top: 10px;
+    margin-top: 10px;
+    font-size: 17px;
+  }
+  .logo{
+    font-size: 17px;
   }
   .text p
-  {
-    font-size: 1.1em;
-    color: #fff;
-    margin: 20px 0;
-    font-weight: 400;
-    max-width: 700px;
-  }
-  .text a
-  {
-    display: inline-block;
-    font-size: 1em;
-    background: #fff;
-    padding: 10px 30px;
-    text-transform: uppercase;
-    text-decoration: none;
-    font-weight: 500;
-    margin-top: 10px;
-    color: #111;
-    letter-spacing: 2px;
-    transition: 0.2s;
-  }
-  .text a:hover
-  {
-    letter-spacing: 6px;
-  }
-  .social
-  {
-    position: absolute;
-    z-index: 10;
-    bottom: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .social li
-  {
-    list-style: none;
-  }
-  .social li a
-  {
-    display: inline-block;
-    margin-right: 20px;
-    filter: invert(1);
-    transform: scale(0.5);
-    transition: 0.5s;
-  }
-  .social li a:hover
-  {
-    transform: scale(0.5) translateY(-15px);
-  }
-  .menu
-  {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 300px;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .menu ul
-  {
-    position: relative;
-  }
-  .menu ul li
-  {
-    list-style: none;
-  }
-  .menu ul li a
-  {
-    text-decoration: none;
-    font-size: 24px;
-    color: #111;
-  }
-  .menu ul li a:hover
-  {
-    color: #03a9f4; 
-  }
-  
-  @media (max-width: 991px)
-  {
-    .showcase,
-    .showcase header
-    {
-      padding: 40px;
-    }
-    .text h2
-    {
-      font-size: 3em;
-    }
-    .text h3
-    {
-      font-size: 2em;
-    }
-  }
-  </style>
-  
-<!-- how we help -->
-<div class="howwehelp">
-  <div class="text1">
-    <h2>HOW WE HELP</h2>
-  </div>  
-  <div id="animateMe" class="animate-me">
-    <br><br><br><br><br>
-  <div class="ag-format-container">
-  <div class="ag-courses_box">
-    <div class="ag-courses_item">
-      <a href="#" class="ag-courses-item_link">
-        <div class="ag-courses-item_bg"></div>
-
-        <div class="ag-courses-item_title">
-          Recovery after hostpital
-        </div>
-
-        <div class="ag-courses-item_date-box">
-          Start:
-          <span class="ag-courses-item_date">
-            04.11.2022
-          </span>
-        </div>
-      </a>
-    </div>
-
-    <div class="ag-courses_item">
-      <a href="#" class="ag-courses-item_link">
-        <div class="ag-courses-item_bg"></div>
-
-        <div class="ag-courses-item_title">
-          Joint and Muscular pain
-        </div>
-
-        <div class="ag-courses-item_date-box">
-          Start:
-          <span class="ag-courses-item_date">
-            04.11.2022
-          </span>
-        </div>
-      </a>
-    </div>
-
-    <div class="ag-courses_item">
-      <a href="#" class="ag-courses-item_link">
-        <div class="ag-courses-item_bg"></div>
-
-        <div class="ag-courses-item_title">
-          Falls and Accidents
-        </div>
-
-        <div class="ag-courses-item_date-box">
-          Start:
-          <span class="ag-courses-item_date">
-            04.11.2022
-          </span>
-        </div>
-      </a>
-    </div>
-
-    <div class="ag-courses_item">
-      <a href="#" class="ag-courses-item_link">
-        <div class="ag-courses-item_bg"></div>
-
-        <div class="ag-courses-item_title">
-      Balance and Cordination
-        </div>
-
-        <div class="ag-courses-item_date-box">
-          Start:
-          <span class="ag-courses-item_date">
-            04.11.2022
-          </span>
-        </div>
-      </a>
-    </div>
-
-    <div class="ag-courses_item">
-      <a href="#" class="ag-courses-item_link">
-        <div class="ag-courses-item_bg"></div>
-
-        <div class="ag-courses-item_title">
-          Muscle Weakness
-        </div>
-
-        <div class="ag-courses-item_date-box">
-          Start:
-          <span class="ag-courses-item_date">
-            30.11.2022
-          </span>
-        </div>
-      </a>
-    </div>
-    <div class="ag-courses_item">
-    <a href="#" class="ag-courses-item_link">
-      <div class="ag-courses-item_bg"></div>
-
-      <div class="ag-courses-item_title">
-        Physiyo therphy for swallon joints
-      </div>
-
-      <div class="ag-courses-item_date-box">
-        Start:
-        <span class="ag-courses-item_date">
-          30.11.2022
-        </span>
-      </div>
-    </a>
-  </div>
-
-
-  </div>
-</div>
-</div>
-</div>
-
-
-<style>
-  .text1 h2
-  {
-    font-size: 5em;
-    font-weight: 800;
-    color: #000000;
-    text-transform: uppercase;
-    position: absolute;
-            top: 10%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1000;
-  }
-
-.howwehelp{
-  width: 100%;
-  background-color: #ffffff;
-  position: relative;
-
+{
+  font-size: 10px;
+  color: #fff;
+  margin-top: 8px;
+  font-weight: 400;
+  max-width: 700px;
 }
-        .ag-format-container {
-            width: 90%;
-            max-width: 1142px;
-            margin: 0 auto;
-        }
+.text{
+  top: 10px;
+  position: relative;
+  z-index: 10;
+}
+}
 
-        .ag-courses_box {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            padding: 20px 0;
-        }
+  </style>
 
-        .ag-courses_item {
-            flex-basis: calc(33.33333% - 30px);
-            margin: 0 15px 30px;
-            overflow: hidden;
-            border-radius: 28px;
-            display: block; /* Ensure items are displayed by default */
-        }
+  <!-- how we help -->
+  <div class="howwehelp">
+    <div class="text1">
+      <h2>HOW WE HELP</h2>
+    </div>
+    <div id="animateMe" class="animate-me">
+      <br><br><br><br><br>
+      <div class="ag-format-container">
+        <div class="ag-courses_box">
+          <div class="ag-courses_item">
+            <a href="#" class="ag-courses-item_link">
+              <div class="ag-courses-item_bg"></div>
 
-        .ag-courses-item_link {
-            display: block;
-            padding: 30px 20px;
-            background-color: #121212;
-            position: relative;
-            text-decoration: none;
-        }
+              <div class="ag-courses-item_title">
+                Recovery after hostpital
+              </div>
 
-        .ag-courses-item_bg {
-            height: 128px;
-            width: 128px;
-            position: absolute;
-            top: -75px;
-            right: -75px;
-            border-radius: 50%;
-            transition: all 0.5s ease;
-        }
+              <div class="ag-courses-item_date-box">
+                Start:
+                <span class="ag-courses-item_date">
+                  04.11.2022
+                </span>
+              </div>
+            </a>
+          </div>
 
-        .ag-courses-item_title {
-            min-height: 87px;
-            margin: 0 0 25px;
-            font-weight: bold;
-            font-size: 30px;
-            color: #FFF;
-            z-index: 2;
-            position: relative;
-        }
+          <div class="ag-courses_item">
+            <a href="#" class="ag-courses-item_link">
+              <div class="ag-courses-item_bg"></div>
 
-        .ag-courses-item_date-box {
-            font-size: 18px;
-            color: #FFF;
-            z-index: 2;
-            position: relative;
-        }
+              <div class="ag-courses-item_title">
+                Joint and Muscular pain
+              </div>
 
-        .ag-courses-item_date {
-            font-weight: bold;
-            color: #f9b234;
-            transition: color 0.5s ease;
-        }
+              <div class="ag-courses-item_date-box">
+                Start:
+                <span class="ag-courses-item_date">
+                  04.11.2022
+                </span>
+              </div>
+            </a>
+          </div>
 
-        /* Hide additional items in desktop view */
-        @media (min-width: 980px) {
-            .ag-courses_item:nth-child(n+7) {
-                display: none;
-            }
-        }
+          <div class="ag-courses_item">
+            <a href="#" class="ag-courses-item_link">
+              <div class="ag-courses-item_bg"></div>
 
-        /* Hide additional items in mobile view */
-        @media (max-width: 979px) {
-            .ag-courses_item:nth-child(n+4) {
-                display: none;
-            }
+              <div class="ag-courses-item_title">
+                Falls and Accidents
+              </div>
 
-            .ag-courses_item {
-                flex-basis: calc(50% - 30px);
-            }
-        }
+              <div class="ag-courses-item_date-box">
+                Start:
+                <span class="ag-courses-item_date">
+                  04.11.2022
+                </span>
+              </div>
+            </a>
+          </div>
 
-        @media (max-width: 767px) {
-            .ag-format-container {
-                width: 96%;
-            }
-        }
+          <div class="ag-courses_item">
+            <a href="#" class="ag-courses-item_link">
+              <div class="ag-courses-item_bg"></div>
 
-        @media (max-width: 639px) {
-            .ag-courses_item {
-                flex-basis: 100%;
-            }
+              <div class="ag-courses-item_title">
+                Balance and Cordination
+              </div>
 
-            .ag-courses-item_title {
-                min-height: 72px;
-                font-size: 24px;
-            }
+              <div class="ag-courses-item_date-box">
+                Start:
+                <span class="ag-courses-item_date">
+                  04.11.2022
+                </span>
+              </div>
+            </a>
+          </div>
 
-            .ag-courses-item_link {
-                padding: 22px 40px;
-            }
+          <div class="ag-courses_item">
+            <a href="#" class="ag-courses-item_link">
+              <div class="ag-courses-item_bg"></div>
 
-            .ag-courses-item_date-box {
-                font-size: 16px;
-            }
-        }
-</style>
+              <div class="ag-courses-item_title">
+                Muscle Weakness
+              </div>
+
+              <div class="ag-courses-item_date-box">
+                Start:
+                <span class="ag-courses-item_date">
+                  30.11.2022
+                </span>
+              </div>
+            </a>
+          </div>
+          <div class="ag-courses_item">
+            <a href="#" class="ag-courses-item_link">
+              <div class="ag-courses-item_bg"></div>
+
+              <div class="ag-courses-item_title">
+                Physiyo therphy for swallon joints
+              </div>
+
+              <div class="ag-courses-item_date-box">
+                Start:
+                <span class="ag-courses-item_date">
+                  30.11.2022
+                </span>
+              </div>
+            </a>
+          </div>
 
 
-    
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <style>
+    .text1 h2 {
+      font-size: 5em;
+      font-weight: 800;
+      color: #000000;
+      text-transform: uppercase;
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1000;
+    }
+
+    .howwehelp {
+      width: 100%;
+      background-color: #ffffff;
+      position: relative;
+
+    }
+
+    .ag-format-container {
+      width: 90%;
+      max-width: 1142px;
+      margin: 0 auto;
+    }
+
+    .ag-courses_box {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 20px 0;
+    }
+
+    .ag-courses_item {
+      flex-basis: calc(33.33333% - 30px);
+      margin: 0 15px 30px;
+      overflow: hidden;
+      border-radius: 28px;
+      display: block;
+      /* Ensure items are displayed by default */
+    }
+
+    .ag-courses-item_link {
+      display: block;
+      padding: 30px 20px;
+      background-color: #121212;
+      position: relative;
+      text-decoration: none;
+    }
+
+    .ag-courses-item_bg {
+      height: 128px;
+      width: 128px;
+      position: absolute;
+      top: -75px;
+      right: -75px;
+      border-radius: 50%;
+      transition: all 0.5s ease;
+    }
+
+    .ag-courses-item_title {
+      min-height: 87px;
+      margin: 0 0 25px;
+      font-weight: bold;
+      font-size: 30px;
+      color: #FFF;
+      z-index: 2;
+      position: relative;
+    }
+
+    .ag-courses-item_date-box {
+      font-size: 18px;
+      color: #FFF;
+      z-index: 2;
+      position: relative;
+    }
+
+    .ag-courses-item_date {
+      font-weight: bold;
+      color: #f9b234;
+      transition: color 0.5s ease;
+    }
+
+    /* Hide additional items in desktop view */
+    @media (min-width: 980px) {
+      .ag-courses_item:nth-child(n+7) {
+        display: none;
+      }
+    }
+
+    /* Hide additional items in mobile view */
+    @media (max-width: 979px) {
+      .ag-courses_item:nth-child(n+4) {
+        display: none;
+      }
+
+      .ag-courses_item {
+        flex-basis: calc(50% - 30px);
+      }
+    }
+
+    @media (max-width: 767px) {
+      .ag-format-container {
+        width: 96%;
+      }
+    }
+
+    @media (max-width: 639px) {
+      .ag-courses_item {
+        flex-basis: 100%;
+      }
+
+      .ag-courses-item_title {
+        min-height: 72px;
+        font-size: 24px;
+      }
+
+      .ag-courses-item_link {
+        padding: 22px 40px;
+      }
+
+      .ag-courses-item_date-box {
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 991px) {
+
+      .text1 h2 {
+        font-size: 3vh;
+        margin-left: 35px;
+        left: 40%;
+      }
+    }
+  </style>
+
+
+
 </body>
-
-
-
-
