@@ -19,3 +19,5 @@ app.get('/add-appointment', (req, res) => {
     }
     res.sendFile(path.join(__dirname,'add-appointment.html'));
 });
+
+ <div id="animateMe" class="animate-me">

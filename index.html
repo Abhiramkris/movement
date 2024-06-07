@@ -1,413 +1,488 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Basic Website</title>
-    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+
+  <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          gsap.registerPlugin(ScrollTrigger);
+
+          gsap.from("#animateMe", {
+              opacity: 0,
+              y: 50,
+              duration: 1,
+              scrollTrigger: {
+                  trigger: "#animateMe",
+                  start: "top 80%",
+                  end: "top 60%",
+                  toggleActions: "play none none none"
+              }
+          });
+      });
+  </script>
+
+  <title>Document</title>
 </head>
- <!-- Video Source -->
-  <!-- https://www.pexels.com/video/aerial-view-of-beautiful-resort-2169880/ -->
-  <div class="showcase">
+<body>
+
+  <section class="showcase">
     <header>
-      <h2 class="logo">Movement Science</h2>
+      <h2 class="logo">Travel</h2>
       <div class="toggle"></div>
     </header>
-    <video src="videos/explore.mp4" muted loop autoplay></video>
+    <video src="/explore.mp4" muted loop autoplay></video>
     <div class="overlay"></div>
-    <div class="text"><br><br>  <br>
-      <h3>Personalized Therapy, Unmatched Convenience – </h3> 
-      <h4>All Pains Treated, Every Patient Valued. </h4>
-      <p>"From back pain to sports injuries, our expert physiotherapists provide 
-        tailored treatments to get you back to your best. 
-        Experience compassionate care and innovative therapies designed to fit your busy schedule and budget."</p>
-    <a href="/checkslot">Book An Appointment</a> 
-<br><br><br>
-    <!-- <ul class="social">
-      <li><a href="#"><img src="https://i.ibb.co/x7P24fL/facebook.png"></a></li>
-      <li><a href="#"><img src="https://i.ibb.co/Wnxq2Nq/twitter.png"></a></li>
-      <li><a href="#"><img src="https://i.ibb.co/ySwtH4B/instagram.png"></a></li>
-    </ul> -->
+    <div class="text">
+      <h2>Never Stop To </h2> 
+      <h3>Exploring The World</h3>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+      consequat.</p>
+      <a href="#">Explore</a>
     </div>
-  
-  </div>
-<div class="pricing1">
-  <div class="background">
-    <div class="container">
-      <div class="panel pricing-table">
-        
-        <div class="pricing-plan">
-          <img src="https://s22.postimg.cc/8mv5gn7w1/paper-plane.png" alt="" class="pricing-img">
-          <h2 class="pricing-header">Personal</h2>
-          <ul class="pricing-features">
-            <li class="pricing-features-item">Custom domains</li>
-            <li class="pricing-features-item">Sleeps after 30 mins of inactivity</li>
-          </ul>
-          <span class="pricing-price">Free</span>
-          <a href="#/" class="pricing-button">Sign up</a>
-        </div>
-        
-        <div class="pricing-plan">
-          <img src="https://s28.postimg.cc/ju5bnc3x9/plane.png" alt="" class="pricing-img">
-          <h2 class="pricing-header">Small team</h2>
-          <ul class="pricing-features">
-            <li class="pricing-features-item">Never sleeps</li>
-            <li class="pricing-features-item">Multiple workers for more powerful apps</li>
-          </ul>
-          <span class="pricing-price">$150</span>
-          <a href="#/" class="pricing-button is-featured">Free trial</a>
-        </div>
-        
-        <div class="pricing-plan">
-          <img src="https://s21.postimg.cc/tpm0cge4n/space-ship.png" alt="" class="pricing-img">
-          <h2 class="pricing-header">Enterprise</h2>
-          <ul class="pricing-features">
-            <li class="pricing-features-item">Dedicated</li>
-            <li class="pricing-features-item">Simple horizontal scalability</li>
-          </ul>
-          <span class="pricing-price">$400</span>
-          <a href="#/" class="pricing-button">Free trial</a>
-        </div>
-        
-      </div>
-    </div>
-  </div>
-</div>
+    <br><br><br>
+  </section>
 
-  
   <style>
-
     @import url('https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap');
-*
-{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-}
-html {
-  box-sizing: border-box;
-  font-family: 'Open Sans', sans-serif;
-}
-
-*, *:before, *:after {
-  box-sizing: inherit;
-}
-.pricing1
-{
-  position: absolute;
-  margin-top: 90vh;
-  left: 17%;
-}
-
-.background {
-  padding: 0 25px 25px;
-  position: relative;
-  width: 100%;
-}
-
-.background::after {
-  content: '';
-  background: #60a9ff;
-  background: -moz-linear-gradient(top, #60a9ff 0%, #4394f4 100%);
-  background: -webkit-linear-gradient(top, #60a9ff 0%,#4394f4 100%);
-  background: linear-gradient(to bottom, #60a9ff 0%,#4394f4 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#60a9ff', endColorstr='#4394f4',GradientType=0 );
-  height: 550px;
-  width: 1000px;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: 1;
-}
-
-@media (min-width: 900px) {
-  .background {
-    padding: 0 0 20 px;
-  }
-}
-
-.container {
-  margin: 0 auto;
-  padding: 50px 0 0;
-  max-width: 960px;
-  width: 100%;
-}
-
-.panel {
-  background-color: #fff;
-  border-radius: 10px;
-  padding: 15px 25px;
-  position: relative;
-  width: 100%;
-  z-index: 10;
-}
-
-.pricing-table {
-  box-shadow: 0px 10px 13px -6px rgba(0, 0, 0, 0.08), 0px 20px 31px 3px rgba(0, 0, 0, 0.09), 0px 8px 20px 7px rgba(0, 0, 0, 0.02);
-  display: flex;
-  flex-direction: column;
-}
-
-@media (min-width: 900px) {
-  .pricing-table {
-    flex-direction: row;
-  }
-}
-
-.pricing-table * {
-  text-align: center;
-  text-transform: uppercase;
-}
-
-.pricing-plan {
-  border-bottom: 1px solid #e1f1ff;
-  padding: 25px;
-}
-
-.pricing-plan:last-child {
-  border-bottom: none;
-}
-
-@media (min-width: 900px) {
-  .pricing-plan {
-    border-bottom: none;
-    border-right: 1px solid #e1f1ff;
-    flex-basis: 100%;
-    padding: 25px 50px;
-  }
-
-  .pricing-plan:last-child {
-    border-right: none;
-  }
-}
-
-.pricing-img {
-  margin-bottom: 25px;
-  max-width: 100%;
-}
-
-.pricing-header {
-  color: #888;
-  font-weight: 600;
-  letter-spacing: 1px;
-}
-
-.pricing-features {
-  color: #016FF9;
-  font-weight: 600;
-  letter-spacing: 1px;
-  margin: 50px 0 25px;
-}
-
-.pricing-features-item {
-  border-top: 1px solid #e1f1ff;
-  font-size: 12px;
-  line-height: 1.5;
-  padding: 15px 0;
-}
-
-.pricing-features-item:last-child {
-  border-bottom: 1px solid #e1f1ff;
-}
-
-.pricing-price {
-  color: #016FF9;
-  display: block;
-  font-size: 32px;
-  font-weight: 700;
-}
-
-.pricing-button {
-  border: 1px solid #9dd1ff;
-  border-radius: 10px;
-  color: #348EFE;
-  display: inline-block;
-  margin: 25px 0;
-  padding: 15px 35px;
-  text-decoration: none;
-  transition: all 150ms ease-in-out;
-}
-
-.pricing-button:hover,
-.pricing-button:focus {
-  background-color: #e1f1ff;
-}
-
-.pricing-button.is-featured {
-  background-color: #48aaff;
-  color: #fff;
-}
-
-.pricing-button.is-featured:hover,
-.pricing-button.is-featured:active {
-  background-color: #269aff;
-}
-
-.header
-{
-  position: relative;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding: 10px 100px;
-  z-index: 1000;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-header .logo
-{
-  color: #fff;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-.showcase
-{
-  position: absolute;
-  right: 0;
-  width: 100%;
-  min-height: 100vh;
-  padding: 100px;
-  display: block;
-  justify-content: space-between;
-  align-items: center;
-  background: #111;
-  transition: 0.5s;
-  z-index: 2;
-}
-.showcase.active
-{
-  right: 300px;
-}
-
-.showcase video
-{
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.8;
-}
-.overlay
-{
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #03a9f4;
-  mix-blend-mode: overlay;
-}
-.text
-{
-  position: relative;
-  z-index: 10;
-}
-
-.text h3
-{
-  font-size: 4em;
-  font-weight: 800;
-  color: #fff;
-  line-height: 1em;
-  text-transform: uppercase;
-}
-.text h4
-{
-  font-size: 3em;
-  font-weight: 700;
-  color: #fff;
-  line-height: 1em;
-  text-transform: uppercase;
-}
-.text p
-{
-  font-size: 1.1em;
-  color: #fff;
-  margin: 20px 0;
-  font-weight: 400;
-  max-width: 700px;
-}
-.text a
-{
-  display: inline-block;
-  font-size: 1em;
-  background: #fff;
-  padding: 10px 30px;
-  text-transform: uppercase;
-  text-decoration: none;
-  font-weight: 500;
-  margin-top: 10px;
-  color: #111;
-  letter-spacing: 2px;
-  transition: 0.2s;
-}
-.text a:hover
-{
-  letter-spacing: 2px;
-}
-
-@media (max-width: 990px)
-{
-  .showcase,
-  .showcase header
+  *
   {
-    padding: 40px;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+  header
+  {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 40px 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  header .logo
+  {
+    color: #fff;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+   
+  .showcase
+  {
+    position: relative;
+    right: 0;
+    width: 100%;
+    min-height: 100vh;
+    padding: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #111111;
+    transition: 0.5s;
+    z-index: 2;
+  }
+  .showcase.active
+  {
+    right: 300px;
+  }
+  
+  .showcase video
+  {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 1;
+  }
+  .overlay
+  {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #03a9f4;
+    mix-blend-mode: overlay;
+    
+  }
+  .text
+  {
+    position: relative;
+    z-index: 10;
+  }
+  
+  .text h2
+  {
+    font-size: 5em;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1em;
+    text-transform: uppercase;
   }
   .text h3
   {
-    font-size: 27px;
-  }
-  .text h4
-  {
-    top: 10px;
-    margin-top: 10px;
-    font-size: 17px;
-  }
-  .logo{
-
-    font-size: 20px;
+    font-size: 4em;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1em;
+    text-transform: uppercase;
   }
   .text p
-{
-  font-size: 10px;
-  color: #fff;
-  margin-top: 8px;
-  font-weight: 400;
-  max-width: 700px;
-}
-.text{
-  margin-top: 90px;
-  position: relative;
-  z-index: 10;
-}
-.pricing1
-{
-  width: 100%;
-  position: absolute;
-  margin-top: 85vh;
-  left: 0;
-  background-color: rgb(240, 241, 254);
-}
-.background::after {
- display: none;
-
-}
-.pricing-img {
-  margin-left: 10vw;
-  margin-bottom: 15px;
-  max-width: 80%;
-}
-header .logo
-{
-  margin-top: 30px;
-margin-left: -30px;
-}
-}
-
+  {
+    font-size: 1.1em;
+    color: #fff;
+    margin: 20px 0;
+    font-weight: 400;
+    max-width: 700px;
+  }
+  .text a
+  {
+    display: inline-block;
+    font-size: 1em;
+    background: #fff;
+    padding: 10px 30px;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-weight: 500;
+    margin-top: 10px;
+    color: #111;
+    letter-spacing: 2px;
+    transition: 0.2s;
+  }
+  .text a:hover
+  {
+    letter-spacing: 6px;
+  }
+  .social
+  {
+    position: absolute;
+    z-index: 10;
+    bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .social li
+  {
+    list-style: none;
+  }
+  .social li a
+  {
+    display: inline-block;
+    margin-right: 20px;
+    filter: invert(1);
+    transform: scale(0.5);
+    transition: 0.5s;
+  }
+  .social li a:hover
+  {
+    transform: scale(0.5) translateY(-15px);
+  }
+  .menu
+  {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .menu ul
+  {
+    position: relative;
+  }
+  .menu ul li
+  {
+    list-style: none;
+  }
+  .menu ul li a
+  {
+    text-decoration: none;
+    font-size: 24px;
+    color: #111;
+  }
+  .menu ul li a:hover
+  {
+    color: #03a9f4; 
+  }
+  
+  @media (max-width: 991px)
+  {
+    .showcase,
+    .showcase header
+    {
+      padding: 40px;
+    }
+    .text h2
+    {
+      font-size: 3em;
+    }
+    .text h3
+    {
+      font-size: 2em;
+    }
+  }
   </style>
-</html>
+  
+<!-- how we help -->
+<div class="howwehelp">
+  <div class="text1">
+    <h2>HOW WE HELP</h2>
+  </div>  
+  <div id="animateMe" class="animate-me">
+    <br><br><br><br><br>
+  <div class="ag-format-container">
+  <div class="ag-courses_box">
+    <div class="ag-courses_item">
+      <a href="#" class="ag-courses-item_link">
+        <div class="ag-courses-item_bg"></div>
+
+        <div class="ag-courses-item_title">
+          Recovery after hostpital
+        </div>
+
+        <div class="ag-courses-item_date-box">
+          Start:
+          <span class="ag-courses-item_date">
+            04.11.2022
+          </span>
+        </div>
+      </a>
+    </div>
+
+    <div class="ag-courses_item">
+      <a href="#" class="ag-courses-item_link">
+        <div class="ag-courses-item_bg"></div>
+
+        <div class="ag-courses-item_title">
+          Joint and Muscular pain
+        </div>
+
+        <div class="ag-courses-item_date-box">
+          Start:
+          <span class="ag-courses-item_date">
+            04.11.2022
+          </span>
+        </div>
+      </a>
+    </div>
+
+    <div class="ag-courses_item">
+      <a href="#" class="ag-courses-item_link">
+        <div class="ag-courses-item_bg"></div>
+
+        <div class="ag-courses-item_title">
+          Falls and Accidents
+        </div>
+
+        <div class="ag-courses-item_date-box">
+          Start:
+          <span class="ag-courses-item_date">
+            04.11.2022
+          </span>
+        </div>
+      </a>
+    </div>
+
+    <div class="ag-courses_item">
+      <a href="#" class="ag-courses-item_link">
+        <div class="ag-courses-item_bg"></div>
+
+        <div class="ag-courses-item_title">
+      Balance and Cordination
+        </div>
+
+        <div class="ag-courses-item_date-box">
+          Start:
+          <span class="ag-courses-item_date">
+            04.11.2022
+          </span>
+        </div>
+      </a>
+    </div>
+
+    <div class="ag-courses_item">
+      <a href="#" class="ag-courses-item_link">
+        <div class="ag-courses-item_bg"></div>
+
+        <div class="ag-courses-item_title">
+          Muscle Weakness
+        </div>
+
+        <div class="ag-courses-item_date-box">
+          Start:
+          <span class="ag-courses-item_date">
+            30.11.2022
+          </span>
+        </div>
+      </a>
+    </div>
+    <div class="ag-courses_item">
+    <a href="#" class="ag-courses-item_link">
+      <div class="ag-courses-item_bg"></div>
+
+      <div class="ag-courses-item_title">
+        Physiyo therphy for swallon joints
+      </div>
+
+      <div class="ag-courses-item_date-box">
+        Start:
+        <span class="ag-courses-item_date">
+          30.11.2022
+        </span>
+      </div>
+    </a>
+  </div>
+
+
+  </div>
+</div>
+</div>
+</div>
+
+
+<style>
+  .text1 h2
+  {
+    font-size: 5em;
+    font-weight: 800;
+    color: #000000;
+    text-transform: uppercase;
+    position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+  }
+
+.howwehelp{
+  width: 100%;
+  background-color: #ffffff;
+  position: relative;
+
+}
+        .ag-format-container {
+            width: 90%;
+            max-width: 1142px;
+            margin: 0 auto;
+        }
+
+        .ag-courses_box {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px 0;
+        }
+
+        .ag-courses_item {
+            flex-basis: calc(33.33333% - 30px);
+            margin: 0 15px 30px;
+            overflow: hidden;
+            border-radius: 28px;
+            display: block; /* Ensure items are displayed by default */
+        }
+
+        .ag-courses-item_link {
+            display: block;
+            padding: 30px 20px;
+            background-color: #121212;
+            position: relative;
+            text-decoration: none;
+        }
+
+        .ag-courses-item_bg {
+            height: 128px;
+            width: 128px;
+            position: absolute;
+            top: -75px;
+            right: -75px;
+            border-radius: 50%;
+            transition: all 0.5s ease;
+        }
+
+        .ag-courses-item_title {
+            min-height: 87px;
+            margin: 0 0 25px;
+            font-weight: bold;
+            font-size: 30px;
+            color: #FFF;
+            z-index: 2;
+            position: relative;
+        }
+
+        .ag-courses-item_date-box {
+            font-size: 18px;
+            color: #FFF;
+            z-index: 2;
+            position: relative;
+        }
+
+        .ag-courses-item_date {
+            font-weight: bold;
+            color: #f9b234;
+            transition: color 0.5s ease;
+        }
+
+        /* Hide additional items in desktop view */
+        @media (min-width: 980px) {
+            .ag-courses_item:nth-child(n+7) {
+                display: none;
+            }
+        }
+
+        /* Hide additional items in mobile view */
+        @media (max-width: 979px) {
+            .ag-courses_item:nth-child(n+4) {
+                display: none;
+            }
+
+            .ag-courses_item {
+                flex-basis: calc(50% - 30px);
+            }
+        }
+
+        @media (max-width: 767px) {
+            .ag-format-container {
+                width: 96%;
+            }
+        }
+
+        @media (max-width: 639px) {
+            .ag-courses_item {
+                flex-basis: 100%;
+            }
+
+            .ag-courses-item_title {
+                min-height: 72px;
+                font-size: 24px;
+            }
+
+            .ag-courses-item_link {
+                padding: 22px 40px;
+            }
+
+            .ag-courses-item_date-box {
+                font-size: 16px;
+            }
+        }
+</style>
+
+
+    
+</body>
+
+
+
+
