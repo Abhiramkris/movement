@@ -21,3 +21,10 @@ app.get('/add-appointment', (req, res) => {
 });
 
  <div id="animateMe" class="animate-me">
+
+    z-index: 9999; /* Ensure it appears above the gradient */
+            background: 
+                linear-gradient( rgba(245, 247, 250, 0)90%, rgba(0, 57, 53, 0.2)100%),
+                white;
+            background-blend-mode: darken;
+            border-radius: 80px;
