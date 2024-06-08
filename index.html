@@ -387,11 +387,12 @@
     <br><br><br>
   </div>
   <div class="morebtn">
-    <button class="btnn">hj</button>
+    <button class="btnn">LEARN MORE</button>
   </div>
 
 
   <style>
+    
     .text1 h2 {
       font-size: 5em;
       font-weight: 800;
@@ -411,11 +412,8 @@
 .morebtn{
   position: absolute;
   margin-top:-9.3vw;
-  margin-left: 13vw;
-  border-radius: 100px;
   z-index: 1 ;
-  width: 90%;
-      max-width: 1142px;
+  width: 100%;
   backdrop-filter: blur(0) saturate(180%);
     -webkit-backdrop-filter: blur(0) saturate(180%);
     background: 
@@ -424,13 +422,20 @@
 
 .btnn{
   position: relative;
-  
   background-color: #081923;
   color: white;
-  width: 100px;
+  width: 130px;
   height: 45px;
   background-blend-mode: screen;
+  margin-left:calc(65vw - 130px);
 }
+
+@media (min-width: 979px) {
+      .morebtn{
+        display: none;
+      }
+    }
+
 
 
     .ag-format-container {
@@ -438,6 +443,7 @@
       width: 90%;
       max-width: 1142px;
       margin: 0 auto;
+     
    
     }
     .ag-courses_box {
@@ -455,6 +461,7 @@
       overflow: hidden;
       border-radius: 28px;
       display: block;
+      
       /* Ensure items are displayed by default */
     }
 
@@ -463,7 +470,7 @@
       padding: 30px 20px;
       background-color: #121212;
       position: relative;
-      text-decoration: none;
+      
     }
 
     .ag-courses-item_bg {
