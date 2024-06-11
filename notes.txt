@@ -28,3 +28,6 @@ app.get('/add-appointment', (req, res) => {
                 white;
             background-blend-mode: darken;
             border-radius: 80px;
+
+
+             <a href="/php/test.php">Visit PHP Page</a>

@@ -7,12 +7,15 @@ const path = require('path');
 const twilio = require('twilio');
 const dotenv = require('dotenv');
 const fs = require('fs');
+const phpServer = require('node-php-server');
 dotenv.config(); // Load environment variables
 const app = express();
 const port = 3000;
 
+app.set('view engine', 'ejs');
 app.use(bodyParser.json());
-app.use(express.static('public'));
+// app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: true }));
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
@@ -26,19 +29,36 @@ const db = mysql.createConnection({
     database: process.env.DB_NAME
 });
 
+// php stuffs
+
+phpServer.createServer({
+    port: 8000,
+    hostname: '127.0.0.1',
+    base: path.join(__dirname, 'php'), // Directory where PHP files are located
+    keepalive: false,
+    open: false,
+  });
+
+  app.use('/php', (req, res) => {
+    const phpUrl = `http://127.0.0.1:8000${req.originalUrl.replace('/php', '')}`;
+    res.redirect(phpUrl);
+  });
+  
+
+
 db.connect(err => {
     if (err) throw err;
     console.log('Connected to database.');
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.render(path.join(__dirname, 'views/index'));
 });
 
 
 // Serve the check-slot.html page
 app.get('/checkslot', (req, res) => {
-    res.sendFile(path.join(__dirname, 'checkslot.html'));
+    res.render(path.join(__dirname, 'views/checkslot'));
 });
 
 // Serve the OTP verify page
@@ -46,7 +66,7 @@ app.get('/verify-otp', (req, res) => {
     // if (!req.session.otp_requested) {
     //     return res.redirect('/');
     // }
-    res.sendFile(path.join(__dirname, 'verify-otp.html'));
+    res.render(path.join(__dirname, 'views/verify-otp'));
 });
 
 // Serve the add appointment page
@@ -54,14 +74,14 @@ app.get('/add-appointment', (req, res) => {
     // if (!req.session.otp_verified) {
     //     return res.redirect('/');
     // }
-    res.sendFile(path.join(__dirname,  'appointment.html'));
+    res.render(path.join(__dirname,  'views/appointment'));
 });
 
 app.get('/added', (req, res) => {
     // if (!req.session.otp_verified) {
     //     return res.redirect('/');
     // }
-    res.sendFile(path.join(__dirname,  'add.html'));
+    res.render(path.join(__dirname,  'views/add'));
 });
 
 
