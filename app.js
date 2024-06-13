@@ -9,7 +9,7 @@ const dotenv = require('dotenv');
 const fs = require('fs');
 const app = express();
 // const phpServer = require('node-php-server');
-app.set('views', '/var/task/views');
+// app.set('views', '/var/task/views');
 dotenv.config(); // Load environment variable
 const port = 3000;
 
