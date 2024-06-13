@@ -7,10 +7,10 @@ const path = require('path');
 const twilio = require('twilio');
 const dotenv = require('dotenv');
 const fs = require('fs');
+const app = express();
 // const phpServer = require('node-php-server');
 app.set('views', '/var/task/views');
-dotenv.config(); // Load environment variables
-const app = express();
+dotenv.config(); // Load environment variable
 const port = 3000;
 
 app.set('view engine', 'ejs');
