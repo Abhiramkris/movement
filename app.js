@@ -212,3 +212,9 @@ app.listen(port, () => {
 app.get('/howwehelp/recovery', (req, res) => {
     res.render(path.join(__dirname, 'views/howhelp/recovery'));
 });
+app.get('/howwehelp/jointpain', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/jointpain'));
+});
+app.get('/howwehelp/falls', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/falls'));
+});
