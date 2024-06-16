@@ -7,15 +7,14 @@ const path = require('path');
 const twilio = require('twilio');
 const dotenv = require('dotenv');
 const fs = require('fs');
-const phpServer = require('node-php-server');
-//app.set('views', '/var/task/views');  // comment for vercep;
+// const phpServer = require('node-php-server');
 dotenv.config(); // Load environment variables
 const app = express();
 const port = 3000;
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
-// app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: true }));
 
