@@ -7,8 +7,8 @@ const path = require('path');
 const twilio = require('twilio');
 const dotenv = require('dotenv');
 const fs = require('fs');
-// const phpServer = require('node-php-server');
-app.set('views', '/var/task/views');
+const phpServer = require('node-php-server');
+//app.set('views', '/var/task/views');  // comment for vercep;
 dotenv.config(); // Load environment variables
 const app = express();
 const port = 3000;
@@ -32,18 +32,18 @@ const db = mysql.createConnection({
 
 // php stuffs
 
-// phpServer.createServer({
-//     port: 8000,
-//     hostname: '127.0.0.1',
-//     base: path.join(__dirname, 'php'), // Directory where PHP files are located
-//     keepalive: false,
-//     open: false,
-//   });
+phpServer.createServer({
+    port: 8000,
+    hostname: '127.0.0.1',
+    base: path.join(__dirname, 'php'), // Directory where PHP files are located
+    keepalive: false,
+    open: false,
+  });
 
-//   app.use('/php', (req, res) => {
-//     const phpUrl = `http://127.0.0.1:8000${req.originalUrl.replace('/php', '')}`;
-//     res.redirect(phpUrl);
-//   });
+  app.use('/php', (req, res) => {
+    const phpUrl = `http://127.0.0.1:8000${req.originalUrl.replace('/php', '')}`;
+    res.redirect(phpUrl);
+  });
   
 
 
@@ -207,4 +207,8 @@ app.post('/add-appointment', [
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
+});
+
+app.get('/howwehelp/recovery', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/recovery'));
 });
