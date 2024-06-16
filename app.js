@@ -22,22 +22,22 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = twilio(accountSid, authToken);
 
-// const db = mysql.createConnection({
-//     host: process.env.DB_HOST,
-//     user: process.env.DB_USER,
-//     password: process.env.DB_PASSWORD,
-//     database: process.env.DB_NAME
-// });
+const db = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
+});
 
 // php stuffs
 
-phpServer.createServer({
-    port: 8000,
-    hostname: '127.0.0.1',
-    base: path.join(__dirname, 'php'), // Directory where PHP files are located
-    keepalive: false,
-    open: false,
-  });
+// phpServer.createServer({
+//     port: 8000,
+//     hostname: '127.0.0.1',
+//     base: path.join(__dirname, 'php'), // Directory where PHP files are located
+//     keepalive: false,
+//     open: false,
+//   });
 
   app.use('/php', (req, res) => {
     const phpUrl = `http://127.0.0.1:8000${req.originalUrl.replace('/php', '')}`;
