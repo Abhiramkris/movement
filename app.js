@@ -7,7 +7,7 @@ const path = require('path');
 const twilio = require('twilio');
 const dotenv = require('dotenv');
 const fs = require('fs');
-// const phpServer = require('node-php-server');
+const phpServer = require('node-php-server');
 dotenv.config(); // Load environment variables
 const app = express();
 const port = 3000;
