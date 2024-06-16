@@ -7,7 +7,7 @@ const path = require('path');
 const twilio = require('twilio');
 const dotenv = require('dotenv');
 const fs = require('fs');
-const phpServer = require('node-php-server');
+// const phpServer = require('node-php-server');
 dotenv.config(); // Load environment variables
 const app = express();
 const port = 3000;
@@ -22,12 +22,12 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = twilio(accountSid, authToken);
 
-const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
-});
+// const db = mysql.createConnection({
+//     host: process.env.DB_HOST,
+//     user: process.env.DB_USER,
+//     password: process.env.DB_PASSWORD,
+//     database: process.env.DB_NAME
+// });
 
 // php stuffs
 
