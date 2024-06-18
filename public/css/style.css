@@ -100,7 +100,7 @@ body {
       margin: auto;
       font-size: 10px;
       z-index: 1000;
-      /* margin-top: -10vw; */
+      margin-top: -10vw;
   }
   .info h1{
     margin-right: 0px;
