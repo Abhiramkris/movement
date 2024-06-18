@@ -40,11 +40,11 @@ const db = mysql.createConnection({
 //     open: false,
 //   });
 
-  app.use('/php', (req, res) => {
-    const phpUrl = `http://127.0.0.1:8000${req.originalUrl.replace('/php', '')}`;
-    res.redirect(phpUrl);
-  });
-  
+//   app.use('/php', (req, res) => {
+//     const phpUrl = `http://127.0.0.1:8000${req.originalUrl.replace('/php', '')}`;
+//     res.redirect(phpUrl);
+//   });
+
 
 
 db.connect(err => {
@@ -75,14 +75,14 @@ app.get('/add-appointment', (req, res) => {
     // if (!req.session.otp_verified) {
     //     return res.redirect('/');
     // }
-    res.render(path.join(__dirname,  'views/appointment'));
+    res.render(path.join(__dirname, 'views/appointment'));
 });
 
 app.get('/added', (req, res) => {
     // if (!req.session.otp_verified) {
     //     return res.redirect('/');
     // }
-    res.render(path.join(__dirname,  'views/add'));
+    res.render(path.join(__dirname, 'views/add'));
 });
 
 
@@ -151,12 +151,12 @@ app.post('/verify-otp', [
         .verificationChecks
         .create({ to: phone, code: otp })
         .then(verification_check => {
-            if (verification_check.status === 'approved') { 
+            if (verification_check.status === 'approved') {
                 req.session.otp_verified = true;
                 res.json({ redirect: '/add-appointment' });
             } else {
                 res.status(400).json({ error: 'Invalid OTP' });
-                
+
             }
         })
         .catch(error => {
@@ -164,7 +164,6 @@ app.post('/verify-otp', [
             res.status(500).json({ error: 'Failed to verify OTP' });
         });
 });
-
 app.post('/add-appointment', [
     body('name').trim().escape().notEmpty().withMessage('Name is required'),
     body('address').trim().escape().notEmpty().withMessage('Address is required')
@@ -175,46 +174,59 @@ app.post('/add-appointment', [
     }
 
     const { name, address } = req.body;
-  //  const { date, slot, phone } = req.session;
-    const date=7;
-    const slot= 2;
-    const phone= 0;
-   //remove comments here // if (!req.session.otp_verified) {
+    const date = 7; // Example date, replace with actual date logic
+    const slot = 2; // Example slot, replace with actual slot logic
+    const phone = 0; // Example phone, replace with actual phone logic
+
+    // Assuming OTP verification is not currently part of the logic
+    // if (!req.session.otp_verified) {
     //     return res.status(400).json({ error: 'OTP not verified' });
     // }
 
+    // Insert into appointments table
     db.query('INSERT INTO appointments (name, address, date, slot, phone) VALUES (?, ?, ?, ?, ?)',
         [name, address, date, slot, phone], (err, results) => {
             if (err) {
                 console.log(err);
                 return res.status(500).json({ error: 'Database insert error' });
             }
-// insert into slot also 
 
-            if (results && results.affectedRows > 0) {
-                // Redirect to /added if the query was successful
-                return res.json({ redirect: '/added' });
+            if (results.affectedRows === 1) {
+                console.log(results.affectedRows);
+
+                // Destroy session after successful appointment insertion
+                req.session.destroy((err) => {
+                    if (err) {
+                        console.log('Session destruction error:', err);
+                    }
+                    // Redirect to /added if the query was successful
+                    return res.json({ redirect: '/added' });
+                });
             } else {
-            
                 return res.status(500).json({ error: 'Database insert error' });
             }
-
-            req.session.destroy();
-            
         });
-       
+
+    // Example: Inserting into slot table if needed
+    // db.query('INSERT INTO slot_table (slot_value) VALUES (?)', [slot], (err, result) => {
+    //     if (err) {
+    //         console.log('Error inserting into slot_table:', err);
+    //     } else {
+    //         console.log('Inserted into slot_table:', result);
+    //     }
+    // });
 });
 
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
+    app.listen(port, () => {
+        console.log(`Server is running on port ${port}`);
+    });
 
-app.get('/howwehelp/recovery', (req, res) => {
-    res.render(path.join(__dirname, 'views/howhelp/recovery'));
-});
-app.get('/howwehelp/jointpain', (req, res) => {
-    res.render(path.join(__dirname, 'views/howhelp/jointpain'));
-});
-app.get('/howwehelp/falls', (req, res) => {
-    res.render(path.join(__dirname, 'views/howhelp/falls'));
-});
+    app.get('/howwehelp/recovery', (req, res) => {
+        res.render(path.join(__dirname, 'views/howhelp/recovery'));
+    });
+    app.get('/howwehelp/jointpain', (req, res) => {
+        res.render(path.join(__dirname, 'views/howhelp/jointpain'));
+    });
+    app.get('/howwehelp/falls', (req, res) => {
+        res.render(path.join(__dirname, 'views/howhelp/falls'));
+    });
