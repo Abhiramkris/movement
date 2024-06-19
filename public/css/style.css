@@ -6,8 +6,6 @@
 }
 
 body {
-  display: flex;
-  justify-content: center;
   align-items: center;
   height: 100vh;
   background-color: #f5f5f5;
@@ -16,7 +14,7 @@ body {
 .container {
   width: 90%;
   max-width: 1200px;
-  padding: 20px;
+  padding: 50px;
 }
 
 .content {
@@ -27,8 +25,10 @@ body {
 }
 
 .info {
+   z-index: 1000;
   margin-bottom: 20px;
   text-align: center;
+  margin-top: -100px;
 }
 
 .info p {
@@ -77,30 +77,75 @@ body {
   text-decoration: none;
 }
 .image img {
-  max-width: 100%;
+  max-width: 80%;
   height: auto;
 }
 
 .image{
   z-index: -100;
+  margin-top: 60px;
+}
+.cardwrapper{
+  z-index: 1000;
+      display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; /* Optional: Wraps cards to the next row if there are too many to fit in one row */
+    justify-content: space-between; /* Adjusts space between cards */
+}
+.card {
+   z-index: 1000;
+    background-color: #f9f9f9; /* Adjust the background color as needed */
+    border: 1px solid #ddd; /* Adds a border to the card */
+    border-radius: 4px; /* Adds rounded corners to the card */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Adds a subtle shadow to the card */
+    padding: 20px; /* Adds padding inside the card */
+    margin: 10px; /* Adds space between the cards */
+    flex: 1 1 20%; /* Allows the cards to grow and shrink; the 20% sets a base width */
+    box-sizing: border-box; /* Ensures padding and border are included in the card's width and height */
+}
+
+.main-text {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.card2ndtext {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.buttonwrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.arrowbutton, .callbutton {
+    width: 20px;
+    height: 20px;
+    background-color: #007BFF; /* Adjust the color as needed */
+    border-radius: 50%;
 }
 
 @media screen and (max-width: 780px) {
  .container{
-  margin:auto;
+  margin: auto;
+ background-image: url();
+ background-repeat: no-repeat;
  }
 
   .content {
+    margin-top: 150px;
       flex-direction: row;
       text-align: center;
       justify-content: center;
+
   }
 
   .info {
-      margin: auto;
       font-size: 10px;
-      z-index: 1000;
-      margin-top: -10vw;
+     
   }
   .info h1{
     margin-right: 0px;
@@ -123,6 +168,7 @@ body {
 
   }
 }
+
 @media screen and (min-width: 780px) {
   .content {
       flex-direction: row;
@@ -133,13 +179,16 @@ body {
       flex: 1;
       margin-right: -20px;
   }
+  .container{
+    margin-top: 130px;
+  }
 
   .image {
     flex: 1;
     position: relative;
-    margin-top: -70px;
+    margin-top: -50px;
     height: 480px;
     width: 470px;
-    margin-left: -240px;
+    margin-left: -100px;
   }
 }
