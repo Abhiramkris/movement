@@ -1,74 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Physiotherapy Services</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/aura.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <!-- hero section -->
-    <div class="container">
-        <div class="content">
-            <div class="image">
-                <img src="images/doc.png" alt="Doctor">
-            </div>
-            <div class="info">
-                <p>200K+ Customer Served | 10+ Years Of Experience</p>
-                <h1>We Provide All Kind Of <span class="highlight">Physiotherapy Services</span></h1>
-                <div class="services">
-                    <div class="service">Management</div>
-                    <div class="service">Mobility</div>
-                    <div class="service">Recovery</div>
-                </div>
-                <a href="#" class="btn">Book Consultation</a>
-                <a href="#" class="btn2">arrow</a>
-            </div>
+
+  <section class="showcase">
+    <header>
+      <div class="toggle"></div>
+    </header>
+    <img src="/images/hero.jpg"></img>
+    <div class="overlay"></div>
+    <div class="text1">
+      <h2 class="header1">Physiotherapy at <span class="highlight">home.</span></h2>
+      <h2 class="header1">We treat</h2>
+      <section class="animation">
+        <div class="text-wrapper">
+          <div class="first">
+            <h2 class="header1">After surgery</h2>
+          </div>
+          <div class="second">
+            <h2 class="header1">Aches and pain</h2>
+          </div>
+          <div class="third">
+            <h2 class="header1">Mobility problems</h2>
+          </div>
+          <div class="third">
+            <h2 class="header1">Sports injury</h2>
+          </div>
+          <div class="third">
+            <h2 class="header1">Adults and Children</h2>
+          </div>
         </div>
+      </section>
+      <p class="subhead1">
+        "Comprehensive Physiotherapy Solutions Tailored to Address a Wide Range of Conditions and Physical Ailments"</p>
+      <a href="#" class="ctcbtn">Book free Consultancy</a>
     </div>
-    <!-- the how to do cards -->
-     <div class="cardwrapper">
-        <div class="card">
-            <div class="main-text"> Recovery After Hostpital
-            </div>
-            <span class="card2ndtext">what ever here</span>
-            <div class="buttonwrapper">
-                <div class="arrowbutton"></div>
-                <div class="callbutton"></div>
-            </div>
-        </div>
+  </section>
 
-        <div class="card">
-            <div class="main-text"> Recovery After Hostpital
-            </div>
-            <span class="card2ndtext">what ever here</span>
-            <div class="buttonwrapper">
-                <div class="arrowbutton"></div>
-                <div class="callbutton"></div>
-            </div>
-        </div>
+  <div class="start">
+    <div class="sectionstart">
+      <div class="header">Personalised care delivered directly to your door across the Canada</div>
+      <ul class="custom-list">
+        <li class="subhead">Convenient treatment options available on demand</li>
+        <li class="subhead">Receive care in the comfort of your home, care home, or workplace</li>
+        <li class="subhead">Services available seven days a week</li>
+        <li class="subhead">Flexible scheduling with weekday, evening, and weekend appointments</li>
+        <li class="subhead">Avoid the hassle of traveling to a clinic or hospital</li>
+      </ul>
+    </div>
 
-        <div class="card">
-            <div class="main-text"> Recovery After Hostpital
-            </div>
-            <span class="card2ndtext">what ever here</span>
-            <div class="buttonwrapper">
-                <div class="arrowbutton"></div>
-                <div class="callbutton"></div>
-            </div>
+    <div class="sectionstart">
+      <div class="header">Why Movement Science</div>
+      <div class="imagetext">
+        <div class="subhead"><span style="font-weight: 600;">Dedicated to helping you feel better</span></div> <br>
+        <div class="subhead">Home Physio Group offers an extensive selection of services for adults, children, and the elderly across the UK. We can arrange one-off appointments and long-term bookings with one of our highly-skilled physiotherapists at a time to suit you.
+          Our expert and ex <br> <a href="#" class="ctcbtn">Book free Consultancy</a>
         </div>
+        <div><img src="/images/doc.png" width="10%" height="10%" alt="doc"></div>
+      </div>
+    </div>
 
-        <div class="card">
-            <div class="main-text"> Recovery After Hostpital
-            </div>
-            <span class="card2ndtext">what ever here</span>
-            <div class="buttonwrapper">
-                <div class="arrowbutton"></div>
-                <div class="callbutton"></div>
-            </div>
-        </div>
-    
-     </div>
-    
+    <!-- ready to rec cover? -->
+    <div class="ready">
+      <div class="content">
+        <h1 class="title">Ready to recover?
+          <div class="aurora">
+            <div class="aurora__item"></div>
+            <div class="aurora__item"></div>
+            <div class="aurora__item"></div>
+            <div class="aurora__item"></div>
+          </div>
+        </h1>
+        <p class="subtitle">Call us <a href=""></a> or <a href="">book appointment</a></p>
+      </div>
+    </div>
+  </div>
 </body>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const textElement = document.getElementById('changing-text');
+    const texts = ["Hello, World!", "Welcome to the Site", "Enjoy Your Stay", "Have a Great Day!"];
+    let index = 0;
+
+    function changeText() {
+      textElement.textContent = texts[index];
+      index = (index + 1) % texts.length;
+    }
+
+    changeText(); // Initialize with the first text
+
+    setInterval(() => {
+      changeText();
+    }, 5000); // Change text every 6 seconds
+  });
+</script>
+
 </html>
