@@ -18,8 +18,40 @@
 </head>
 
 <body>
+  <div id="preloader">
+    <img src="/images/Docsymbol.gif" alt="Loading...">
+</div>
+<div id="overlay"></div>
+<script>
+  // script.js
+window.addEventListener('load', function() {
+    const preloader = document.getElementById('preloader');
+    const overlay = document.getElementById('overlay');
+    const content = document.getElementById('content');
 
-  <nav class="navbar">
+    setTimeout(() => {
+        preloader.style.display = 'none';
+        overlay.style.width = '200%';
+        overlay.style.height = '200%';
+    }, 500); // Change the timeout duration as needed
+
+    overlay.addEventListener('transitionend', () => {
+        setTimeout(() => {
+            overlay.style.opacity = '0';
+        }, 10); // Delay to ensure the overlay is fully expanded before starting to fade out
+    });
+
+    overlay.addEventListener('transitionend', () => {
+        if (overlay.style.opacity === '0') {
+            content.style.display = 'block';
+            document.body.style.overflow = 'auto';
+            overlay.style.display = 'none';
+        }
+    });
+});
+</script>
+
+<nav class="navbar">
     <div class="logo">Movement Science</div>
     <ul class="nav-links">
       <li><a href="#">Home</a></li>
