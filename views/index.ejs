@@ -22,34 +22,6 @@
     <img src="/images/Docsymbol.gif" alt="Loading...">
 </div>
 <div id="overlay"></div>
-<script>
-  // script.js
-window.addEventListener('load', function() {
-    const preloader = document.getElementById('preloader');
-    const overlay = document.getElementById('overlay');
-    const content = document.getElementById('content');
-
-    setTimeout(() => {
-        preloader.style.display = 'none';
-        overlay.style.width = '200%';
-        overlay.style.height = '200%';
-    }, 500); // Change the timeout duration as needed
-
-    overlay.addEventListener('transitionend', () => {
-        setTimeout(() => {
-            overlay.style.opacity = '0';
-        }, 10); // Delay to ensure the overlay is fully expanded before starting to fade out
-    });
-
-    overlay.addEventListener('transitionend', () => {
-        if (overlay.style.opacity === '0') {
-            content.style.display = 'block';
-            document.body.style.overflow = 'auto';
-            overlay.style.display = 'none';
-        }
-    });
-});
-</script>
 
 <nav class="navbar">
     <div class="logo">Movement Science</div>
@@ -60,7 +32,7 @@ window.addEventListener('load', function() {
       <li><a href="#">Contact</a></li>
     </ul>
     <div class="burger-contact">
-      <button class="contact-button"><i class="fas fa-phone"></i></button>
+      <button class="contact-button"><a href="/checkslot"><i class="fas fa-phone"></i></a></button>
       <div class="burger">
         <div class="line1"></div>
         <div class="line2"></div>
@@ -69,16 +41,7 @@ window.addEventListener('load', function() {
     </div>
   </nav>
 
-<script>
- const burger = document.querySelector('.burger');
-const navLinks = document.querySelector('.nav-links');
 
-burger.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-});
-
-
-</script>
 
   <section class="showcase">
     <img src="/images/hero.jpg"></img>
@@ -176,6 +139,8 @@ burger.addEventListener('click', () => {
 
 <!-- testimonials -->
 
+
+
 <br><br>
     <!-- ready to rec cover? -->
     <div class="ready">
@@ -193,23 +158,42 @@ burger.addEventListener('click', () => {
     </div>
   </div>
 </body>
+
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const textElement = document.getElementById('changing-text');
-    const texts = ["Hello, World!", "Welcome to the Site", "Enjoy Your Stay", "Have a Great Day!"];
-    let index = 0;
+window.addEventListener('load', function() {
+    const preloader = document.getElementById('preloader');
+    const overlay = document.getElementById('overlay');
+    const content = document.getElementById('content');
 
-    function changeText() {
-      textElement.textContent = texts[index];
-      index = (index + 1) % texts.length;
-    }
+    setTimeout(() => {
+        preloader.style.display = 'none';
+        overlay.style.width = '200%';
+        overlay.style.height = '200%';
+    }, 500); // Change the timeout duration as needed
 
-    changeText(); // Initialize with the first text
+    overlay.addEventListener('transitionend', () => {
+        setTimeout(() => {
+            overlay.style.opacity = '0';
+        }, 10); // Delay to ensure the overlay is fully expanded before starting to fade out
+    });
 
-    setInterval(() => {
-      changeText();
-    }, 5000); // Change text every 6 seconds
-  });
+    overlay.addEventListener('transitionend', () => {
+        if (overlay.style.opacity === '0') {
+            content.style.display = 'block';
+            document.body.style.overflow = 'auto';
+            overlay.style.display = 'none';
+        }
+    });
+});
+
+const burger = document.querySelector('.burger');
+const navLinks = document.querySelector('.nav-links');
+
+burger.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+    console.log("nigs");
+});
+
+
 </script>
-
 </html>

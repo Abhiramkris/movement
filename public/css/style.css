@@ -4,6 +4,7 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
+ 
 }
 
 
@@ -11,11 +12,12 @@
 {
   position: absolute;
   right: 0;
-  width: 100%;
+  width: 100vw;
   min-height: 100vh;
   padding: 100px;
   transition: 0.5s;
   z-index: 2;
+
 }
 .showcase.active
 {
@@ -59,7 +61,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 150%;
   height: 70%;
   object-fit: cover;
   opacity: 0.8;
