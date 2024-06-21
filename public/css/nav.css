@@ -1,0 +1,99 @@
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 1000;
+}
+
+.navbar .logo {
+    font-size: 40px;
+    font-weight: bold;
+    color: #000;
+}
+
+.navbar .nav-links {
+    list-style: none;
+    display: flex;
+}
+
+.navbar .nav-links li {
+    margin: 0 15px;
+}
+
+.navbar .nav-links a {
+    text-decoration: none;
+    color: #000;
+    font-weight: 500;
+}
+
+.burger-contact {
+    display: flex;
+    align-items: center;
+}
+
+.contact-button {
+    display: none;
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 16px;
+    align-items: center;
+    justify-content: center;
+    margin-right: 6px;
+    
+}
+
+
+.burger {
+    display: none;
+    cursor: pointer;
+    margin-right: 20px;
+}
+
+.burger div {
+    width: 25px;
+    height: 3px;
+    background-color: #000;
+    margin: 5px;
+    transition: all 0.3s ease;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .navbar .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 60px;
+        left: -100%;
+        background: rgba(255, 255, 255, 0.9);
+        transition: all 0.3s ease;
+    }
+    .navbar .logo{
+    font-size: 16px;
+}
+    .navbar .nav-links.active {
+        left: 0;
+    }
+
+    .contact-button {
+        display: flex;
+        margin-left: 20%;
+    }
+
+    .burger {
+        display: block;
+    }
+}

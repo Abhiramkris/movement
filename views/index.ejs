@@ -8,7 +8,9 @@
   <link rel="stylesheet" href="css/imagetext.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/aura.css">
+  <link rel="stylesheet" href="css/nav.css">
 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -17,10 +19,36 @@
 
 <body>
 
+  <nav class="navbar">
+    <div class="logo">Movement Science</div>
+    <ul class="nav-links">
+      <li><a href="#">Home</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Services</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+    <div class="burger-contact">
+      <button class="contact-button"><i class="fas fa-phone"></i></button>
+      <div class="burger">
+        <div class="line1"></div>
+        <div class="line2"></div>
+        <div class="line3"></div>
+      </div>
+    </div>
+  </nav>
+
+<script>
+ const burger = document.querySelector('.burger');
+const navLinks = document.querySelector('.nav-links');
+
+burger.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+});
+
+
+</script>
+
   <section class="showcase">
-    <header>
-      <div class="toggle"></div>
-    </header>
     <img src="/images/hero.jpg"></img>
     <div class="overlay"></div>
     <div class="text1">
@@ -44,10 +72,8 @@
             <h2 class="header1">Adults and Children</h2>
           </div>
         </div>
-      </section>
-      <p class="subhead1">
-        "Comprehensive Physiotherapy Solutions Tailored to Address a Wide Range of Conditions and Physical Ailments"</p>
-      <a href="#" class="ctcbtn">Book free Consultancy</a>
+      </section> <br>
+      <!-- <a href="#" class="ctcbtn">Book free Consultancy</a> -->
     </div>
   </section>
 
@@ -105,7 +131,6 @@
 </div>
 </div>
 
-<br><br>
 <div class="sectionstart">
   <div class="container">
     <div class="header">Physiotherapy you can trust</div><br> <br>
