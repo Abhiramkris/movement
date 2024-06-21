@@ -83,8 +83,9 @@ font-size: 40px;
 }
 .subhead{
   position: relative;
-  max-width: 60%;
+  max-width: 80%;
   margin-top: 35px;
+  line-height:42px;
   font-size: 20px;
   font-weight: 400;
   color: rgb(51, 56, 68);
@@ -165,10 +166,10 @@ font-size: 40px;
   .subhead{
     font-weight: 400;
     margin-left: 25px;
-    margin-top: -10px;
+    margin-top: 10px;
     font-size: 18px;
-    max-width: 90%;
-    line-height: 20px;
+    max-width: 80%;
+    line-height: 30px;
     padding-bottom: 5px;
   }
   .text1{
@@ -178,7 +179,7 @@ font-size: 40px;
   .header{
     position: relative;
     font-size: 25px;
-    max-width:90%;
+    max-width:100%;
     padding: 30px;
     margin-top: -30px;
   }
@@ -187,12 +188,12 @@ font-size: 40px;
   }
   .sectionstart{
     padding: 0;
+    margin-top: 70px;
   }
 }
 .container {
   max-width: 1200px; /* Adjust max width as per your design */
   margin: 0 auto; /* Center align container */
-  padding: 20px; /* Add padding for spacing */
 }
 
 .imagetext {
@@ -216,11 +217,9 @@ font-size: 40px;
   flex: 1; /* Take up 50% of the container */
 }
 
-.subhead {
-  margin-bottom: 10px; /* Space between subheadings */
-}
 
 .ctcbtn {
+  z-index: 3;
   display: inline-block;
   padding: 10px 20px;
   background-color: #007bff;
@@ -231,15 +230,51 @@ font-size: 40px;
   margin-top: 10px; /* Adjust top margin */
 }
 
+.hidingimgclass{
+  position: absolute;
+  height: 400px;
+  width: 560px;
+  margin-left: 55%;
+  margin-top: -24%;
+  z-index: -2;
+  object-fit: cover;
+}
+@media (max-width: 768px) {
+  .hidingimgclass{
+    display: none;
+  }
+}
 /* Media Query for Responsive Design */
 @media (max-width: 768px) {
   .imagetext {
       flex-direction: column; /* Stack items vertically on smaller screens */
+      font-weight: 400;
+    margin-left: 25px;
+    margin-top: 10px;
+    font-size: 18px;
+    max-width: 100%;
+    line-height: 30px;
+    padding-bottom: 5px;
   }
+
+ 
 
   .image {
       max-width: 100%; /* Full width for image on smaller screens */
-      margin-right: 0; /* Remove margin for image */
+      margin-left:0; /* Remove margin for image */
       margin-bottom: 20px; /* Space between image and text */
   }
 }
+.iframe-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px; /* Optional: Add padding if needed */
+}
+
+iframe {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
