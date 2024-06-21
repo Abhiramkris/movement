@@ -5,6 +5,8 @@
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
 }
+
+
 .showcase
 {
   position: absolute;
@@ -12,7 +14,6 @@
   width: 100%;
   min-height: 100vh;
   padding: 100px;
-  display: flex;
   transition: 0.5s;
   z-index: 2;
 }
@@ -46,7 +47,8 @@
   z-index: 2;
   margin-top: 3%;
   height: 70%;
-}
+  flex: 1;
+} 
 
 .header
 {
@@ -132,7 +134,7 @@ font-size: 40px;
 .custom-list li {
   position: relative; /* Required for pseudo-element positioning */
   padding-left: 25px; /* Space for the tick icon */
-  margin-bottom: 10px; /* Adjust spacing between list items */
+  margin-bottom: 17px; /* Adjust spacing between list items */
   line-height: 1.5; /* Adjust line height for better readability */
 }
 
@@ -140,7 +142,7 @@ font-size: 40px;
   content: "\2714"; /* Unicode character for tick (✔) */
   font-size: 18px; /* Adjust size of the tick icon */
   position: absolute; /* Position relative to the list item */
-  left: 0; /* Align tick to the left */
+  left: -3px; /* Align tick to the left */
   top: 3px; /* Adjust vertical alignment */
   color: #007bff; /* Color of the tick */
 }
@@ -152,20 +154,22 @@ font-size: 40px;
     padding: 25px;
   }
   .header1{
-    font-size: 25px;
+    font-size: 30px;
   }
   .subhead1{
-    margin-top: -10px;
-    font-size: 13px;
-    max-width: 90%;
+    margin-top: 5px;
+    font-size: 18px;
+    width: 90%;
     line-height: 17px;
   }
   .subhead{
+    font-weight: 400;
     margin-left: 25px;
     margin-top: -10px;
-    font-size: 13px;
+    font-size: 18px;
     max-width: 90%;
-    line-height: 17px;
+    line-height: 20px;
+    padding-bottom: 5px;
   }
   .text1{
     margin-top: 30vh;
@@ -173,15 +177,69 @@ font-size: 40px;
   }
   .header{
     position: relative;
-    font-size: 20px;
+    font-size: 25px;
     max-width:90%;
-    padding: 25px;
+    padding: 30px;
     margin-top: -30px;
   }
   .custom-list li::before {
-    font-size: 13px; /* Adjust size of the tick icon */
+    font-size: 18px; /* Adjust size of the tick icon */
   }
   .sectionstart{
     padding: 0;
+  }
+}
+.container {
+  max-width: 1200px; /* Adjust max width as per your design */
+  margin: 0 auto; /* Center align container */
+  padding: 20px; /* Add padding for spacing */
+}
+
+.imagetext {
+  display: flex; /* Use flexbox for layout */
+  align-items: center; /* Center align items vertically */
+  justify-content: space-between; /* Space items evenly */
+  margin-top: 20px; /* Adjust top margin */
+}
+
+.image {
+  flex: 1; /* Take up 50% of the container */
+  margin-right: 20px; /* Margin between image and text */
+}
+
+.image img {
+  max-width: 100%; /* Ensure image does not exceed its container */
+  height: auto; /* Maintain aspect ratio */
+}
+
+.text {
+  flex: 1; /* Take up 50% of the container */
+}
+
+.subhead {
+  margin-bottom: 10px; /* Space between subheadings */
+}
+
+.ctcbtn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 5px;
+  margin-top: 10px; /* Adjust top margin */
+}
+
+/* Media Query for Responsive Design */
+@media (max-width: 768px) {
+  .imagetext {
+      flex-direction: column; /* Stack items vertically on smaller screens */
+  }
+
+  .image {
+      max-width: 100%; /* Full width for image on smaller screens */
+      margin-right: 0; /* Remove margin for image */
+      margin-bottom: 20px; /* Space between image and text */
   }
 }
