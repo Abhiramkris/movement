@@ -31,3 +31,8 @@ app.get('/add-appointment', (req, res) => {
 
 
              <a href="/php/test.php">Visit PHP Page</a>
+
+             // Redirect to the specified page after a delay (optional)
+         setTimeout(() => {
+            window.location.href = '/added';
+        }, 500); // Delay in milliseconds (e.g., 1000 ms = 1 second)

@@ -193,18 +193,22 @@ app.post('/add-appointment', [
 
             if (results.affectedRows === 1) {
                 console.log(results.affectedRows);
+                console.log('Redirecting to /aded');
+                res.redirect('/added');
+
 
                 // Destroy session after successful appointment insertion
                 req.session.destroy((err) => {
                     if (err) {
                         console.log('Session destruction error:', err);
                     }
-                    // Redirect to /added if the query was successful
-                    return res.json({ redirect: '/added' });
+                    // Redirect to /added if the query was successfully
+                  
                 });
             } else {
                 return res.status(500).json({ error: 'Database insert error' });
             }
+
         });
 
     // Example: Inserting into slot table if needed
@@ -217,16 +221,16 @@ app.post('/add-appointment', [
     // });
 });
 
-    app.listen(port, () => {
-        console.log(`Server is running on port ${port}`);
-    });
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
 
-    app.get('/howwehelp/recovery', (req, res) => {
-        res.render(path.join(__dirname, 'views/howhelp/recovery'));
-    });
-    app.get('/howwehelp/jointpain', (req, res) => {
-        res.render(path.join(__dirname, 'views/howhelp/jointpain'));
-    });
-    app.get('/howwehelp/falls', (req, res) => {
-        res.render(path.join(__dirname, 'views/howhelp/falls'));
-    });
+app.get('/howwehelp/recovery', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/recovery'));
+});
+app.get('/howwehelp/jointpain', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/jointpain'));
+});
+app.get('/howwehelp/falls', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/falls'));
+});
