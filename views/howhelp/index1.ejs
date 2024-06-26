@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Grid with Background Image and Gradient</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 10px;
+        }
+        .box {
+            position: relative;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .box::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0), white);
+        }
+        .buttons {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .button.call {
+            background-color: #28a745;
+        }
+        @media (max-width: 767px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="box" style="background-image: url('https://source.unsplash.com/random/1');">
+            <div class="buttons">
+                <a href="#" class="button">Read More</a>
+                <a href="#" class="button call">Call</a>
+            </div>
+        </div>
+        <div class="box" style="background-image: url('https://source.unsplash.com/random/2');">
+            <div class="buttons">
+                <a href="#" class="button">Read More</a>
+                <a href="#" class="button call">Call</a>
+            </div>
+        </div>
+        <div class="box" style="background-image: url('https://source.unsplash.com/random/3');">
+            <div class="buttons">
+                <a href="#" class="button">Read More</a>
+                <a href="#" class="button call">Call</a>
+            </div>
+        </div>
+        <div class="box" style="background-image: url('https://source.unsplash.com/random/4');">
+            <div class="buttons">
+                <a href="#" class="button">Read More</a>
+                <a href="#" class="button call">Call</a>
+            </div>
+        </div>
+        <div class="box" style="background-image: url('https://source.unsplash.com/random/5');">
+            <div class="buttons">
+                <a href="#" class="button">Read More</a>
+                <a href="#" class="button call">Call</a>
+            </div>
+        </div>
+        <div class="box" style="background-image: url('https://source.unsplash.com/random/6');">
+            <div class="buttons">
+                <a href="#" class="button">Read More</a>
+                <a href="#" class="button call">Call</a>
+            </div>
+        </div>
+        <div class="box" style="background-image: url('https://source.unsplash.com/random/7');">
+            <div class="buttons">
+                <a href="#" class="button">Read More</a>
+                <a href="#" class="button call">Call</a>
+            </div>
+        </div>
+        <div class="box" style="background-image: url('https://source.unsplash.com/random/8');">
+            <div class="buttons">
+                <a href="#" class="button">Read More</a>
+                <a href="#" class="button call">Call</a>
+            </div>
+        </div>
+        <div class="box" style="background-image: url('https://source.unsplash.com/random/9');">
+            <div class="buttons">
+                <a href="#" class="button">Read More</a>
+                <a href="#" class="button call">Call</a>
+            </div>
+        </div>
+        <div class="box" style="background-image: url('https://source.unsplash.com/random/10');">
+            <div class="buttons">
+                <a href="#" class="button">Read More</a>
+                <a href="#" class="button call">Call</a>
+            </div>
+        </div>
+        <div class="box" style="background-image: url('https://source.unsplash.com/random/11');">
+            <div class="buttons">
+                <a href="#" class="button">Read More</a>
+                <a href="#" class="button call">Call</a>
+            </div>
+        </div>
+        <div class="box" style="background-image: url('https://source.unsplash.com/random/12');">
+            <div class="buttons">
+                <a href="#" class="button">Read More</a>
+                <a href="#" class="button call">Call</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

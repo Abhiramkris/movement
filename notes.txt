@@ -36,3 +36,18 @@ app.get('/add-appointment', (req, res) => {
          setTimeout(() => {
             window.location.href = '/added';
         }, 500); // Delay in milliseconds (e.g., 1000 ms = 1 second)
+
+
+app.get('/howwehelp/recovery', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/recovery'));
+});
+app.get('/howwehelp/jointpain', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/jointpain'));
+});
+app.get('/howwehelp/falls', (req, res) => {
+    res.render(path.join(__dirname, 'howhelp/balance'));
+});
+
+app.get('/howwehelp', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/index'));
+});

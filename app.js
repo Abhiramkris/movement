@@ -62,6 +62,10 @@ app.get('/checkslot', (req, res) => {
     res.render(path.join(__dirname, 'views/checkslot'));
 });
 
+app.get('/howhelp/index', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/index1'));
+});
+
 // Serve the OTP verify page
 app.get('/verify-otp', (req, res) => {
     // if (!req.session.otp_requested) {
@@ -223,14 +227,4 @@ app.post('/add-appointment', [
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
-});
-
-app.get('/howwehelp/recovery', (req, res) => {
-    res.render(path.join(__dirname, 'views/howhelp/recovery'));
-});
-app.get('/howwehelp/jointpain', (req, res) => {
-    res.render(path.join(__dirname, 'views/howhelp/jointpain'));
-});
-app.get('/howwehelp/falls', (req, res) => {
-    res.render(path.join(__dirname, 'views/howhelp/falls'));
 });
