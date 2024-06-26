@@ -1,7 +1,45 @@
-.navbar-brand img {
+.navbar {
+	background: rgba(255, 255, 255, 0.3);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	padding: 10px 20px;
+	border-radius: 0; /* No border radius */
+  }
+
+  .navbar-brand img {
 	width: 40px; /* Adjust logo size */
 	height: auto;
   }
+
   .navbar-toggler {
 	border: none; /* Optional: Remove border for the burger icon */
+  }
+
+  .navbar-nav .nav-link {
+	color: #fff; /* White color for nav links */
+  }
+
+  .navbar-nav .nav-link:hover {
+	color: #ddd; /* Lighter color on hover */
+  }
+
+  .nav-item.active .nav-link {
+	color: #ddd; /* Active link color */
+  }
+
+  .free-consultation {
+	color: #fff;
+	font-weight: bold;
+	text-transform: uppercase;
+	padding: 0 20px;
+	display: flex;
+	align-items: center;
+  }
+
+  @media (max-width: 768px) {
+	.navbar {
+	  padding: 10px; /* Adjust padding for mobile */
+	}
   }
