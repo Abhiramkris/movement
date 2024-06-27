@@ -23,7 +23,9 @@
     "moment-timezone": "^0.5.45",
     "mysql": "^2.18.1",
     "mysql2": "^3.9.7",
+    "node-cron": "^3.0.3",
     "node-php-server": "^0.1.2",
+    "nodemailer": "^6.9.14",
     "nodemon": "^3.1.0",
     "open": "^7.4.2",
     "twilio": "^5.1.0"

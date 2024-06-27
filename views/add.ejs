@@ -4,6 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (!('Notification' in window)) {
+                console.error('This browser does not support desktop notification.');
+                return;
+            }
+
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    console.log('Notification permission granted.');
+                } else {
+                    console.error('Permission denied for notification.');
+                }
+            });
+
+            // Example: Listen for notifications triggered by server
+            const serverUrl = 'http://localhost:3000/send-notification';
+
+            fetch(serverUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.title && data.body) {
+                        new Notification(data.title, { body: data.body });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching notification:', error);
+                });
+        });
+    </script>
 </head>
 <body>
     <h1>added</h1>

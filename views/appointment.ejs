@@ -49,6 +49,7 @@
         <form id="appointmentForm">
             <input type="text" id="name" name="name" placeholder="Enter your name" required>
             <input type="text" id="address" name="address" placeholder="Enter your address" required>
+            <input type="text" id="email" name="email" placeholder="email" required>
             <button type="submit">Submit</button>
         </form>
     </div>
@@ -58,20 +59,24 @@
 
             const name = document.getElementById('name').value;
             const address = document.getElementById('address').value;
-
+            const email = document.getElementById('email').value;
             fetch('/add-appointment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ name, address })
+                body: JSON.stringify({ name, address,email})
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     alert('Appointment added successfully!');
                     // Optionally, redirect to another page or clear form fields
-                } else if (data.error) {
+                } 
+                else if (data.redirect) {
+                        window.location.href = data.redirect;
+                    }
+                else if (data.error) {
                     alert(data.error);
                 } else if (data.errors) {
                     alert(data.errors.map(err => err.msg).join('\n'));

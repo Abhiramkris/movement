@@ -89,6 +89,29 @@ app.get('/added', (req, res) => {
     res.render(path.join(__dirname, 'views/add'));
 });
 
+app.post('/send-notification', (req, res) => {
+    const { title, body } = req.body;
+
+    // Check if the browser supports notifications
+    if (!('Notification' in window)) {
+        console.error('This browser does not support desktop notification.');
+        return res.status(400).json({ error: 'Desktop notification not supported' });
+    }
+
+    // Request permission from the user to display notifications
+    Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+            // Create a new notification
+            const notification = new Notification(title, { body });
+            console.log('Browser notification sent:', notification);
+            res.json({ message: 'Notification sent successfully' });
+        } else {
+            console.error('Permission denied for notification');
+            res.status(403).json({ error: 'Permission denied for notification' });
+        }
+    });
+});
+
 
 app.post('/checkslot', [
     body('date').isISO8601().withMessage('Invalid date format').custom((value) => {
@@ -107,32 +130,44 @@ app.post('/checkslot', [
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { date, slot, phone } = req.body;
+    const { date, slot, phone, city } = req.body;
 
     db.query('SELECT * FROM slots WHERE date = ? AND slot = ?', [date, slot], (err, results) => {
         if (err) {
             return res.status(500).json({ error: 'Database query error' });
         }
-
         if (results.length === 0) {
-            // Slot is available, send OTP
-            client.verify.v2.services('VA748199d35535a2bd83e8c1ef972ca77d')
-                .verifications
-                .create({ to: phone, channel: 'sms' })
-                .then(verification => {
-                    req.session.date = date;
-                    req.session.slot = slot;
-                    req.session.phone = phone;
-                    req.session.otp_requested = true;
-                    res.json({ redirect: '/otp-verify' });
-                })
-                .catch(error => {
-                    console.error('Failed to send OTP:', error);
-                    res.status(500).json({ error: 'Failed to send OTP' });
-                });
-        } else {
-            res.status(400).json({ error: 'Slot not available' });
+            console.log('yeah');
+            req.session.date = date;
+            req.session.slot = slot;
+            req.session.phone = phone;
+            req.session.city=city;
+            req.session.otp_requested = true;
+            res.json({ redirect: '/add-appointment' }); //remove later
         }
+        else{
+            return res.status(400).json({ error: 'Slot already occupied' });
+        }
+
+        // if (results.length === 0) {
+        //     // Slot is available, send OTP
+        //     client.verify.v2.services('VA748199d35535a2bd83e8c1ef972ca77d')
+        //         .verifications
+        //         .create({ to: phone, channel: 'sms' })
+        //         .then(verification => {
+        //             req.session.date = date;
+        //             req.session.slot = slot;
+        //             req.session.phone = phone;
+        //             req.session.otp_requested = true;
+        //             res.json({ redirect: '/otp-verify' });
+        //         })
+        //         .catch(error => {
+        //             console.error('Failed to send OTP:', error);
+        //             res.status(500).json({ error: 'Failed to send OTP' });
+        //         });
+        // } else {
+        //     res.status(400).json({ error: 'Slot not available' });
+        // }
     });
 });
 
@@ -168,61 +203,76 @@ app.post('/verify-otp', [
             res.status(500).json({ error: 'Failed to verify OTP' });
         });
 });
+
+
 app.post('/add-appointment', [
     body('name').trim().escape().notEmpty().withMessage('Name is required'),
-    body('address').trim().escape().notEmpty().withMessage('Address is required')
+    body('address').trim().escape().notEmpty().withMessage('Address is required'),
+    body('email').trim().escape().notEmpty().withMessage('email is required')
 ], (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, address } = req.body;
-    const date = 7; // Example date, replace with actual date logic
-    const slot = 2; // Example slot, replace with actual slot logic
-    const phone = 0; // Example phone, replace with actual phone logic
+    const { name, address, email} = req.body;
+    const date = req.session.date;
+    const slot = req.session.slot;
+    const phone = req.session.phone;
+    const city= req.session.city;
 
     // Assuming OTP verification is not currently part of the logic
     // if (!req.session.otp_verified) {
+    //  const is_verified = 0;
     //     return res.status(400).json({ error: 'OTP not verified' });
     // }
+    // else{
+//      const_verfied =1;
+    // }
+
+    // add verfied here
+    if (!date || !slot || !phone||!email||!city) {
+        console.log('Session data is missing:', { date, slot, phone });
+        return res.status(400).json({ error: 'data is missing pls try again' });
+    }
+
 
     // Insert into appointments table
-    db.query('INSERT INTO appointments (name, address, date, slot, phone) VALUES (?, ?, ?, ?, ?)',
-        [name, address, date, slot, phone], (err, results) => {
+    db.query('INSERT INTO appointments (name, address, date, slot, phone, email, city) VALUES (?, ?, ?, ?, ?,?,?)',
+        [name, address, date, slot, phone,email,city], (err, results) => {
             if (err) {
-                console.log(err);
+                console.log('Database insert error:', err);
                 return res.status(500).json({ error: 'Database insert error' });
             }
 
             if (results.affectedRows === 1) {
-                console.log(results.affectedRows);
-                console.log('Redirecting to /aded');
-                res.redirect('/added');
+                console.log('Number of affected rows:', results.affectedRows);
+                console.log('Successfully inserted the appointment.');
 
-
-                // Destroy session after successful appointment insertion
-                req.session.destroy((err) => {
+                // Insert into slots table
+                db.query('INSERT INTO slots (slot, date) VALUES (?, ?)', [slot, date], (err, result) => {
                     if (err) {
-                        console.log('Session destruction error:', err);
+                        console.log('Error inserting into slots table:', err);
+                        return res.status(500).json({ error: 'Error inserting into slots table' });
+                    } else {
+                        console.log('Inserted into slots:', result);
+
+                        // Destroy the session after successful inserts
+                        req.session.destroy((err) => {
+                            if (err) {
+                                console.log('Session destruction error:', err);
+                                return res.status(500).json({ error: 'Session destruction error' });
+                            }
+                            console.log('Redirecting to /added');
+                            return res.json({ redirect: '/added' });
+                        });
                     }
-                    // Redirect to /added if the query was successfully
-                  
                 });
             } else {
-                return res.status(500).json({ error: 'Database insert error' });
+                console.log('Unexpected number of affected rows:', results.affectedRows);
+                return res.status(500).json({ error: 'Unexpected number of affected rows' });
             }
-
         });
-
-    // Example: Inserting into slot table if needed
-    // db.query('INSERT INTO slot_table (slot_value) VALUES (?)', [slot], (err, result) => {
-    //     if (err) {
-    //         console.log('Error inserting into slot_table:', err);
-    //     } else {
-    //         console.log('Inserted into slot_table:', result);
-    //     }
-    // });
 });
 
 app.listen(port, () => {
