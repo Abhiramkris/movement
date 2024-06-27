@@ -6,9 +6,6 @@ const path = require('path');
 const ejs = require('ejs');
 const schedule = require('node-schedule');
 const axios = require('axios');
-
-
-
 dotenv.config(); // Load environment variables
 
 const db = mysql.createConnection({
@@ -54,6 +51,8 @@ function sendAppointmentEmails() {
     });
 }
 
+
+
 function sendEmail(appointment) {
     const mailOptions = {
         from: process.env.EMAIL_USER,
@@ -91,35 +90,4 @@ function generateEmailHtml(appointment) {
 }
 
 // Test the function manually
-//sendAppointmentEmails();
-
-const appointmentDate = new Date(appointment.date);
-const today = new Date();
-
-// Compare appointment date with today's date
-if (appointmentDate.toDateString() === today.toDateString()) {
-    const j = schedule.scheduleJob('0 4 * * *', () => {
-        sendBrowserNotification();
-    });
-
-}
-
-function sendBrowserNotification() {
-    // Replace with your notification content
-    const notification = {
-        title: 'Daily Reminder',
-        body: 'Remember to check your appointments for today!'
-    };
-
-    // Example: POST request to trigger browser notification on client side
-    axios.post('http://localhost:3000/send-notification', notification)
-        .then(response => {
-            console.log('Notification sent successfully:', response.data);
-        })
-        .catch(error => {
-            console.error('Error sending notification:', error.message);
-        });
-}
-
-console.log('Scheduler started. Notifications will be triggered daily near 4 am.');
-
+sendAppointmentEmails();

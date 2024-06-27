@@ -90,26 +90,18 @@ app.get('/added', (req, res) => {
 });
 
 app.post('/send-notification', (req, res) => {
-    const { title, body } = req.body;
+    
 
-    // Check if the browser supports notifications
-    if (!('Notification' in window)) {
-        console.error('This browser does not support desktop notification.');
-        return res.status(400).json({ error: 'Desktop notification not supported' });
-    }
+    const { message } = req.body;
 
-    // Request permission from the user to display notifications
-    Notification.requestPermission().then(permission => {
-        if (permission === 'granted') {
-            // Create a new notification
-            const notification = new Notification(title, { body });
-            console.log('Browser notification sent:', notification);
-            res.json({ message: 'Notification sent successfully' });
-        } else {
-            console.error('Permission denied for notification');
-            res.status(403).json({ error: 'Permission denied for notification' });
+    // Broadcast the message to all connected clients
+    wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(message);
         }
     });
+
+    res.json({ message: 'Notification sent successfully' });
 });
 
 
@@ -264,7 +256,7 @@ app.post('/add-appointment', [
                                 return res.status(500).json({ error: 'Session destruction error' });
                             }
                             console.log('Redirecting to /added');
-                            return res.json({ redirect: '/added' });
+                            return res.json({ redirect: '/added' }); //make it bloclk url
                         });
                     }
                 });

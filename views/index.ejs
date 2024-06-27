@@ -23,7 +23,22 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
   <!-- JavaScript Bundle with Popper -->
 </head>
+<script>
+  const ws = new WebSocket('ws://localhost:3000'); // Replace with your WebSocket server URL
 
+  ws.onopen = () => {
+      console.log('Connected to WebSocket server');
+  };
+
+  ws.onmessage = (event) => {
+      const notificationDiv = document.getElementById('notification');
+      notificationDiv.innerHTML = `<p>New Notification: ${event.data}</p>`;
+  };
+
+  ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+  };
+</script>
 <body>
   <div id="preloader">
     <img src="/images/Docsymbol.gif" alt="Loading..."> <br>
