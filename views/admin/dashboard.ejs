@@ -1,0 +1,116 @@
+<!-- admin/dashboard.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointments Dashboard</title>
+    <style>
+        /* CSS styles for appointments table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .appointment-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+        }
+        .actions {
+            display: flex;
+            align-items: center;
+        }
+        .remarks-input {
+            margin-right: 10px;
+            padding: 5px;
+        }
+        .approve-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .approve-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Appointments Dashboard</h1>
+
+    <form action="/admin/dashboard" method="GET">
+        <label for="date">Filter by Date:</label>
+        <input type="date" id="date" name="date">
+        <button type="submit">Filter</button>
+    </form>
+    
+    <% if (appointments && appointments.length > 0) { %>
+        <% appointments.forEach(appointment => { %>
+            <div class="appointment-box">
+                <p><strong>Name:</strong> <%= appointment.name %></p>
+                <p><strong>Address:</strong> <%= appointment.address %></p>
+                <p><strong>Date:</strong> <%= appointment.date %></p>
+                <p><strong>Slot:</strong> <%= appointment.slot %></p>
+                <p><strong>Phone:</strong> <%= appointment.phone %></p>
+                <p><strong>Email:</strong> <%= appointment.email %></p>
+                <p><strong>City:</strong> <%= appointment.city %></p>
+                <div class="actions">
+                    <input type="text" class="remarks-input" placeholder="Add remarks">
+                    <button class="approve-btn" data-appointment-id="<%= appointment.id %>">Approve</button>
+                </div>
+            </div>
+        <% }) %>
+    <% } else { %>
+        <p>No appointments found.</p>
+    <% } %>
+
+    <script>
+        // Add event listener to all approve buttons
+        document.querySelectorAll('.approve-btn').forEach(button => {
+            button.addEventListener('click', async function() {
+                const appointmentId = this.dataset.appointmentId;
+                await approveAppointment(appointmentId);
+            });
+        });
+
+        async function approveAppointment(id) {
+            try {
+                const remarks = document.querySelector('.remarks-input').value; // Get remarks from input
+                const response = await fetch(`/approve-appointment/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ remarks })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    alert(data.message); // Show success message or handle response
+                    // Optionally update UI or redirect
+                } else {
+                    throw new Error('Failed to approve appointment');
+                }
+            } catch (error) {
+                console.error('Error approving appointment:', error);
+                alert('Failed to approve appointment. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>
