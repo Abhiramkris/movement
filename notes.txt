@@ -58,3 +58,9 @@ app.get('/howwehelp', (req, res) => {
 //     password: process.env.DB_PASSWORD,
 //     database: process.env.DB_NAME
 // });
+
+
+    if (!date || !slot || !phone || !email || !city) {
+        console.log('Session data is missing:', { date, slot, phone });
+        return res.status(400).json({ error: 'Session data is missing, please try again' });
+    }

@@ -55,10 +55,14 @@
 
     <form action="/admin/dashboard" method="GET">
         <label for="date">Filter by Date:</label>
-        <input type="date" id="date" name="date">
+        <input type="date" id="date" name="date" value="<%= filterDate %>">
         <button type="submit">Filter</button>
+        <button type="button" id="clear-filter">Clear Filter</button>
     </form>
-    
+    <button id="logout-btn">Logout</button> <br>
+    <!-- Add this button to your dashboard page -->
+<button type="button" id="see-history-btn">See History</button>
+
     <% if (appointments && appointments.length > 0) { %>
         <% appointments.forEach(appointment => { %>
             <div class="appointment-box">
@@ -70,8 +74,9 @@
                 <p><strong>Email:</strong> <%= appointment.email %></p>
                 <p><strong>City:</strong> <%= appointment.city %></p>
                 <div class="actions">
-                    <input type="text" class="remarks-input" placeholder="Add remarks">
-                    <button class="approve-btn" data-appointment-id="<%= appointment.id %>">Approve</button>
+                    <input type="text" class="remarks-input" id="remarks-<%= appointment.id %>" placeholder="Add remarks" required>
+                    <button class="approve-btn" data-appointment-id="<%= appointment.id %>">Done</button>
+                    <button class="delete-btn" data-appointment-id="<%= appointment.id %>">Delete</button>
                 </div>
             </div>
         <% }) %>
@@ -80,18 +85,43 @@
     <% } %>
 
     <script>
-        // Add event listener to all approve buttons
-        document.querySelectorAll('.approve-btn').forEach(button => {
-            button.addEventListener('click', async function() {
-                const appointmentId = this.dataset.appointmentId;
-                await approveAppointment(appointmentId);
+
+         document.getElementById('see-history-btn').addEventListener('click', function() {
+        const patientName = prompt('Please enter the patient name:');
+        if (patientName) {
+            fetch('/admin/patient-history', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: patientName })
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.open();
+                document.write(html);
+                document.close();
+            })
+            .catch(error => {
+                console.error('Error fetching patient history:', error);
+                alert('Failed to fetch patient history. Please try again.');
             });
+        }
+    });
+
+
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            window.location.href = '/admin/logout';
         });
 
-        async function approveAppointment(id) {
+         document.querySelectorAll('.approve-btn').forEach(button => {
+        button.addEventListener('click', async function() {
+            const appointmentId = this.dataset.appointmentId;
+            const remarksInput = document.getElementById(`remarks-${appointmentId}`);
+            const remarks = remarksInput.value;
+            
             try {
-                const remarks = document.querySelector('.remarks-input').value; // Get remarks from input
-                const response = await fetch(`/approve-appointment/${id}`, {
+                const response = await fetch(`/admin/approve-appointment/${appointmentId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -104,13 +134,42 @@
                     alert(data.message); // Show success message or handle response
                     // Optionally update UI or redirect
                 } else {
-                    throw new Error('Failed to approve appointment');
+                    const errorText = await response.text();
+                    throw new Error(errorText);
                 }
             } catch (error) {
                 console.error('Error approving appointment:', error);
                 alert('Failed to approve appointment. Please try again.');
             }
-        }
+        });
+    });
+    // Event listener for delete buttons
+    document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', async function() {
+                const appointmentId = this.dataset.appointmentId;
+
+                try {
+                    const response = await fetch(`/admin/delete-appointment/${appointmentId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        alert(data.message); // Show success message or handle response
+                        // Optionally update UI or redirect
+                    } else {
+                        const errorText = await response.text();
+                        throw new Error(errorText);
+                    }
+                } catch (error) {
+                    console.error('Error deleting appointment:', error);
+                    alert('Failed to delete appointment. Please try again.');
+                }
+            });
+        });
     </script>
 </body>
 </html>

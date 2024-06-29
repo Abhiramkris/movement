@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient History</title>
+    <link rel="stylesheet" href="/path/to/bootstrap.css">
+    <script src="/path/to/bootstrap.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Patient History for <%= name %></h1>
+        <div class="row">
+            <% if (Object.keys(groupedAppointments).length > 0) { %>
+                <% Object.values(groupedAppointments).forEach(group => { %>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title"><%= group.name %></h5>
+                                <p class="card-text">
+                                    Phone: <%= group.phone %><br>
+                                    Address: <%= group.address %><br>
+                                    Number of Visits: <%= group.visits.length %>
+                                </p>
+                                <h6>Visits:</h6>
+                                <ul>
+                                    <% group.visits.forEach(visit => { %>
+                                        <li>Date: <%= visit.date %>, Slot: <%= visit.slot %>, Remarks: <%= visit.remarks %></li>
+                                    <% }); %>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>No history found for this patient.</p>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>
