@@ -100,11 +100,11 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/js/intlTelInput.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
+   <script>
+     document.addEventListener('DOMContentLoaded', function () {
             const phoneInputField = document.querySelector("#phone");
             const iti = window.intlTelInput(phoneInputField, {
-                initialCountry: "ca",
+                initialCountry: "auto", // or your default country code
                 utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/js/utils.js"
             });
 
@@ -151,22 +151,22 @@
                     },
                     body: JSON.stringify({ date, slot, phone, city })
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.redirect) {
-                        window.location.href = data.redirect;
-                    } else if (data.error) {
-                        alert(data.error);
-                    } else if (data.errors) {
-                        alert(data.errors.map(err => err.msg).join('\n'));
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.redirect) {
+                            window.location.href = data.redirect;
+                        } else if (data.error) {
+                            alert(data.error);
+                        } else if (data.errors) {
+                            alert(data.errors.map(err => err.msg).join('\n'));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
             });
         });
-    </script>
+   </script>
 </body>
 
 </html>

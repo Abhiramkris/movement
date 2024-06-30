@@ -48,6 +48,7 @@
         .approve-btn:hover {
             background-color: #45a049;
         }
+        
     </style>
 </head>
 <body>
@@ -77,6 +78,7 @@
                     <input type="text" class="remarks-input" id="remarks-<%= appointment.id %>" placeholder="Add remarks" required>
                     <button class="approve-btn" data-appointment-id="<%= appointment.id %>">Done</button>
                     <button class="delete-btn" data-appointment-id="<%= appointment.id %>">Delete</button>
+                    <button class="whatsapp-btn" data-phone-number="<%= appointment.phone %>">WhatsApp</button>
                 </div>
             </div>
         <% }) %>
@@ -85,6 +87,16 @@
     <% } %>
 
     <script>
+document.querySelectorAll('.whatsapp-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        const phoneNumber = this.dataset.phoneNumber;
+        const message = encodeURIComponent('we hope that you like our service review us at '); // Customize your default message here
+
+        const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
+
+        window.open(whatsappUrl, '_blank');
+    });
+});
 
          document.getElementById('see-history-btn').addEventListener('click', function() {
         const patientName = prompt('Please enter the patient name:');

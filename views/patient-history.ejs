@@ -5,10 +5,36 @@
     <title>Patient History</title>
     <link rel="stylesheet" href="/path/to/bootstrap.css">
     <script src="/path/to/bootstrap.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 20px;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        .card-title {
+            color: #007bff;
+        }
+        .card-text {
+            margin-bottom: 10px;
+        }
+        .visits-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .visits-list li {
+            background-color: #e9ecef;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            padding: 10px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1>Patient History for <%= name %></h1>
+        <h1 class="text-center">Patient History for <%= name %></h1>
         <div class="row">
             <% if (Object.keys(groupedAppointments).length > 0) { %>
                 <% Object.values(groupedAppointments).forEach(group => { %>
@@ -17,22 +43,26 @@
                             <div class="card-body">
                                 <h5 class="card-title"><%= group.name %></h5>
                                 <p class="card-text">
-                                    Phone: <%= group.phone %><br>
-                                    Address: <%= group.address %><br>
-                                    Number of Visits: <%= group.visits.length %>
+                                    <strong>Phone:</strong> <%= group.phone %><br>
+                                    <strong>Address:</strong> <%= group.address %><br>
+                                    <strong>Number of Visits:</strong> <%= group.visits.length %>
                                 </p>
                                 <h6>Visits:</h6>
-                                <ul>
+                                <ul class="visits-list">
                                     <% group.visits.forEach(visit => { %>
-                                        <li>Date: <%= visit.date %>, Slot: <%= visit.slot %>, Remarks: <%= visit.remarks %></li>
+                                        <li>
+                                            <strong>Date:</strong> <%= visit.date %>, 
+                                            <strong>Slot:</strong> <%= visit.slot %>, 
+                                            <strong>Remarks:</strong> <%= visit.remarks %>
+                                        </li>
                                     <% }); %>
                                 </ul>
                             </div>
                         </div>
-                    </div>
+                    </div> <hr><hr>
                 <% }); %>
             <% } else { %>
-                <p>No history found for this patient.</p>
+                <p class="text-center">No history found for this patient.</p>
             <% } %>
         </div>
     </div>

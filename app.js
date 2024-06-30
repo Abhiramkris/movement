@@ -58,8 +58,7 @@ const db = mysql.createConnection({
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
-    connectTimeout: 10000,  // 10 seconds
-    acquireTimeout: 10000   // 10 seconds
+    connectTimeout: 10000  // 10 seconds
 });
 db.connect(err => {
     if (err) throw err;
@@ -119,7 +118,7 @@ router.get('/logout', (req, res) => {
         if (err) {
             return res.status(500).json({ message: 'Failed to log out' });
         }
-        res.redirect('/login'); // Adjust the redirect URL to your login page
+        res.render('admin/login'); // Assuming you have a login form view (e.g., login.ejs)
     });
 });
 
@@ -193,6 +192,7 @@ router.post('/approve-appointment/:id', requireAdmin, (req, res) => {
 
                 res.status(200).json({ message: 'Appointment approved successfully' });
             });
+            
         });
     });
 });
