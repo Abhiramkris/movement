@@ -1,7 +1,7 @@
 /* nav.css */
 
 /* Make the navbar fixed */
-.navbar {
+/* .navbar {
 	position: fixed;
 	width: 100%;
 	top: 0;
@@ -12,7 +12,7 @@
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 	padding: 10px 20px;
 	transition: background-color 0.3s ease;
-  }
+  } */
   
   /* Adjust navbar brand and links for better visibility */
   .navbar-brand, .nav-link {
