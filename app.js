@@ -62,17 +62,8 @@ const db = mysql.createPool({
 
 
 
-// Example function using async/await with mysql2
-async function fetchAppointments() {
-    try {
-        const [rows, fields] = await db.query('SELECT * FROM appointments');
-        console.log('Appointments:', rows);
-    } catch (err) {
-        console.error('Error fetching appointments:', err);
-    }
-}
 
-//fetchAppointments();
+
 
 const router = express.Router();
 
@@ -400,53 +391,50 @@ app.post('/checkslot', [
     }),
     body('slot').notEmpty().withMessage('Slot is required'),
     body('phone').isMobilePhone('any').withMessage('Invalid phone number')
-], (req, res) => {
+], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
 
     const { date, slot, phone, city } = req.body;
-    console.log(date);
-    db.query('SELECT * FROM slots WHERE date = ? AND slot = ?', [date, slot], (err, results) => {
-        if (err) {
-            return res.status(500).json({ error: 'Database query error' });
-        }
-        if (results.length == 0) {
-            console.log(results.length);
+
+    try {
+        // Check if slot is available
+        const [results] = await db.query('SELECT * FROM slots WHERE date = ? AND slot = ?', [date, slot]);
+
+        if (results.length === 0) {
+            // Slot is available, set session data
             req.session.date = date;
             req.session.slot = slot;
             req.session.phone = phone;
             req.session.city = city;
             req.session.otp_requested = true;
-            res.json({ redirect: '/add-appointment' }); //remove later
-
-        }
-        else {
+            return res.json({ redirect: '/add-appointment' }); // Redirect to add appointment page
+        } else {
+            // Slot is already occupied
             return res.status(400).json({ error: 'Slot already occupied' });
         }
 
-        // if (results.length === 0) {
-        //     // Slot is available, send OTP
-        //     client.verify.v2.services('VA748199d35535a2bd83e8c1ef972ca77d')
-        //         .verifications
-        //         .create({ to: phone, channel: 'sms' })
-        //         .then(verification => {
-        //             req.session.date = date;
-        //             req.session.slot = slot;
-        //             req.session.phone = phone;
-        //             req.session.otp_requested = true;
-        //             res.json({ redirect: '/otp-verify' });
-        //         })
-        //         .catch(error => {
-        //             console.error('Failed to send OTP:', error);
-        //             res.status(500).json({ error: 'Failed to send OTP' });
-        //         });
-        // } else {
-        //     res.status(400).json({ error: 'Slot not available' });
-        // }
-    });
+        // If you want to implement OTP sending logic when slot is available
+        // Uncomment and integrate your Twilio logic here
+        /*
+        await client.verify.services('your_service_sid')
+            .verifications
+            .create({ to: phone, channel: 'sms' });
+
+        req.session.date = date;
+        req.session.slot = slot;
+        req.session.phone = phone;
+        req.session.otp_requested = true;
+        return res.json({ redirect: '/otp-verify' });
+        */
+    } catch (error) {
+        console.error('Error checking slot:', error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
+
 
 app.post('/verify-otp', [
     body('otp').isLength({ min: 4, max: 6 }).withMessage('Invalid OTP')
