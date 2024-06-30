@@ -23,6 +23,15 @@
 /* body{
     background-color: #001e3e;
 } */
+
+*
+{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
     .container {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -97,11 +106,22 @@
     @media (max-width: 767px) {
       .container {
         display: block;
-       
+        width: 80%;
       }
       .box{
-        margin-top: 20px;
+        margin-top: 40px;
       } 
+
+      .buttons {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      right: 10px;
+      display: flex;
+      z-index: 9;
+      margin: auto;
+      width: 30%;
+    }
     }
 
     @media (max-width: 1200px) {
@@ -120,33 +140,40 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light">
-    <a class="navbar-brand" href="/">
-      <img src="your-logo-url.png" alt="Logo"> <!-- Replace with your logo URL -->
-    </a>
-    <div class="free-consultation">
-      <a href="#" class="nav-link">Free Consultation</a>
-    </div>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item active">
-          <a class="nav-link" href="/howhelp/index">How we help <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Services</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Conditions</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">About-us</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">
+          <img src="your-logo-url.png" alt="Logo"> <!-- Replace with your logo URL -->
+        </a>
+        <div class="free-consultation">
+          <a href="/checkslot" class="nav-link">Free Consultation</a>
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="/howhelp/index">How we help <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Services</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Conditions</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About-us</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <script>
+        $(document).ready(function() {
+        $('.navbar-toggler').click(function() {
+          $('#navbarNav').collapse('toggle');
+        });
+      });
+      </script>
   <div class="how">
   <div class="container">
     <div class="box" style="background-image: url('/images/image2.jpg');">
