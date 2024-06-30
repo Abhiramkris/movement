@@ -592,7 +592,7 @@ app.get('/howhelp/index', (req, res) => {
     res.render(path.join(__dirname, 'views/howhelp/index1'));
 });
 
-app.get('/recoveryafterhospital', (req, res) => {
+app.get('/howhelp/recovery', (req, res) => {
     res.render(path.join(__dirname, 'views/howhelp/recovery'));
 });
 
