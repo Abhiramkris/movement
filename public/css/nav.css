@@ -1,0 +1,57 @@
+/* nav.css */
+
+/* Make the navbar fixed */
+.navbar {
+	position: fixed;
+	width: 100%;
+	top: 0;
+	z-index: 1000;
+	backdrop-filter: blur(10px);
+	background: rgba(255, 255, 255, 0.1);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	padding: 10px 20px;
+	transition: background-color 0.3s ease;
+  }
+  
+  /* Adjust navbar brand and links for better visibility */
+  .navbar-brand, .nav-link {
+	color: #fff;
+  }
+  
+  .nav-link {
+	margin-right: 20px;
+	
+  }
+  
+  .nav-link:hover {
+	color: #ddd;
+  }
+  
+  /* Ensure free consultation link stands out */
+  .free-consultation .nav-link {
+	background-color: #007bff;
+	color: #fff;
+	border-radius: 5px;
+	padding: 5px 10px;
+  }
+  
+  .free-consultation .nav-link:hover {
+	background-color: #abd3ff;
+  }
+  
+  /* Adjust the navbar toggler button for better visibility */
+  .navbar-toggler-icon {
+	background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%2855,55,55,0.5%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+  }
+  
+  /* Additional styles for the toggler button */
+  .navbar-toggler {
+	border: none;
+  }
+  
+  /* Adjust the navbar brand for better visibility */
+  .navbar-brand img {
+	height: 40px;
+  }
+  

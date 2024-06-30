@@ -394,9 +394,7 @@ app.get('/checkslot', (req, res) => {
     res.render(path.join(__dirname, 'views/checkslot'));
 });
 
-app.get('/howhelp/index', (req, res) => {
-    res.render(path.join(__dirname, 'views/howhelp/index1'));
-});
+
 
 // Serve the OTP verify page
 app.get('/verify-otp', (req, res) => {
@@ -420,9 +418,6 @@ app.get('/added', (req, res) => {
     // }
     res.render(path.join(__dirname, 'views/add'));
 });
-
-
-
 
 app.post('/checkslot', [
     body('date').isISO8601().withMessage('Invalid date format').custom((value) => {
@@ -593,6 +588,13 @@ app.post('/add-appointment', [
         });
 });
 
+app.get('/howhelp/index', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/index1'));
+});
+
+app.get('/recoveryafterhospital', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/recovery'));
+});
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
