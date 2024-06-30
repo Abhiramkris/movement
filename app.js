@@ -50,20 +50,16 @@ const client = twilio(accountSid, authToken);
 
 // MySQL2 pool configuration
 
-const db = mysql.createConnection({
+const db = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     waitForConnections: true,
     connectionLimit: 10,
-    queueLimit: 0,
-    connectTimeout: 10000  // 10 seconds
+    queueLimit: 0
 });
-db.connect(err => {
-    if (err) throw err;
-    console.log('Connected to database.');
-});
+
 
 
 // Example function using async/await with mysql2
@@ -160,88 +156,58 @@ module.exports = router;
 
 
 // POST request to approve an appointment
-router.post('/approve-appointment/:id', requireAdmin, (req, res) => {
+router.post('/approve-appointment/:id', requireAdmin, async (req, res) => {
     const { id } = req.params;
     const { remarks } = req.body;
 
-    db.query('SELECT * FROM appointments WHERE id = ?', [id], (selectError, results) => {
-        if (selectError) {
-            console.error('Error fetching appointment:', selectError);
-            return res.status(500).json({ message: 'Failed to fetch appointment', error: selectError.message });
-        }
-
-        if (results.length === 0) {
+    try {
+        const [selectResults, selectFields] = await db.query('SELECT * FROM appointments WHERE id = ?', [id]);
+        if (selectResults.length === 0) {
             return res.status(404).json({ message: 'Appointment not found' });
         }
 
-        const appointment = results[0];
+        const appointment = selectResults[0];
 
-        db.query('INSERT INTO approved_appointments (name, address, date, slot, phone, email, city, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
-        [appointment.name, appointment.address, appointment.date, appointment.slot, appointment.phone, appointment.email, appointment.city, remarks], 
-        (insertError, insertResults) => {
-            if (insertError) {
-                console.error('Error inserting approved appointment:', insertError);
-                return res.status(500).json({ message: 'Failed to approve appointment', error: insertError.message });
-            }
+        const [insertResults, insertFields] = await db.query('INSERT INTO approved_appointments (name, address, date, slot, phone, email, city, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [appointment.name, appointment.address, appointment.date, appointment.slot, appointment.phone, appointment.email, appointment.city, remarks]);
 
-            db.query('DELETE FROM appointments WHERE id = ?', [id], (deleteError, deleteResults) => {
-                if (deleteError) {
-                    console.error('Error deleting appointment:', deleteError);
-                    return res.status(500).json({ message: 'Failed to delete original appointment', error: deleteError.message });
-                }
+        const [deleteResults, deleteFields] = await db.query('DELETE FROM appointments WHERE id = ?', [id]);
 
-                res.status(200).json({ message: 'Appointment approved successfully' });
-            });
-            
-        });
-    });
+        res.status(200).json({ message: 'Appointment approved successfully' });
+    } catch (error) {
+        console.error('Error handling appointment approval:', error);
+        res.status(500).json({ message: 'Failed to process appointment', error: error.message });
+    }
 });
 
-router.delete('/delete-appointment/:id', requireAdmin, (req, res) => {
+router.delete('/delete-appointment/:id', requireAdmin, async (req, res) => {
     const { id } = req.params;
 
-    // Fetch the slot details before deleting the appointment
-    db.query('SELECT date, slot FROM appointments WHERE id = ?', [id], (selectError, selectResults) => {
-        if (selectError) {
-            console.error('Error fetching appointment:', selectError);
-            return res.status(500).json({ message: 'Failed to fetch appointment', error: selectError.message });
-        }
-
+    try {
+        const [selectResults, selectFields] = await db.query('SELECT date, slot FROM appointments WHERE id = ?', [id]);
         if (selectResults.length === 0) {
             return res.status(404).json({ message: 'Appointment not found' });
         }
 
         const { date, slot } = selectResults[0];
 
-        // Delete the appointment
-        db.query('DELETE FROM appointments WHERE id = ?', [id], (deleteError, deleteResults) => {
-            if (deleteError) {
-                console.error('Error deleting appointment:', deleteError);
-                return res.status(500).json({ message: 'Failed to delete appointment', error: deleteError.message });
-            }
+        const [deleteResults, deleteFields] = await db.query('DELETE FROM appointments WHERE id = ?', [id]);
+        const [deleteSlotResults, deleteSlotFields] = await db.query('DELETE FROM slots WHERE date = ? AND slot = ?', [date, slot]);
 
-            // Delete the corresponding slot
-            db.query('DELETE FROM slots WHERE date = ? AND slot = ?', [date, slot], (slotError, slotResults) => {
-                if (slotError) {
-                    console.error('Error deleting slot:', slotError);
-                    return res.status(500).json({ message: 'Failed to delete slot', error: slotError.message });
-                }
-
-                res.status(200).json({ message: 'Appointment and corresponding slot deleted successfully' });
-            });
-        });
-    });
+        res.status(200).json({ message: 'Appointment and corresponding slot deleted successfully' });
+    } catch (error) {
+        console.error('Error handling appointment deletion:', error);
+        res.status(500).json({ message: 'Failed to delete appointment', error: error.message });
+    }
 });
+
 module.exports = router;
 
-router.post('/patient-history', requireAdmin, (req, res) => {
+router.post('/patient-history', requireAdmin, async (req, res) => {
     const { name } = req.body;
 
-    db.query('SELECT * FROM approved_appointments WHERE name = ?', [name], (error, results) => {
-        if (error) {
-            console.error('Error fetching patient history:', error);
-            return res.status(500).json({ message: 'Failed to fetch patient history', error: error.message });
-        }
+    try {
+        const [results, fields] = await db.query('SELECT * FROM approved_appointments WHERE name = ?', [name]);
 
         const groupedAppointments = results.reduce((acc, appointment) => {
             const key = `${appointment.name}-${appointment.phone}`;
@@ -262,8 +228,12 @@ router.post('/patient-history', requireAdmin, (req, res) => {
         }, {});
 
         res.render('patient-history', { groupedAppointments, name });
-    });
+    } catch (error) {
+        console.error('Error fetching patient history:', error);
+        res.status(500).json({ message: 'Failed to fetch patient history', error: error.message });
+    }
 });
+
 
 module.exports = router;
 
@@ -511,11 +481,11 @@ app.post('/verify-otp', [
         });
 });
 
-app.post('/add-appointment', [
+router.post('/add-appointment', [
     body('name').trim().escape().notEmpty().withMessage('Name is required'),
     body('address').trim().escape().notEmpty().withMessage('Address is required'),
     body('email').trim().escape().notEmpty().withMessage('Email is required')
-], (req, res) => {
+], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -532,60 +502,38 @@ app.post('/add-appointment', [
         return res.status(400).json({ error: 'Session data is missing, please try again' });
     }
 
-    // Insert into appointments table
-    db.query('INSERT INTO appointments (name, address, email, phone, city, date, slot) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        [name, address, email, phone, city, date, slot], (err, results) => {
-            if (err) {
-                console.log('Database insert error:', err);
-                return res.status(500).json({ error: 'Database insert error' });
-            }
+    try {
+        await db.beginTransaction();
 
-            if (results.affectedRows === 1) {
-                console.log('Successfully inserted the appointment.');
+        const [insertResults, insertFields] = await db.query('INSERT INTO appointments (name, address, email, phone, city, date, slot) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [name, address, email, phone, city, date, slot]);
 
-                // Insert into customers table
-                db.query('INSERT INTO customers (name, address, email, phone, city) VALUES (?, ?, ?, ?, ?)',
-                    [name, address, email, phone, city], (customerErr, customerResults) => {
-                        if (customerErr) {
-                            console.log('Error inserting into customers table:', customerErr);
-                            return res.status(500).json({ error: 'Error inserting into customers table' });
-                        }
+        if (insertResults.affectedRows !== 1) {
+            throw new Error('Failed to insert appointment');
+        }
 
-                        console.log('Successfully inserted into customers table:', customerResults);
+        const [customerResults, customerFields] = await db.query('INSERT INTO customers (name, address, email, phone, city) VALUES (?, ?, ?, ?, ?)',
+            [name, address, email, phone, city]);
 
-                        // Insert into slots table
-                        db.query('INSERT INTO slots (date, slot) VALUES (?, ?)', [date, slot], (slotErr, slotResults) => {
-                            if (slotErr) {
-                                console.log('Error inserting into slots table:', slotErr);
-                                return res.status(500).json({ error: 'Error inserting into slots table' });
-                            }
+        if (customerResults.affectedRows !== 1) {
+            throw new Error('Failed to insert customer');
+        }
 
-                            console.log('Successfully inserted into slots table:', slotResults);
+        const [slotResults, slotFields] = await db.query('INSERT INTO slots (date, slot) VALUES (?, ?)', [date, slot]);
 
-                            // Assuming clients is defined elsewhere and represents a list of WebSocket clients
-                            clients.forEach(client => {
-                                client.send(JSON.stringify({
-                                    title: 'New Appointment Added',
-                                    body: `New appointment with ${name} on ${date} during ${slot}.`
-                                }));
-                            });
+        if (slotResults.affectedRows !== 1) {
+            throw new Error('Failed to update slot availability');
+        }
 
-                            // Destroy the session after successful inserts
-                            req.session.destroy((sessionErr) => {
-                                if (sessionErr) {
-                                    console.log('Session destruction error:', sessionErr);
-                                    return res.status(500).json({ error: 'Session destruction error' });
-                                }
-                                console.log('Redirecting to /added');
-                                return res.json({ redirect: '/added' });
-                            });
-                        });
-                    });
-            } else {
-                console.log('Unexpected number of affected rows:', results.affectedRows);
-                return res.status(500).json({ error: 'Unexpected number of affected rows' });
-            }
-        });
+        await db.commit();
+        req.session.destroy(); // Clear session after successful appointment
+
+        res.status(200).json({ message: 'Appointment added successfully' });
+    } catch (error) {
+        await db.rollback();
+        console.error('Error adding appointment:', error);
+        res.status(500).json({ message: 'Failed to add appointment', error: error.message });
+    }
 });
 
 app.get('/howhelp/index', (req, res) => {
