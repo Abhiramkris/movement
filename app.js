@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { body, validationResult } = require('express-validator');
 const session = require('express-session');
-const mysql = require('mysql2/promise');
+const mysql = require('mysql2');
 const path = require('path');
 const twilio = require('twilio');
 const dotenv = require('dotenv');
@@ -50,7 +50,7 @@ const client = twilio(accountSid, authToken);
 
 // MySQL2 pool configuration
 
-const db = mysql.createPool({
+const db = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
@@ -58,13 +58,25 @@ const db = mysql.createPool({
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
-    connectTimeout: 15000, // 15 seconds
+    connectTimeout: 10000  // 10 seconds
+});
+db.connect(err => {
+    if (err) throw err;
+    console.log('Connected to database.');
 });
 
 
+// Example function using async/await with mysql2
+async function fetchAppointments() {
+    try {
+        const [rows, fields] = await db.query('SELECT * FROM appointments');
+        console.log('Appointments:', rows);
+    } catch (err) {
+        console.error('Error fetching appointments:', err);
+    }
+}
 
-
-
+//fetchAppointments();
 
 const router = express.Router();
 
@@ -148,58 +160,88 @@ module.exports = router;
 
 
 // POST request to approve an appointment
-router.post('/approve-appointment/:id', requireAdmin, async (req, res) => {
+router.post('/approve-appointment/:id', requireAdmin, (req, res) => {
     const { id } = req.params;
     const { remarks } = req.body;
 
-    try {
-        const [selectResults, selectFields] = await db.query('SELECT * FROM appointments WHERE id = ?', [id]);
-        if (selectResults.length === 0) {
+    db.query('SELECT * FROM appointments WHERE id = ?', [id], (selectError, results) => {
+        if (selectError) {
+            console.error('Error fetching appointment:', selectError);
+            return res.status(500).json({ message: 'Failed to fetch appointment', error: selectError.message });
+        }
+
+        if (results.length === 0) {
             return res.status(404).json({ message: 'Appointment not found' });
         }
 
-        const appointment = selectResults[0];
+        const appointment = results[0];
 
-        const [insertResults, insertFields] = await db.query('INSERT INTO approved_appointments (name, address, date, slot, phone, email, city, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            [appointment.name, appointment.address, appointment.date, appointment.slot, appointment.phone, appointment.email, appointment.city, remarks]);
+        db.query('INSERT INTO approved_appointments (name, address, date, slot, phone, email, city, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
+        [appointment.name, appointment.address, appointment.date, appointment.slot, appointment.phone, appointment.email, appointment.city, remarks], 
+        (insertError, insertResults) => {
+            if (insertError) {
+                console.error('Error inserting approved appointment:', insertError);
+                return res.status(500).json({ message: 'Failed to approve appointment', error: insertError.message });
+            }
 
-        const [deleteResults, deleteFields] = await db.query('DELETE FROM appointments WHERE id = ?', [id]);
+            db.query('DELETE FROM appointments WHERE id = ?', [id], (deleteError, deleteResults) => {
+                if (deleteError) {
+                    console.error('Error deleting appointment:', deleteError);
+                    return res.status(500).json({ message: 'Failed to delete original appointment', error: deleteError.message });
+                }
 
-        res.status(200).json({ message: 'Appointment approved successfully' });
-    } catch (error) {
-        console.error('Error handling appointment approval:', error);
-        res.status(500).json({ message: 'Failed to process appointment', error: error.message });
-    }
+                res.status(200).json({ message: 'Appointment approved successfully' });
+            });
+            
+        });
+    });
 });
 
-router.delete('/delete-appointment/:id', requireAdmin, async (req, res) => {
+router.delete('/delete-appointment/:id', requireAdmin, (req, res) => {
     const { id } = req.params;
 
-    try {
-        const [selectResults, selectFields] = await db.query('SELECT date, slot FROM appointments WHERE id = ?', [id]);
+    // Fetch the slot details before deleting the appointment
+    db.query('SELECT date, slot FROM appointments WHERE id = ?', [id], (selectError, selectResults) => {
+        if (selectError) {
+            console.error('Error fetching appointment:', selectError);
+            return res.status(500).json({ message: 'Failed to fetch appointment', error: selectError.message });
+        }
+
         if (selectResults.length === 0) {
             return res.status(404).json({ message: 'Appointment not found' });
         }
 
         const { date, slot } = selectResults[0];
 
-        const [deleteResults, deleteFields] = await db.query('DELETE FROM appointments WHERE id = ?', [id]);
-        const [deleteSlotResults, deleteSlotFields] = await db.query('DELETE FROM slots WHERE date = ? AND slot = ?', [date, slot]);
+        // Delete the appointment
+        db.query('DELETE FROM appointments WHERE id = ?', [id], (deleteError, deleteResults) => {
+            if (deleteError) {
+                console.error('Error deleting appointment:', deleteError);
+                return res.status(500).json({ message: 'Failed to delete appointment', error: deleteError.message });
+            }
 
-        res.status(200).json({ message: 'Appointment and corresponding slot deleted successfully' });
-    } catch (error) {
-        console.error('Error handling appointment deletion:', error);
-        res.status(500).json({ message: 'Failed to delete appointment', error: error.message });
-    }
+            // Delete the corresponding slot
+            db.query('DELETE FROM slots WHERE date = ? AND slot = ?', [date, slot], (slotError, slotResults) => {
+                if (slotError) {
+                    console.error('Error deleting slot:', slotError);
+                    return res.status(500).json({ message: 'Failed to delete slot', error: slotError.message });
+                }
+
+                res.status(200).json({ message: 'Appointment and corresponding slot deleted successfully' });
+            });
+        });
+    });
 });
-
 module.exports = router;
 
-router.post('/patient-history', requireAdmin, async (req, res) => {
+router.post('/patient-history', requireAdmin, (req, res) => {
     const { name } = req.body;
 
-    try {
-        const [results, fields] = await db.query('SELECT * FROM approved_appointments WHERE name = ?', [name]);
+    db.query('SELECT * FROM approved_appointments WHERE name = ?', [name], (error, results) => {
+        if (error) {
+            console.error('Error fetching patient history:', error);
+            return res.status(500).json({ message: 'Failed to fetch patient history', error: error.message });
+        }
 
         const groupedAppointments = results.reduce((acc, appointment) => {
             const key = `${appointment.name}-${appointment.phone}`;
@@ -220,12 +262,8 @@ router.post('/patient-history', requireAdmin, async (req, res) => {
         }, {});
 
         res.render('patient-history', { groupedAppointments, name });
-    } catch (error) {
-        console.error('Error fetching patient history:', error);
-        res.status(500).json({ message: 'Failed to fetch patient history', error: error.message });
-    }
+    });
 });
-
 
 module.exports = router;
 
@@ -356,7 +394,9 @@ app.get('/checkslot', (req, res) => {
     res.render(path.join(__dirname, 'views/checkslot'));
 });
 
-
+app.get('/howhelp/index', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/index1'));
+});
 
 // Serve the OTP verify page
 app.get('/verify-otp', (req, res) => {
@@ -392,50 +432,53 @@ app.post('/checkslot', [
     }),
     body('slot').notEmpty().withMessage('Slot is required'),
     body('phone').isMobilePhone('any').withMessage('Invalid phone number')
-], async (req, res) => {
+], (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
 
     const { date, slot, phone, city } = req.body;
-
-    try {
-        // Check if slot is available
-        const [results] = await db.query('SELECT * FROM slots WHERE date = ? AND slot = ?', [date, slot]);
-
-        if (results.length === 0) {
-            // Slot is available, set session data
+    console.log(date);
+    db.query('SELECT * FROM slots WHERE date = ? AND slot = ?', [date, slot], (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database query error' });
+        }
+        if (results.length == 0) {
+            console.log(results.length);
             req.session.date = date;
             req.session.slot = slot;
             req.session.phone = phone;
             req.session.city = city;
             req.session.otp_requested = true;
-            return res.json({ redirect: '/add-appointment' }); // Redirect to add appointment page
-        } else {
-            // Slot is already occupied
+            res.json({ redirect: '/add-appointment' }); //remove later
+
+        }
+        else {
             return res.status(400).json({ error: 'Slot already occupied' });
         }
 
-        // If you want to implement OTP sending logic when slot is available
-        // Uncomment and integrate your Twilio logic here
-        /*
-        await client.verify.services('your_service_sid')
-            .verifications
-            .create({ to: phone, channel: 'sms' });
-
-        req.session.date = date;
-        req.session.slot = slot;
-        req.session.phone = phone;
-        req.session.otp_requested = true;
-        return res.json({ redirect: '/otp-verify' });
-        */
-    } catch (error) {
-        console.error('Error checking slot:', error);
-        return res.status(500).json({ error: 'Internal Server Error' });
-    }
+        // if (results.length === 0) {
+        //     // Slot is available, send OTP
+        //     client.verify.v2.services('VA748199d35535a2bd83e8c1ef972ca77d')
+        //         .verifications
+        //         .create({ to: phone, channel: 'sms' })
+        //         .then(verification => {
+        //             req.session.date = date;
+        //             req.session.slot = slot;
+        //             req.session.phone = phone;
+        //             req.session.otp_requested = true;
+        //             res.json({ redirect: '/otp-verify' });
+        //         })
+        //         .catch(error => {
+        //             console.error('Failed to send OTP:', error);
+        //             res.status(500).json({ error: 'Failed to send OTP' });
+        //         });
+        // } else {
+        //     res.status(400).json({ error: 'Slot not available' });
+        // }
+    });
 });
-
 
 app.post('/verify-otp', [
     body('otp').isLength({ min: 4, max: 6 }).withMessage('Invalid OTP')
@@ -470,11 +513,11 @@ app.post('/verify-otp', [
         });
 });
 
-router.post('/add-appointment', [
+app.post('/add-appointment', [
     body('name').trim().escape().notEmpty().withMessage('Name is required'),
     body('address').trim().escape().notEmpty().withMessage('Address is required'),
     body('email').trim().escape().notEmpty().withMessage('Email is required')
-], async (req, res) => {
+], (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -491,47 +534,62 @@ router.post('/add-appointment', [
         return res.status(400).json({ error: 'Session data is missing, please try again' });
     }
 
-    try {
-        await db.beginTransaction();
+    // Insert into appointments table
+    db.query('INSERT INTO appointments (name, address, email, phone, city, date, slot) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [name, address, email, phone, city, date, slot], (err, results) => {
+            if (err) {
+                console.log('Database insert error:', err);
+                return res.status(500).json({ error: 'Database insert error' });
+            }
 
-        const [insertResults, insertFields] = await db.query('INSERT INTO appointments (name, address, email, phone, city, date, slot) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [name, address, email, phone, city, date, slot]);
+            if (results.affectedRows === 1) {
+                console.log('Successfully inserted the appointment.');
 
-        if (insertResults.affectedRows !== 1) {
-            throw new Error('Failed to insert appointment');
-        }
+                // Insert into customers table
+                db.query('INSERT INTO customers (name, address, email, phone, city) VALUES (?, ?, ?, ?, ?)',
+                    [name, address, email, phone, city], (customerErr, customerResults) => {
+                        if (customerErr) {
+                            console.log('Error inserting into customers table:', customerErr);
+                            return res.status(500).json({ error: 'Error inserting into customers table' });
+                        }
 
-        const [customerResults, customerFields] = await db.query('INSERT INTO customers (name, address, email, phone, city) VALUES (?, ?, ?, ?, ?)',
-            [name, address, email, phone, city]);
+                        console.log('Successfully inserted into customers table:', customerResults);
 
-        if (customerResults.affectedRows !== 1) {
-            throw new Error('Failed to insert customer');
-        }
+                        // Insert into slots table
+                        db.query('INSERT INTO slots (date, slot) VALUES (?, ?)', [date, slot], (slotErr, slotResults) => {
+                            if (slotErr) {
+                                console.log('Error inserting into slots table:', slotErr);
+                                return res.status(500).json({ error: 'Error inserting into slots table' });
+                            }
 
-        const [slotResults, slotFields] = await db.query('INSERT INTO slots (date, slot) VALUES (?, ?)', [date, slot]);
+                            console.log('Successfully inserted into slots table:', slotResults);
 
-        if (slotResults.affectedRows !== 1) {
-            throw new Error('Failed to update slot availability');
-        }
+                            // Assuming clients is defined elsewhere and represents a list of WebSocket clients
+                            clients.forEach(client => {
+                                client.send(JSON.stringify({
+                                    title: 'New Appointment Added',
+                                    body: `New appointment with ${name} on ${date} during ${slot}.`
+                                }));
+                            });
 
-        await db.commit();
-        req.session.destroy(); // Clear session after successful appointment
-
-        res.status(200).json({ message: 'Appointment added successfully' });
-    } catch (error) {
-        await db.rollback();
-        console.error('Error adding appointment:', error);
-        res.status(500).json({ message: 'Failed to add appointment', error: error.message });
-    }
+                            // Destroy the session after successful inserts
+                            req.session.destroy((sessionErr) => {
+                                if (sessionErr) {
+                                    console.log('Session destruction error:', sessionErr);
+                                    return res.status(500).json({ error: 'Session destruction error' });
+                                }
+                                console.log('Redirecting to /added');
+                                return res.json({ redirect: '/added' });
+                            });
+                        });
+                    });
+            } else {
+                console.log('Unexpected number of affected rows:', results.affectedRows);
+                return res.status(500).json({ error: 'Unexpected number of affected rows' });
+            }
+        });
 });
 
-app.get('/howhelp/index', (req, res) => {
-    res.render(path.join(__dirname, 'views/howhelp/index1'));
-});
-
-app.get('/howhelp/recovery', (req, res) => {
-    res.render(path.join(__dirname, 'views/howhelp/recovery'));
-});
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
