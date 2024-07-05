@@ -1,187 +1,277 @@
 <!-- admin/dashboard.ejs -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Appointments Dashboard</title>
-    <style>
-        /* CSS styles for appointments table */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .appointment-box {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-bottom: 10px;
-            background-color: #f9f9f9;
-        }
-        .actions {
-            display: flex;
-            align-items: center;
-        }
-        .remarks-input {
-            margin-right: 10px;
-            padding: 5px;
-        }
-        .approve-btn {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-        .approve-btn:hover {
-            background-color: #45a049;
-        }
-        
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Appointments Dashboard</title>
+  <style>
+    /* CSS styles for appointments table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .appointment-box {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: #f9f9f9;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .remarks-input {
+      margin-right: 10px;
+      padding: 5px;
+    }
+
+    .approve-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .approve-btn:hover {
+      background-color: #45a049;
+    }
+  </style>
 </head>
+
 <body>
-    <h1>Appointments Dashboard</h1>
+  <h1>Appointments Dashboard</h1>
 
-    <form action="/admin/dashboard" method="GET">
-        <label for="date">Filter by Date:</label>
-        <input type="date" id="date" name="date" value="<%= filterDate %>">
-        <button type="submit">Filter</button>
-        <button type="button" id="clear-filter">Clear Filter</button>
-    </form>
-    <button id="logout-btn">Logout</button> <br>
-    <!-- Add this button to your dashboard page -->
-<button type="button" id="see-history-btn">See History</button>
+  <form action="/admin/dashboard" method="GET">
+    <label for="date">Filter by Date:</label>
+    <input type="date" id="date" name="date" value="<%= filterDate %>">
+    <button type="submit">Filter</button>
+    <button type="button" id="clear-filter">Clear Filter</button>
+  </form>
+  <button id="logout-btn">Logout</button> <br>
+  <!-- Add this button to your dashboard page -->
+  <button type="button" id="see-history-btn">See History</button>
 
-    <% if (appointments && appointments.length > 0) { %>
-        <% appointments.forEach(appointment => { %>
-            <div class="appointment-box">
-                <p><strong>Name:</strong> <%= appointment.name %></p>
-                <p><strong>Address:</strong> <%= appointment.address %></p>
-                <p><strong>Date:</strong> <%= appointment.date %></p>
-                <p><strong>Slot:</strong> <%= appointment.slot %></p>
-                <p><strong>Phone:</strong> <%= appointment.phone %></p>
-                <p><strong>Email:</strong> <%= appointment.email %></p>
-                <p><strong>City:</strong> <%= appointment.city %></p>
-                <div class="actions">
-                    <input type="text" class="remarks-input" id="remarks-<%= appointment.id %>" placeholder="Add remarks" required>
-                    <button class="approve-btn" data-appointment-id="<%= appointment.id %>">Done</button>
-                    <button class="delete-btn" data-appointment-id="<%= appointment.id %>">Delete</button>
-                    <button class="whatsapp-btn" data-phone-number="<%= appointment.phone %>">WhatsApp</button>
-                </div>
-            </div>
-        <% }) %>
-    <% } else { %>
-        <p>No appointments found.</p>
-    <% } %>
+  <% if (appointments && appointments.length > 0) { %>
+  <% appointments.forEach(appointment => { %>
+  <div class="appointment-box">
+    <p><strong>Name:</strong> <%= appointment.name %></p>
+    <p><strong>Address:</strong> <%= appointment.address %></p>
+    <p><strong>Date:</strong> <%= appointment.date %></p>
+    <p><strong>Slot:</strong> <%= appointment.slot %></p>
+    <p><strong>Phone:</strong> <%= appointment.phone %></p>
+    <p><strong>Email:</strong> <%= appointment.email %></p>
+    <p><strong>City:</strong> <%= appointment.city %></p>
+    <div class="actions">
+      <input type="text" class="remarks-input" id="remarks-<%= appointment.id %>" placeholder="Add remarks" required>
+      <button class="approve-btn" data-appointment-id="<%= appointment.id %>">Done</button>
+      <button class="delete-btn" data-appointment-id="<%= appointment.id %>">Delete</button>
+      <button class="whatsapp-btn" data-phone-number="<%= appointment.phone %>">WhatsApp</button>
+    </div>
+  </div>
+  <% }) %>
+  <% } else { %>
+  <p>No appointments found.</p>
+  <% } %>
 
-    <script>
-document.querySelectorAll('.whatsapp-btn').forEach(button => {
-    button.addEventListener('click', function() {
+  <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+    document.getElementById('clear-filter').addEventListener('click', function() {
+        // Clear filter logic here
+        console.log('Clear Filter button clicked');
+        // Example: Reset input fields
+        document.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+        // Example: Reset select elements
+        document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+    });
+});
+
+    document.querySelectorAll('.whatsapp-btn').forEach(button => {
+      button.addEventListener('click', function() {
         const phoneNumber = this.dataset.phoneNumber;
         const message = encodeURIComponent('we hope that you like our service review us at '); // Customize your default message here
 
         const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
 
         window.open(whatsappUrl, '_blank');
+      });
     });
-});
 
-         document.getElementById('see-history-btn').addEventListener('click', function() {
-        const patientName = prompt('Please enter the patient name:');
-        if (patientName) {
-            fetch('/admin/patient-history', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ name: patientName })
+    document.getElementById('see-history-btn').addEventListener('click', function() {
+      const patientName = prompt('Please enter the patient name:');
+      if (patientName) {
+        fetch('/admin/patient-history', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              name: patientName
             })
-            .then(response => response.text())
-            .then(html => {
-                document.open();
-                document.write(html);
-                document.close();
+          })
+          .then(response => response.text())
+          .then(html => {
+            document.open();
+            document.write(html);
+            document.close();
+          })
+          .catch(error => {
+            console.error('Error fetching patient history:', error);
+            alert('Failed to fetch patient history. Please try again.');
+          });
+      }
+    });
+
+
+    document.getElementById('logout-btn').addEventListener('click', function() {
+      window.location.href = '/admin/logout';
+    });
+
+    document.querySelectorAll('.approve-btn').forEach(button => {
+      button.addEventListener('click', async function() {
+        const appointmentId = this.dataset.appointmentId;
+        const remarksInput = document.getElementById(`remarks-${appointmentId}`);
+        const remarks = remarksInput.value;
+
+        try {
+          const response = await fetch(`/admin/approve-appointment/${appointmentId}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              remarks
             })
-            .catch(error => {
-                console.error('Error fetching patient history:', error);
-                alert('Failed to fetch patient history. Please try again.');
-            });
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            alert(data.message); // Show success message or handle response
+            // Optionally update UI or redirect
+          } else {
+            const errorText = await response.text();
+            throw new Error(errorText);
+          }
+        } catch (error) {
+          console.error('Error approving appointment:', error);
+          alert('Failed to approve appointment. Please try again.');
         }
-    });
-
-
-        document.getElementById('logout-btn').addEventListener('click', function() {
-            window.location.href = '/admin/logout';
-        });
-
-         document.querySelectorAll('.approve-btn').forEach(button => {
-        button.addEventListener('click', async function() {
-            const appointmentId = this.dataset.appointmentId;
-            const remarksInput = document.getElementById(`remarks-${appointmentId}`);
-            const remarks = remarksInput.value;
-            
-            try {
-                const response = await fetch(`/admin/approve-appointment/${appointmentId}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ remarks })
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    alert(data.message); // Show success message or handle response
-                    // Optionally update UI or redirect
-                } else {
-                    const errorText = await response.text();
-                    throw new Error(errorText);
-                }
-            } catch (error) {
-                console.error('Error approving appointment:', error);
-                alert('Failed to approve appointment. Please try again.');
-            }
-        });
+      });
     });
     // Event listener for delete buttons
     document.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', async function() {
-                const appointmentId = this.dataset.appointmentId;
+      button.addEventListener('click', async function() {
+        const appointmentId = this.dataset.appointmentId;
 
-                try {
-                    const response = await fetch(`/admin/delete-appointment/${appointmentId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json'
+        try {
+          const response = await fetch(`/admin/delete-appointment/${appointmentId}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            alert(data.message); // Show success message or handle response
+            // Optionally update UI or redirect
+          } else {
+            const errorText = await response.text();
+            throw new Error(errorText);
+          }
+        } catch (error) {
+          console.error('Error deleting appointment:', error);
+          alert('Failed to delete appointment. Please try again.');
+        }
+      });
+    });
+
+    // Request notification permission on page load
+    document.addEventListener('DOMContentLoaded', () => {
+                if (Notification.permission !== 'granted') {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === 'granted') {
+                            console.log('Notification permission granted.');
+                        } else {
+                            console.log('Notification permission denied.');
                         }
                     });
-
-                    if (response.ok) {
-                        const data = await response.json();
-                        alert(data.message); // Show success message or handle response
-                        // Optionally update UI or redirect
-                    } else {
-                        const errorText = await response.text();
-                        throw new Error(errorText);
-                    }
-                } catch (error) {
-                    console.error('Error deleting appointment:', error);
-                    alert('Failed to delete appointment. Please try again.');
                 }
             });
-        });
-    </script>
+
+            // Establish WebSocket connection
+            const socket = new WebSocket('wss://localhost:8080'); // Change to your production URL
+
+            socket.onopen = () => {
+                console.log('WebSocket connection established');
+            };
+            socket.onmessage = (event) => {
+                const message = JSON.parse(event.data);
+                console.log(message);
+
+                // Show browser notification
+
+                if (Notification.permission === 'granted') {
+                    new Notification(message.title, {
+                        body: message.body,
+                    });
+                } else {
+                    alert(`${message.title}: ${message.body}`);
+                }
+            };
+
+            socket.onclose = () => {
+                console.log('WebSocket connection closed');
+            };
+
+            socket.onerror = (error) => {
+                console.error('WebSocket error:', error);
+            };
+    
+  </script>
+
+<script>
+  const socket = new WebSocket('ws://localhost:8080');
+
+socket.onopen = () => {
+ console.log('WebSocket connection established');
+};
+
+socket.onmessage = (event) => {
+ const message = JSON.parse(event.data);
+ alert(`${message.title}: ${message.body}`);
+};
+
+socket.onclose = () => {
+ console.log('WebSocket connection closed');
+};
+
+socket.onerror = (error) => {
+ console.error('WebSocket error:', error);
+};
+</script>
+
 </body>
+
 </html>

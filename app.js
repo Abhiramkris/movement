@@ -20,21 +20,28 @@ const app = express();
 const port = process.env.PORT || 3000;
 const server = http.createServer(app); // Create HTTP server
 const io = socketIo(server); // Initialize Socket.IO
-
-
-
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({ port: 8080 });
 
 let clients = [];
 
-// Handle WebSocket connections
-io.on('connection', (socket) => {
-    clients.push(socket);
+wss.on('connection', (ws) => {
+    clients.push(ws);
+    console.log('New client connected');
 
-    socket.on('disconnect', () => {
-        clients = clients.filter(client => client !== socket);
+    ws.on('close', () => {
+        clients = clients.filter(client => client !== ws);
+        console.log('Client disconnected');
     });
 });
 
+function notifyClients(message) {
+    clients.forEach(client => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify(message));
+        }
+    });
+}
 
 
 app.set('view engine', 'ejs');
@@ -55,11 +62,8 @@ const db = mysql.createConnection({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
-    connectTimeout: 10000  // 10 seconds
 });
+
 db.connect(err => {
     if (err) throw err;
     console.log('Connected to database.');
@@ -67,14 +71,14 @@ db.connect(err => {
 
 
 // Example function using async/await with mysql2
-async function fetchAppointments() {
-    try {
-        const [rows, fields] = await db.query('SELECT * FROM appointments');
-        console.log('Appointments:', rows);
-    } catch (err) {
-        console.error('Error fetching appointments:', err);
-    }
-}
+// async function fetchAppointments() {
+//     try {
+//         const [rows, fields] = await db.query('SELECT * FROM appointments');
+//         console.log('Appointments:', rows);
+//     } catch (err) {
+//         console.error('Error fetching appointments:', err);
+//     }
+// }
 
 //fetchAppointments();
 
@@ -156,7 +160,7 @@ router.get('/dashboard', requireAdmin, (req, res) => {
 
 module.exports = router;
 
-// Admin calendar route
+
 
 
 // POST request to approve an appointment
@@ -182,6 +186,9 @@ router.post('/approve-appointment/:id', requireAdmin, (req, res) => {
             if (insertError) {
                 console.error('Error inserting approved appointment:', insertError);
                 return res.status(500).json({ message: 'Failed to approve appointment', error: insertError.message });
+            }
+            else{
+                console.log("OOPSY");
             }
 
             db.query('DELETE FROM appointments WHERE id = ?', [id], (deleteError, deleteResults) => {
@@ -286,12 +293,9 @@ module.exports = router;
 // Mount the admin routes under /admin
 app.use('/admin', router);
 
-
-
-
 // Create a Nodemailer transporter using your email service
 const transporter = nodemailer.createTransport({
-    host: 'smtp.hostinger.email', // Update with your SMTP server
+    host: 'smtp.gmail.com', // Update with your SMTP server
     port: 465,
     secure: true,
     auth: {
@@ -302,7 +306,7 @@ const transporter = nodemailer.createTransport({
 
 // const mailOptions = {
 //     from: process.env.EMAIL_USER,
-//     to: 'kabhiram@gmail.com',
+//     to: 'akshay@movement-science.com',
 //     subject: 'Test Email',
 //     text: 'This is a test email from Node.js using nodemailer.'
 // };
@@ -590,6 +594,54 @@ app.post('/add-appointment', [
         });
 });
 
+app.get('/howhelp/recovery', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/recovery'));
+});
+
+app.get('/howhelp/balance', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/balance'));
+});
+
+app.get('/howhelp/jointpain', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/jointpain'));
+});
+
+app.get('/howhelp/sports', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/sports'));
+});
+
+app.get('/howhelp/muscularweak', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/muscularweak'));
+});
+
+app.get('/howhelp/balance', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/balance'));
+});
+
+app.get('/howhelp/swelljoints', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/swelljoints'));
+});
+
+app.get('/howhelp/backtowork', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/backtowork'));
+});
+
+app.get('/howhelp/mobility', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/mobility'));
+});
+
+
+app.get('/howhelp/falls', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/falls'));
+});
+
+app.get('/howhelp/balance', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/mobilediff'));
+});
+
+app.get('/howhelp/confidence', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/confidence'));
+});
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
