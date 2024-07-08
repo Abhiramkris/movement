@@ -323,7 +323,7 @@ const transporter = nodemailer.createTransport({
 
 
 // Cron job to run every day at a specified time (e.g., 8:00 AM)
-cron.schedule('0 8 * * *', () => {
+cron.schedule('0 15 * * *', () => {
     sendAppointmentEmails();
 });
 
