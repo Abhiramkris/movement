@@ -466,7 +466,7 @@ app.post('/checkslot', [
 
         if (results.length === 0) {
             // Slot is available, send OTP
-            client.verify.v2.services('VA748199d35535a2bd83e8c1ef972ca77d')
+            client.verify.v2.services('VAf387b0730e86f98fd3b5f33afee65aa9')
                 .verifications
                 .create({ to: phone, channel: 'sms' })
                 .then(verification => {
