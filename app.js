@@ -406,24 +406,24 @@ app.get('/howhelp/index', (req, res) => {
 
 // Serve the OTP verify page
 app.get('/verify-otp', (req, res) => {
-    // if (!req.session.otp_requested) {
-    //     return res.redirect('/');
-    // }
+    if (!req.session.otp_requested) {
+        return res.redirect('/');
+    }
     res.render(path.join(__dirname, 'views/verify-otp'));
 });
 
 // Serve the add appointment page
 app.get('/add-appointment', (req, res) => {
-    // if (!req.session.otp_verified) {
-    //     return res.redirect('/');
-    // }
+    if (!req.session.otp_verified) {
+        return res.redirect('/');
+    }
     res.render(path.join(__dirname, 'views/appointment'));
 });
 
 app.get('/added', (req, res) => {
-    // if (!req.session.otp_verified) {
-    //     return res.redirect('/');
-    // }
+    if (!req.session.otp_verified) {
+        return res.redirect('/');
+    }
     res.render(path.join(__dirname, 'views/add'));
 });
 
@@ -474,7 +474,7 @@ app.post('/checkslot', [
                     req.session.slot = slot;
                     req.session.phone = phone;
                     req.session.otp_requested = true;
-                    res.json({ redirect: '/otp-verify' });
+                    res.json({ redirect: '/verify-otp' });
                 })
                 .catch(error => {
                     console.error('Failed to send OTP:', error);
