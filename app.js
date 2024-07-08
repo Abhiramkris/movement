@@ -457,32 +457,32 @@ app.post('/checkslot', [
             req.session.phone = phone;
             req.session.city = city;
             req.session.otp_requested = true;
-            res.json({ redirect: '/add-appointment' }); //remove later
+            // res.json({ redirect: '/add-appointment' }); 
 
         }
         else {
             return res.status(400).json({ error: 'Slot already occupied' });
         }
 
-        // if (results.length === 0) {
-        //     // Slot is available, send OTP
-        //     client.verify.v2.services('VA748199d35535a2bd83e8c1ef972ca77d')
-        //         .verifications
-        //         .create({ to: phone, channel: 'sms' })
-        //         .then(verification => {
-        //             req.session.date = date;
-        //             req.session.slot = slot;
-        //             req.session.phone = phone;
-        //             req.session.otp_requested = true;
-        //             res.json({ redirect: '/otp-verify' });
-        //         })
-        //         .catch(error => {
-        //             console.error('Failed to send OTP:', error);
-        //             res.status(500).json({ error: 'Failed to send OTP' });
-        //         });
-        // } else {
-        //     res.status(400).json({ error: 'Slot not available' });
-        // }
+        if (results.length === 0) {
+            // Slot is available, send OTP
+            client.verify.v2.services('VA748199d35535a2bd83e8c1ef972ca77d')
+                .verifications
+                .create({ to: phone, channel: 'sms' })
+                .then(verification => {
+                    req.session.date = date;
+                    req.session.slot = slot;
+                    req.session.phone = phone;
+                    req.session.otp_requested = true;
+                    res.json({ redirect: '/otp-verify' });
+                })
+                .catch(error => {
+                    console.error('Failed to send OTP:', error);
+                    res.status(500).json({ error: 'Failed to send OTP' });
+                });
+        } else {
+            res.status(400).json({ error: 'Slot not available' });
+        }
     });
 });
 
