@@ -59,7 +59,7 @@ const client = twilio(accountSid, authToken);
 
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
-    port: 23642,
+    // port: 23642,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
@@ -501,7 +501,7 @@ app.post('/verify-otp', [
         return res.status(400).json({ error: 'OTP not requested' });
     }
 
-    client.verify.v2.services('VA748199d35535a2bd83e8c1ef972ca77d')
+    client.verify.v2.services('VAf387b0730e86f98fd3b5f33afee65aa9')
         .verificationChecks
         .create({ to: phone, code: otp })
         .then(verification_check => {
