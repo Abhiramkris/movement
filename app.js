@@ -518,7 +518,7 @@ app.post('/verify-otp', [
         });
 });
 
-app.get('/appointments', (req, res) => {
+app.get('/appointmentsall', (req, res) => {
     db.query('SELECT * FROM appointments', (error, results) => {
         if (error) {
             console.error('Error fetching appointments:', error);
