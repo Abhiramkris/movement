@@ -59,11 +59,10 @@ const client = twilio(accountSid, authToken);
 
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
-    port: 23642,
+    // port: 23642,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    timeout: 60000
 });
 
 db.connect(err => {
@@ -643,6 +642,10 @@ app.get('/howhelp/balance', (req, res) => {
 
 app.get('/howhelp/confidence', (req, res) => {
     res.render(path.join(__dirname, 'views/howhelp/confidence'));
+});
+
+app.get('/services', (req, res) => {
+    res.render(path.join(__dirname, 'views/services/index3.ejs'));
 });
 
 app.listen(port, () => {

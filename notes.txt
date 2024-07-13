@@ -64,3 +64,20 @@ app.get('/howwehelp', (req, res) => {
         console.log('Session data is missing:', { date, slot, phone });
         return res.status(400).json({ error: 'Session data is missing, please try again' });
     }
+
+    .text22{
+  margin-top: 30px;
+text-align: left;
+font-size: 9em;
+margin-left: 60px;
+font-weight: 800;
+line-height: 1em;
+}
+.responsive-img {
+  max-width: 80%;
+  height: auto;
+  border-radius: 15px;
+  display: block;
+  margin: 20px auto;
+}
+kahya tho na mero nanyine

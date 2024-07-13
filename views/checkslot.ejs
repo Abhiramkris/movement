@@ -6,9 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Check Slots</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/css/intlTelInput.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Google Sans', Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
@@ -17,38 +18,92 @@
             align-items: center;
             height: 100vh;
         }
+
         .container {
             background-color: #fff;
-            padding: 20px;
+            padding: 40px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
         }
+
         h1 {
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            font-weight: 500;
         }
+
         label {
             display: block;
-            margin: 10px 0 5px;
+            margin: 15px 0 5px;
+            font-size: 14px;
+            font-weight: 500;
         }
+
         input[type="date"],
         input[type="tel"],
-        input[type="radio"],
         select,
         button {
             display: block;
             width: 100%;
-            margin-bottom: 10px;
-            padding: 10px;
+            margin-bottom: 20px;
+            padding: 12px;
             font-size: 16px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            background-color: #f8f9fa;
         }
+
         button {
-            background-color: #4CAF50;
+            background-color: #1a73e8;
             color: white;
             border: none;
             cursor: pointer;
+            border-radius: 4px;
         }
+
         button:hover {
-            background-color: #45a049;
+            background-color: #185abc;
+        }
+
+        .slots {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .slot {
+            flex: 1 1 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .slot input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .slot label {
+            font-weight: 400;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                max-width: 600px;
+            }
+
+            .form-row {
+                display: flex;
+                justify-content: space-between;
+                gap: 20px;
+            }
+
+            .form-row>div {
+                flex: 1;
+            }
+
+            .slot {
+                flex: 1 1 calc(33.333% - 10px);
+            }
         }
     </style>
 </head>
@@ -57,11 +112,16 @@
     <div class="container">
         <h1>Check Slots</h1>
         <form id="appointmentForm">
-            <label for="date">Date:</label>
-            <input type="date" id="date" name="date" required><br>
-
-            <label for="phone">Phone Number:</label>
-            <input type="tel" id="phone" name="phone" required><br>
+            <div class="form-row">
+                <div>
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" name="date" required>
+                </div>
+                <div>
+                    <label for="phone">Phone Number:</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+            </div>
 
             <label for="city">City:</label>
             <select id="city" name="city" required>
@@ -75,33 +135,42 @@
                 <option value="Burnham">Burnham</option>
                 <option value="Taplow">Taplow</option>
                 <option value="Langley">Langley</option>
-            </select><br>
+            </select>
 
-            <div id="slot1-container">
-                <input type="radio" id="slot1" name="slot" value="slot1" required> Slot 1<br>
+            <div class="slots">
+                <div class="slot">
+                    <input type="radio" id="slot1" name="slot" value="slot1" required>
+                    <label for="slot1">Slot 1</label>
+                </div>
+                <div class="slot">
+                    <input type="radio" id="slot2" name="slot" value="slot2" required>
+                    <label for="slot2">Slot 2</label>
+                </div>
+                <div class="slot">
+                    <input type="radio" id="slot3" name="slot" value="slot3" required>
+                    <label for="slot3">Slot 3</label>
+                </div>
+                <div class="slot" id="slot4-container" style="display: none;">
+                    <input type="radio" id="slot4" name="slot" value="slot4">
+                    <label for="slot4">Slot 4</label>
+                </div>
+                <div class="slot" id="slot5-container" style="display: none;">
+                    <input type="radio" id="slot5" name="slot" value="slot5">
+                    <label for="slot5">Slot 5</label>
+                </div>
+                <div class="slot" id="slot6-container" style="display: none;">
+                    <input type="radio" id="slot6" name="slot" value="slot6">
+                    <label for="slot6">Slot 6</label>
+                </div>
             </div>
-            <div id="slot2-container">
-                <input type="radio" id="slot2" name="slot" value="slot2" required> Slot 2<br>
-            </div>
-            <div id="slot3-container">
-                <input type="radio" id="slot3" name="slot" value="slot3" required> Slot 3<br>
-            </div>
-            <div id="slot4-container" style="display: none;">
-                <input type="radio" id="slot4" name="slot" value="slot4"> Slot 4<br>
-            </div>
-            <div id="slot5-container" style="display: none;">
-                <input type="radio" id="slot5" name="slot" value="slot5"> Slot 5<br>
-            </div>
-            <div id="slot6-container" style="display: none;">
-                <input type="radio" id="slot6" name="slot" value="slot6"> Slot 6<br>
-            </div>
-            <button type="submit">Check Availability</button> <br>
+
+            <button type="submit">Check Availability</button>
         </form>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/js/intlTelInput.min.js"></script>
-   <script>
-     document.addEventListener('DOMContentLoaded', function () {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
             const phoneInputField = document.querySelector("#phone");
             const iti = window.intlTelInput(phoneInputField, {
                 initialCountry: "auto", // or your default country code
@@ -166,7 +235,7 @@
                     });
             });
         });
-   </script>
+    </script>
 </body>
 
 </html>
