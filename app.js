@@ -518,6 +518,17 @@ app.post('/verify-otp', [
         });
 });
 
+app.get('/appointments', (req, res) => {
+    db.query('SELECT * FROM appointments', (error, results) => {
+        if (error) {
+            console.error('Error fetching appointments:', error);
+            return res.status(500).json({ message: 'Failed to fetch appointments', error: error.message });
+        }
+        
+        res.render('allAppo', { appointments: results });
+    });
+});
+
 app.post('/add-appointment', [
     body('name').trim().escape().notEmpty().withMessage('Name is required'),
     body('address').trim().escape().notEmpty().withMessage('Address is required'),
