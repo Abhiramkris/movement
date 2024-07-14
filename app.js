@@ -55,11 +55,10 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = twilio(accountSid, authToken);
 
-// MySQL2 pool configuration
 
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
-    // port: 23642,
+    port: process.env.DB_PORT,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
@@ -128,7 +127,7 @@ router.get('/logout', (req, res) => {
 });
 
 
-// Admin dashboard route
+// Admin dashboard route filter here
 router.get('/dashboard', requireAdmin, (req, res) => {
 
 
@@ -305,7 +304,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// const mailOptions = {
+// make function of here const mailOptions = {
 //     from: process.env.EMAIL_USER,
 //     to: 'akshay@movement-science.com',
 //     subject: 'Test Email',
@@ -385,11 +384,10 @@ function generateEmailHtml(appointment) {
 }
 
 // Test the function manually (optional, for debugging)
-sendAppointmentEmails();
+//sendAppointmentEmails();
 
 
 app.get('/', (req, res) => {
-    // sendAppointmentEmails();
     res.render(path.join(__dirname, 'views/index'));
 });
 
@@ -616,7 +614,11 @@ app.get('/howhelp/muscularweak', (req, res) => {
 });
 
 app.get('/howhelp/balance', (req, res) => {
-    res.render(path.join(__dirname, 'views/howhelp/balance'));
+    res.render(path.join(__dirname, 'views/howhelp/return'));
+});
+
+app.get('/howhelp/conf', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/confidence'));
 });
 
 app.get('/howhelp/swelljoints', (req, res) => {
