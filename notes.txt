@@ -82,3 +82,4 @@ line-height: 1em;
 }
 23642
 kahya tho na mero nanyine
+add button for allAppo

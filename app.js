@@ -522,8 +522,7 @@ app.get('/appointmentsall', (req, res) => {
             console.error('Error fetching appointments:', error);
             return res.status(500).json({ message: 'Failed to fetch appointments', error: error.message });
         }
-        
-        res.render('allAppo', { appointments: results });
+        res.render('allAppo', { appointments: results }); // Pass the results to the template
     });
 });
 
