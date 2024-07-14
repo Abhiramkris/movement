@@ -710,7 +710,9 @@ app.get('/services/ser5', (req, res) => {
 app.get('/services/ser6', (req, res) => {
     res.render(path.join(__dirname, 'views/services/ser6.ejs'));
 });
-
+app.get('/conditions', (req, res) => {
+    res.render(path.join(__dirname, 'views/conditions'));
+});
 
 
 app.listen(port, () => {

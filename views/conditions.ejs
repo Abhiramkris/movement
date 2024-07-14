@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tabbed Navigation</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    
+    .tabs {
+      display: flex;
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .tab {
+      background-color: #ddd;
+      padding: 10px 20px;
+      cursor: pointer;
+      margin-right: 10px;
+      border-radius: 5px 5px 0 0;
+      transition: background-color 0.3s ease;
+    }
+    
+    .tab:hover {
+      background-color: #ccc;
+    }
+    
+    .tab.active {
+      background-color: #fff;
+    }
+    
+    .tab-content {
+      display: none;
+      padding: 20px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-top: none;
+      border-radius: 0 5px 5px 5px;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    .blue-rectangle {
+      background-color: #185ee0;
+      color: #fff;
+      padding: 20px;
+      margin-top: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <ul class="tabs">
+      <li class="tab active" onclick="openTab('all')">All</li>
+      <li class="tab" onclick="openTab('1')">1</li>
+      <li class="tab" onclick="openTab('2')">2</li>
+      <li class="tab" onclick="openTab('3')">3</li>
+    </ul>
+
+    <div id="all" class="tab-content active">
+      <div class="blue-rectangle">
+        <h3>Content for All - 1</h3>
+        <p>This is the content for All - 1.</p>
+      </div>
+      <div class="blue-rectangle">
+        <h3>Content for All - 2</h3>
+        <p>This is the content for All - 2.</p>
+      </div>
+      <div class="blue-rectangle">
+        <h3>Content for All - 3</h3>
+        <p>This is the content for All - 3.</p>
+      </div>
+    </div>
+
+    <div id="1" class="tab-content">
+      <div class="blue-rectangle">
+        <h3>Content for 1</h3>
+        <p>This is the content for Tab 1.</p>
+      </div>
+    </div>
+
+    <div id="2" class="tab-content">
+      <div class="blue-rectangle">
+        <h3>Content for 2</h3>
+        <p>This is the content for Tab 2.</p>
+      </div>
+    </div>
+
+    <div id="3" class="tab-content">
+      <div class="blue-rectangle">
+        <h3>Content for 3</h3>
+        <p>This is the content for Tab 3.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openTab(tabName) {
+      const tabs = document.querySelectorAll('.tab');
+      const tabContents = document.querySelectorAll('.tab-content');
+
+      tabs.forEach(tab => {
+        tab.classList.remove('active');
+      });
+
+      tabContents.forEach(content => {
+        content.classList.remove('active');
+      });
+
+      document.getElementById(tabName).classList.add('active');
+      document.querySelector(`.tab[data-tab="${tabName}"]`).classList.add('active');
+
+      if (tabName === 'all') {
+        tabContents.forEach(content => {
+          content.classList.add('active');
+        });
+      }
+    }
+  </script>
+</body>
+</html>
