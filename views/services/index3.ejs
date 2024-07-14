@@ -16,10 +16,11 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
   <!-- cdn tailwing -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
   <!-- JavaScript Bundle with Popper -->
 </head>
+
 <style>
   /* styles.css */
   * {
@@ -32,43 +33,55 @@
     font-family: Arial, sans-serif;
   }
 
-  .container {
+  .content-wrapper {
+    margin: 0 auto; /* Center the content horizontally */
+    max-width: 1200px; /* Adjust as needed */
     padding: 20px;
-    margin-left: 40px;
-    margin-right: 40px;
-    max-width: 85%;
+  }
+
+  .container {
+    max-width: 100%; /* Full width within the content wrapper */
   }
 
   .row {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    margin-left: 40px;
+    max-width: 100%;
   }
 
   .box {
     display: flex;
-    flex: 1 1 calc(50% - 20px);
+    flex-direction: column;
+    width: 100%;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     /* Updated box shadow with more vibrancy */
     margin-bottom: 20px;
   }
 
   .left {
+    order: 2; /* Text will be on top in mobile view */
+    padding: 20px;
     flex: 1;
-  }
-
-  .left img {
-    width: 100%;
-    height: auto;
   }
 
   .right {
+    order: 1; /* Image will be at the bottom in mobile view */
     flex: 1;
-    padding: 20px;
+    position: relative;
+    padding-bottom: 100%; /* Aspect ratio of 1:1 to make it square */
   }
 
-  .right h2 {
+  .right img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .left h2 {
     margin-bottom: 10px;
     border-bottom: 2px solid #007BFF;
     /* Updated to blue color */
@@ -77,12 +90,12 @@
     /* Make heading text uppercase */
   }
 
-  .right p {
+  .left p {
     margin-bottom: 10px;
     /* Make description text uppercase */
   }
 
-  .right button {
+  .left button {
     padding: 5px 15px;
     background-color: #007BFF;
     color: white;
@@ -93,14 +106,33 @@
     /* Make button text uppercase */
   }
 
-  .right button:hover {
+  .left button:hover {
     background-color: #0056b3;
   }
 
-  @media (max-width: 768px) {
+  @media (min-width: 768px) {
     .box {
-      flex: 1 1 100%;
-      flex-direction: column;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .left {
+      order: 1;
+      flex: 2;
+      padding: 20px;
+    }
+
+    .right {
+      order: 2;
+      flex: 1;
+      padding-bottom: 0;
+      width: 300px;
+      height: 300px;
+    }
+
+    .right img {
+      width: 100%;
+      height: 100%;
     }
   }
 
@@ -117,12 +149,6 @@
     }
   }
 </style>
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<!-- Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<!-- Bootstrap JS -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -164,152 +190,104 @@
   </script>
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-  <div class="herohero">
-    <div class="header">We offer support and solutions for numerous problems</div> <br>
-    <div class="subhead">Do you need specialist advice?</div>
-    <div class="subhead">Our highly-skilled and professional team design personalised treatment plans to help you to manage your condition, achieve your goals, and live a pain-free life. Please call our specialist case managers to discuss your needs.</div> <br><br>
-  </div>
-  <br><br><br>
-  <div class="container">
-  <div class="row">
-    <div class="box">
-      <div class="left">
-        <img src="https://picsum.photos/300/200" alt="Random Image">
-      </div>
-      <div class="right">
-        <h2>Physiotherapy for aches and pains</h2>
-        <p>Physiotherapy for aches and pains offers targeted rehabilitation techniques to alleviate discomfort, enhance mobility, and promote overall well-being through personalized treatment plans.</p>
-        <button>More</button>
-      </div>
+  <div class="content-wrapper"> <!-- Added wrapper div -->
+    <div class="herohero">
+      <div class="header">We offer support and solutions for numerous problems</div> <br>
+      <div class="subhead">Do you need specialist advice?</div>
+      <div class="subhead">Our highly-skilled and professional team design personalised treatment plans to help you to manage your condition, achieve your goals, and live a pain-free life. Please call our specialist case managers to discuss your needs.</div> <br><br>
     </div>
-    <div class="box">
-      <div class="left">
-        <img src="https://picsum.photos/300/200" alt="Random Image">
+    <br><br><br>
+    <div class="container">
+      <div class="row">
+        <div class="box">
+ 
+          <div class="left">
+            <h2>Physiotherapy for aches and pains</h2>
+            <p>Physiotherapy for aches and pains offers targeted rehabilitation techniques to alleviate discomfort, enhance mobility, and promote overall well-being through personalized treatment plans.</p>
+          <a href="services/ser1"><button>More</button></a>  
+          </div>
+          <div class="right">
+            <img src="https://picsum.photos/300/300" alt="Random Image">
+          </div>
+        </div>
+        <div class="box">
+          <div class="left">
+            <h2>Case management and Physiotherapy</h2>
+            <p>Case management and physiotherapy integrate strategic care coordination with specialized physical therapy to optimize patient outcomes and recovery journeys.</p>
+            <a href="services/ser2"><button>More</button></a>  
+          </div>
+          <div class="right">
+            <img src="https://picsum.photos/300/300" alt="Random Image">
+          </div>
+        </div>
       </div>
-      <div class="right">
-        <h2>case managment and Physiotherapy</h2>
-        <p>Case management and physiotherapy integrate strategic care coordination with specialized physical therapy to optimize patient outcomes and recovery journeys.</p>
-        <button>More</button>
-      </div>
-    </div>
 
-  </div>
-  <div class="row">
-    <div class="box">
-      <div class="left">
-        <img src="https://picsum.photos/300/200" alt="Random Image">
+      <div class="row">
+        <div class="box">
+          <div class="left">
+            <h2>Physiotherapy for the elderly</h2>
+            <p>Physiotherapy for the elderly focuses on tailored interventions to enhance mobility, alleviate pain, and improve overall quality of life through gentle exercises and specialized care strategies.</p>
+            <a href="services/ser2"><button>More</button></a>  
+          </div>
+          <div class="right">
+            <img src="https://picsum.photos/300/300" alt="Random Image">
+          </div>
+        </div>
+        <div class="box">
+          <div class="left">
+            <h2>Physiotherapy after surgery</h2>
+            <p>Physiotherapy after surgery aims to facilitate recovery, regain strength, and restore mobility through targeted exercises and rehabilitation programs tailored to individual needs, ensuring optimal healing and functional recovery post-surgery.</p>
+            <a href="services/ser4"><button>More</button></a>  
+          </div>
+          <div class="right">
+            <img src="https://picsum.photos/300/300" alt="Random Image">
+          </div>
+        </div>
       </div>
-      <div class="right">
-        <h2>Physiotherapy for the elderly</h2>
-        <p>Physiotherapy for the elderly focuses on tailored interventions to enhance mobility, alleviate pain, and improve overall quality of life through gentle exercises and specialized care strategies.</p>
-        <button>More</button>
-      </div>
-    </div>
-    <div class="box">
-      <div class="left">
-        <img src="https://picsum.photos/300/200" alt="Random Image">
-      </div>
-      <div class="right">
-        <h2>Physiotherapy after surgery</h2>
-        <p>Physiotherapy after surgery aims to facilitate recovery, regain strength, and restore mobility through targeted exercises and rehabilitation programs tailored to individual needs, ensuring optimal healing and functional recovery post-surgery.</p>
-        <button>More</button>
-      </div>
-    </div>
 
-  </div>
-  <div class="row">
-    <div class="box">
-      <div class="left">
-        <img src="https://picsum.photos/300/200" alt="Random Image">
+      <div class="row">
+        <div class="box">
+          <div class="left">
+            <h2>Physiotherapy for sports injuries</h2>
+            <p>Physiotherapy for sports injuries focuses on specialized techniques and exercises to rehabilitate athletes, enhance performance, and prevent future injuries through personalized treatment plans.</p>
+            <a href="services/ser5"><button>More</button></a>  
+          </div>
+          <div class="right">
+            <img src="https://picsum.photos/300/300" alt="Random Image">
+          </div>
+        </div>
+        <div class="box">
+          <div class="left">
+            <h2>Physiotherapy for swollen joints</h2>
+            <p>Physiotherapy for swollen joints utilizes targeted therapies and gentle exercises to reduce inflammation, improve joint mobility, and alleviate discomfort, enhancing overall joint health and function.</p>
+            <a href="services/ser6"><button>More</button></a>  
+          </div>
+          <div class="right">
+            <img src="https://picsum.photos/300/300" alt="Random Image">
+          </div>
+        </div>
       </div>
-      <div class="right">
-        <h2>Physiotherapists visits in care homes</h2>
-        <p>Physiotherapists visit care homes to enhance mobility, manage pain, and improve residents' overall physical function, ensuring personalized care plans that support independence and quality of life.</p>
-        <button>More</button>
+      <div class="box">
+        <div class="left">
+          <h2>Physiotherapy for mothers</h2>
+          <p>Physiotherapy for swollen joints utilizes targeted therapies and gentle exercises to reduce inflammation, improve joint mobility, and alleviate discomfort, enhancing overall joint health and function.</p>
+          <a href="services/ser6"><button>More</button></a>  
+        </div>
+        <div class="right">
+          <img src="https://picsum.photos/300/300" alt="Random Image">
+        </div>
       </div>
-    </div>
-    <div class="box">
-      <div class="left">
-        <img src="https://picsum.photos/300/200" alt="Random Image">
-      </div>
-      <div class="right">
-        <h2>Neurological Physiotherapists</h2>
-        <p>Neurological physiotherapists specialize in treating patients with neurological conditions such as stroke, Parkinson's disease, and multiple sclerosis, focusing on improving movement, balance, and overall function through targeted rehabilitation programs.</p>
-        <button>More</button>
-      </div>
-    </div>
-
-  </div>
-  <div class="row">
-    <div class="box">
-      <div class="left">
-        <img src="https://picsum.photos/300/200" alt="Random Image">
-      </div>
-      <div class="right">
-        <h2>Physiotherapy for children</h2>
-        <p>Physiotherapy for children involves specialized care to address developmental delays, injuries, and conditions affecting movement and function. It aims to promote physical development, improve motor skills, and enhance quality of life through tailored exercises, play-based therapy, and parental education and support.</p>
-        <button>More</button>
-      </div>
-    </div>
-    <div class="box">
-      <div class="left">
-        <img src="https://picsum.photos/300/200" alt="Random Image">
-      </div>
-      <div class="right">
-        <h2>Physiotherapy at work</h2>
-        <p>Description text goes here. Description text goes here.</p>
-        <button>More</button>
+      <div class="box">
+        <div class="left">
+          <h2>Physiotherapy children</h2>
+          <p>Physiotherapy for swollen joints utilizes targeted therapies and gentle exercises to reduce inflammation, improve joint mobility, and alleviate discomfort, enhancing overall joint health and function.</p>
+          <a href="services/ser6"><button>More</button></a>  
+        </div>
+        <div class="right">
+          <img src="https://picsum.photos/300/300" alt="Random Image">
+        </div>
       </div>
     </div>
-
-  </div>
-  <div class="row">
-    <div class="box">
-      <div class="left">
-        <img src="https://picsum.photos/300/200" alt="Random Image">
-      </div>
-      <div class="right">
-        <h2>Physiotherapy support for dementia</h2>
-        <p>Physiotherapy at work focuses on preventing and managing musculoskeletal issues and injuries in the workplace. It includes ergonomic assessments, advice on posture and movement techniques.</p>
-        <button>More</button>
-      </div>
-    </div>
-    <div class="box">
-      <div class="left">
-        <img src="https://picsum.photos/300/200" alt="Random Image">
-      </div>
-      <div class="right">
-        <h2>Chest Physiotherapy</h2>
-        <p>Chest physiotherapy involves techniques aimed at improving respiratory function and managing conditions affecting the lungs and chest. It includes airway clearance techniques, breathing exercises, postural drainage, and manual therapy .</p>
-        <button>More</button>
-      </div>
-    </div>
-
-  </div>
-  <div class="row">
-    <div class="box">
-      <div class="left">
-        <img src="https://picsum.photos/300/200" alt="Random Image">
-      </div>
-      <div class="right">
-        <h2>Women health physiotheraphy</h2>
-        <p>
-          Women's health physiotherapy focuses on addressing various musculoskeletal and pelvic health issues specific to women throughout their life stages. It includes treatments for conditions such as pelvic pain, incontinence, pregnancy-related musculoskeletal pain.</p>
-        <button>More</button>
-      </div>
-    </div>
-    <div class="box">
-      <div class="left">
-        <img src="https://picsum.photos/300/200" alt="Random Image">
-      </div>
-      <div class="right">
-        <h2>Physiotherapy post coronavirus</h2>
-        <p>Physiotherapy post-coronavirus, often referred to as COVID-19 rehabilitation, focuses on addressing the lingering effects of the virus, known as long COVID or post-acute sequelae of SARS-CoV-2 infection (PASC). </p>
-        <button>More</button>
-      </div>
-    </div>
-
-  </div>
   </div>
 </body>
 

@@ -70,6 +70,39 @@ db.connect(err => {
 });
 
 
+app.post('/save-chat-query', (req, res) => {
+    const { name, email, phone, question } = req.body;
+    console.log(req.body); 
+    // Validate incoming data (optional)
+    if (!name || !email || !phone || !question) {
+      return res.status(400).json({ message: 'Missing required fields' });
+    }
+  
+    // Insert into database
+    db.query('INSERT INTO chat_queries (name, email, phone, question) VALUES (?, ?, ?, ?)', [name, email, phone, question], (error, results) => {
+      if (error) {
+        console.error('Error inserting chat query:', error);
+        return res.status(500).json({ message: 'Failed to save query', error: error.message });
+      }
+      res.json({ message: 'Query saved successfully' });
+    });
+  });
+
+  app.get('/admin/live-chat-queries', (req, res) => {
+    // Example SQL query to retrieve live chat queries
+    const sql = 'SELECT * FROM chat_queries ORDER BY id DESC';
+  
+    db.query(sql, (err, results) => {
+      if (err) {
+        console.error('Error fetching live chat queries:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+        return;
+      }
+      // Assuming results is an array of chat queries
+      res.json(results);
+    });
+  });
+
 // Example function using async/await with mysql2
 // async function fetchAppointments() {
 //     try {
@@ -659,6 +692,26 @@ app.get('/howhelp/confidence', (req, res) => {
 app.get('/services', (req, res) => {
     res.render(path.join(__dirname, 'views/services/index3.ejs'));
 });
+app.get('/services/ser1', (req, res) => {
+    res.render(path.join(__dirname, 'views/services/ser1.ejs'));
+});
+app.get('/services/ser2', (req, res) => {
+    res.render(path.join(__dirname, 'views/services/ser2.ejs'));
+});
+app.get('/services/ser3', (req, res) => {
+    res.render(path.join(__dirname, 'views/services/ser3.ejs'));
+});
+app.get('/services/ser4', (req, res) => {
+    res.render(path.join(__dirname, 'views/services/ser4.ejs'));
+});
+app.get('/services/ser5', (req, res) => {
+    res.render(path.join(__dirname, 'views/services/ser5.ejs'));
+});
+app.get('/services/ser6', (req, res) => {
+    res.render(path.join(__dirname, 'views/services/ser6.ejs'));
+});
+
+
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
