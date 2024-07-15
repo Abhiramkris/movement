@@ -3,133 +3,122 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tabbed Navigation</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <title>Tabbed Content</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Custom CSS -->
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f0f0f0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
+    .container {
+      margin-top: 50px;
     }
-    
-    .tabs {
-      display: flex;
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
-    }
-    
-    .tab {
-      background-color: #ddd;
-      padding: 10px 20px;
-      cursor: pointer;
-      margin-right: 10px;
-      border-radius: 5px 5px 0 0;
-      transition: background-color 0.3s ease;
-    }
-    
-    .tab:hover {
-      background-color: #ccc;
-    }
-    
-    .tab.active {
-      background-color: #fff;
-    }
-    
     .tab-content {
       display: none;
-      padding: 20px;
-      background-color: #fff;
-      border: 1px solid #ccc;
-      border-top: none;
-      border-radius: 0 5px 5px 5px;
     }
-    
     .tab-content.active {
-      display: block;
+      display: flex;
+      flex-wrap: wrap; /* Allows wrapping of items */
+      justify-content: space-between; /* Distribute space between items */
     }
-    
-    .blue-rectangle {
-      background-color: #185ee0;
-      color: #fff;
-      padding: 20px;
-      margin-top: 10px;
+    .tab-buttons {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    .tab-buttons button {
+      padding: 10px 20px;
+      border: none;
+      background-color: #f1f1f1;
+      cursor: pointer;
+      margin-right: 10px; /* Add space between buttons */
+    }
+    .tab-buttons button.active {
+      background-color: #007BFF;
+      color: white;
+    }
+    .content-box {
+      background-color: #007BFF;
+      color: white;
+      padding: 10px;
+      display: flex;
+      margin-bottom: 10px;
       border-radius: 5px;
+      width: 10%; /* Control the width of each box */
+      min-width: 150px; /* Ensure boxes are not too small */
+      box-sizing: border-box; /* Ensure padding is included in width */
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <ul class="tabs">
-      <li class="tab active" onclick="openTab('all')">All</li>
-      <li class="tab" onclick="openTab('1')">1</li>
-      <li class="tab" onclick="openTab('2')">2</li>
-      <li class="tab" onclick="openTab('3')">3</li>
-    </ul>
-
+    <div class="tab-buttons">
+      <button class="tab-btn active" data-tab="all">All</button>
+      <button class="tab-btn" data-tab="tab1">Tab 1</button>
+      <button class="tab-btn" data-tab="tab2">Tab 2</button>
+      <button class="tab-btn" data-tab="tab3">Tab 3</button>
+    </div>
     <div id="all" class="tab-content active">
-      <div class="blue-rectangle">
-        <h3>Content for All - 1</h3>
-        <p>This is the content for All - 1.</p>
-      </div>
-      <div class="blue-rectangle">
-        <h3>Content for All - 2</h3>
-        <p>This is the content for All - 2.</p>
-      </div>
-      <div class="blue-rectangle">
-        <h3>Content for All - 3</h3>
-        <p>This is the content for All - 3.</p>
-      </div>
+      <!-- All content will be populated by JavaScript -->
     </div>
-
-    <div id="1" class="tab-content">
-      <div class="blue-rectangle">
-        <h3>Content for 1</h3>
-        <p>This is the content for Tab 1.</p>
-      </div>
+    <div id="tab1" class="tab-content">
+      <div class="content-box">Tab 1 Content 1</div>
+      <div class="content-box">Tab 1 Content 2</div>
+      <div class="content-box">Tab 1 Content 1</div>
+      <div class="content-box">Tab 1 Content 2</div>
+      <div class="content-box">Tab 1 Content 1</div>
+      <div class="content-box">Tab 1 Content 2</div>
     </div>
-
-    <div id="2" class="tab-content">
-      <div class="blue-rectangle">
-        <h3>Content for 2</h3>
-        <p>This is the content for Tab 2.</p>
-      </div>
+    <div id="tab2" class="tab-content">
+      <div class="content-box">Tab 2 Content 1</div>
+      <div class="content-box">Tab 2 Content 2</div>
+      <div class="content-box">Tab 1 Content 1</div>
+      <div class="content-box">Tab 1 Content 2</div>
+      <div class="content-box">Tab 1 Content 1</div>
+      <div class="content-box">Tab 1 Content 2</div>
+      <div class="content-box">Tab 1 Content 1</div>
+      <div class="content-box">Tab 1 Content 2</div>
     </div>
-
-    <div id="3" class="tab-content">
-      <div class="blue-rectangle">
-        <h3>Content for 3</h3>
-        <p>This is the content for Tab 3.</p>
-      </div>
+    <div id="tab3" class="tab-content">
+      <div class="content-box">Tab 3 Content 1</div>
+      <div class="content-box">Tab 3 Content 2</div>
+      <div class="content-box">Tab 1 Content 1</div>
+      <div class="content-box">Tab 1 Content 2</div>
+      <div class="content-box">Tab 1 Content 1</div>
+      <div class="content-box">Tab 1 Content 2</div>
+      <div class="content-box">Tab 1 Content 1</div>
+      <div class="content-box">Tab 1 Content 2</div>
     </div>
   </div>
 
+  <!-- jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <!-- Custom JavaScript -->
   <script>
-    function openTab(tabName) {
-      const tabs = document.querySelectorAll('.tab');
-      const tabContents = document.querySelectorAll('.tab-content');
-
-      tabs.forEach(tab => {
-        tab.classList.remove('active');
-      });
-
-      tabContents.forEach(content => {
-        content.classList.remove('active');
-      });
-
-      document.getElementById(tabName).classList.add('active');
-      document.querySelector(`.tab[data-tab="${tabName}"]`).classList.add('active');
-
-      if (tabName === 'all') {
-        tabContents.forEach(content => {
-          content.classList.add('active');
-        });
+    $(document).ready(function() {
+      // Function to switch tabs
+      function switchTab(tabId) {
+        $('.tab-content').removeClass('active');
+        $('#' + tabId).addClass('active');
+        $('.tab-btn').removeClass('active');
+        $('.tab-btn[data-tab="' + tabId + '"]').addClass('active');
       }
-    }
+
+      // Event listener for tab buttons
+      $('.tab-btn').click(function() {
+        var tabId = $(this).data('tab');
+        switchTab(tabId);
+      });
+
+      // Populate "All" tab with content from all other tabs
+      function populateAllTab() {
+        var allContent = '';
+        $('.tab-content').not('#all').each(function() {
+          allContent += $(this).html();
+        });
+        $('#all').html(allContent);
+      }
+
+      // Initial population of "All" tab
+      populateAllTab();
+    });
   </script>
 </body>
 </html>

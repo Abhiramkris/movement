@@ -713,6 +713,9 @@ app.get('/services/ser6', (req, res) => {
 app.get('/conditions', (req, res) => {
     res.render(path.join(__dirname, 'views/conditions'));
 });
+app.get('/faq', (req, res) => {
+    res.render(path.join(__dirname, 'views/faq'));
+});
 
 
 app.listen(port, () => {
