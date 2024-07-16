@@ -1,201 +1,281 @@
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-    </head>
-    <body>
-        <div class="container">
-            <h2>Frequently Asked Questions</h2>
-            <div class="accordion">
-              <div class="accordion-item">
-                <button id="accordion-button-1" aria-expanded="false"><span class="accordion-title">Why is the moon sometimes out during the day?</span><span class="icon" aria-hidden="true"></span></button>
-                <div class="accordion-content">
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Elementum sagittis vitae et leo duis ut. Ut tortor pretium viverra suspendisse potenti.</p>
-                </div>
-              </div>
-              <div class="accordion-item">
-                <button id="accordion-button-2" aria-expanded="false"><span class="accordion-title">Why is the sky blue?</span><span class="icon" aria-hidden="true"></span></button>
-                <div class="accordion-content">
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Elementum sagittis vitae et leo duis ut. Ut tortor pretium viverra suspendisse potenti.</p>
-                </div>
-              </div>
-              <div class="accordion-item">
-                <button id="accordion-button-3" aria-expanded="false"><span class="accordion-title">Will we ever discover aliens?</span><span class="icon" aria-hidden="true"></span></button>
-                <div class="accordion-content">
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Elementum sagittis vitae et leo duis ut. Ut tortor pretium viverra suspendisse potenti.</p>
-                </div>
-              </div>
-              <div class="accordion-item">
-                <button id="accordion-button-4" aria-expanded="false"><span class="accordion-title">How much does the Earth weigh?</span><span class="icon" aria-hidden="true"></span></button>
-                <div class="accordion-content">
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Elementum sagittis vitae et leo duis ut. Ut tortor pretium viverra suspendisse potenti.</p>
-                </div>
-              </div>
-              <div class="accordion-item">
-                <button id="accordion-button-5" aria-expanded="false"><span class="accordion-title">How do airplanes stay up?</span><span class="icon" aria-hidden="true"></span></button>
-                <div class="accordion-content">
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Elementum sagittis vitae et leo duis ut. Ut tortor pretium viverra suspendisse potenti.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-    </body>
-    <style>
-        @import url('https://fonts.googleapis.com/css?family=Hind:300,400&display=swap');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern UI</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    /* Imports */
+    @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700');
 
-:root {
-  --bg: #fff;
-  --text: #7288a2;
-  --gray: #4d5974;
-  --lightgray: #e5e5e5;
-  --blue: #03b5d2;
-}
-
-* {
-  box-sizing: border-box;
-}
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Hind', sans-serif;
-  background: var(--bg);
-  color: var(--gray);
-  display: flex;
-  min-height: 100vh;
-}
-
-.container {
-  margin: 0 auto;
-  padding: 4rem;
-  width: 48rem;
-}
-
-.accordion {
-  .accordion-item {
-    border-bottom: 1px solid var(--lightgray);
-    button[aria-expanded='true'] {
-      border-bottom: 1px solid var(--blue);
+    /* Variables */
+    :root {
+      --main-font: 'Roboto', sans-serif;
+      --primary-color: #1a73e8;
+      --primary-gradient: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%);
+      --light-gray: #f8f8f8;
+      --main-font-color: #5f6368;
+      --main-font-weight: 300;
     }
-  }
 
-  button {
-    position: relative;
-    display: block;
-    text-align: left;
-    width: 100%;
-    padding: 1em 0;
-    color: var(--text);
-    font-size: 1.15rem;
-    font-weight: 400;
-    border: none;
-    background: none;
-    outline: none;
+    /* Basic */
+    body {
+      background-color: var(--light-gray);
+      font-family: var(--main-font);
+      font-weight: var(--main-font-weight);
+    }
 
-    &:hover,
-    &:focus {
+    .container {
+      margin-top: 20px;
+    }
+
+    .row {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .card {
+      margin-bottom: 20px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      box-shadow: none;
+      transition: all .3s ease-in-out;
+      padding: 2rem;
+      background-color: #fff;
+    }
+
+    .card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-5px);
+    }
+
+    .card-block {
+      padding: 0;
+    }
+
+    .card-title {
+      color: #202124;
+      font-size: 1.3rem;
+      font-weight: 500;
+      padding: .75rem 0;
+    }
+
+    .card-header {
+      padding: 0;
+      padding-bottom: 1.5rem;
+      margin: 0;
+    }
+
+    .btn-light-blue {
+      color: #fff;
+      background: var(--primary-gradient);
+      border: none;
+      border-radius: 4px;
+      padding: .65rem 1.5rem;
+      text-transform: uppercase;
+      transition: background .3s ease-in-out, transform .3s ease-in-out;
+    }
+
+    .btn-light-blue:hover {
+      background: linear-gradient(135deg, #4285f4 0%, #1a73e8 100%);
+      transform: translateY(-2px);
+    }
+
+    /* Accordion */
+    .accordion {
+      background-color: var(--light-gray);
+      border-radius: 8px;
+      padding: 0;
+      width: 100%;
+    }
+
+    .accordion-item {
+      border-bottom: 1px solid #dddddd;
+    }
+
+    .accordion-item:last-child {
+      border-bottom: none;
+    }
+
+    .accordion button[aria-expanded='true'] {
+      border-bottom: 1px solid var(--primary-color);
+    }
+
+    .accordion button {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      border: none;
+      background: none;
+      color: var(--main-font-color);
       cursor: pointer;
-      color: var(--blue);
+      padding: 1rem;
+      outline: none;
+      transition: all 0.25s;
+    }
 
-      &::after {
-        cursor: pointer;
-        color: var(--blue);
-        border: 1px solid var(--blue);
+    .accordion button .accordion-title {
+      flex: 1;
+      text-align: left;
+    }
+
+    .accordion button .icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 1.25rem;
+      height: 1.25rem;
+      border-radius: 50%;
+      font-size: 0.75rem;
+      background-color: var(--primary-color);
+      color: #fff;
+      transition: all 0.25s;
+    }
+
+    .accordion button .icon::before {
+      content: '+';
+    }
+
+    .accordion button[aria-expanded='true'] .icon::before {
+      content: '-';
+    }
+
+    .accordion button:hover,
+    .accordion button:focus {
+      background-color: #e0e0e0;
+    }
+
+    .accordion button:hover .icon,
+    .accordion button:focus .icon {
+      background-color: #1358b6;
+    }
+
+    .accordion .accordion-content {
+      display: none;
+      padding: 1rem;
+      animation: fadeIn 0.35s ease-in-out;
+    }
+
+    .accordion [aria-expanded='true']+.accordion-content {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
       }
     }
 
-    .accordion-title {
-      padding: 1em 1.5em 1em 0;
+    /* Highlight Middle Card */
+    .card-highlight {
+      box-shadow: 0 0 10px rgba(26, 115, 232, 0.6); /* Adjust shadow color and opacity */
     }
 
-    .icon {
-      display: inline-block;
-      position: absolute;
-      top: 18px;
-      right: 0;
-      width: 22px;
-      height: 22px;
-      border: 1px solid;
-      border-radius: 22px;
+    .card-highlight .card-body {
+      background-color: #f0faff; /* Adjust highlight background color */
+    }
 
-      &::before {
-        display: block;
-        position: absolute;
-        content: '';
-        top: 9px;
-        left: 5px;
-        width: 10px;
-        height: 2px;
-        background: currentColor;
+    /* Media query for larger screens */
+    @media (min-width: 768px) {
+      .row {
+        flex-direction: row;
+        justify-content: center;
       }
 
-      &::after {
-        display: block;
-        position: absolute;
-        content: '';
-        top: 5px;
-        left: 9px;
-        width: 2px;
-        height: 10px;
-        background: currentColor;
+      .card {
+        margin-bottom: 0;
       }
     }
-  }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Frequently Asked Questions</h2>
+    <div class="accordion">
+      <div class="accordion-item">
+        <button id="accordion-button-1" aria-expanded="false"><span class="accordion-title">Why is the moon sometimes out during the day?</span><span class="icon" aria-hidden="true"></span></button>
+        <div class="accordion-content">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Elementum sagittis vitae et leo duis ut. Ut tortor pretium viverra suspendisse potenti.</p>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button id="accordion-button-2" aria-expanded="false"><span class="accordion-title">Why is the sky blue?</span><span class="icon" aria-hidden="true"></span></button>
+        <div class="accordion-content">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Elementum sagittis vitae et leo duis ut. Ut tortor pretium viverra suspendisse potenti.</p>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button id="accordion-button-3" aria-expanded="false"><span class="accordion-title">Will we ever discover aliens?</span><span class="icon" aria-hidden="true"></span></button>
+        <div class="accordion-content">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Elementum sagittis vitae et leo duis ut. Ut tortor pretium viverra suspendisse potenti.</p>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button id="accordion-button-4" aria-expanded="false"><span class="accordion-title">How much does the Earth weigh?</span><span class="icon" aria-hidden="true"></span></button>
+        <div class="accordion-content">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Elementum sagittis vitae et leo duis ut. Ut tortor pretium viverra suspendisse potenti.</p>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button id="accordion-button-5" aria-expanded="false"><span class="accordion-title">How do airplanes stay up?</span><span class="icon" aria-hidden="true"></span></button>
+        <div class="accordion-content">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Elementum sagittis vitae et leo duis ut. Ut tortor pretium viverra suspendisse potenti.</p>
+        </div>
+      </div>
+    </div>
 
-  button[aria-expanded='true'] {
-    color: var(--blue);
+    <h2>Pricing</h2>
+    <div class="row">
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Basic Plan</h5>
+            <p class="card-text">$10 per month</p>
+            <a href="#" class="btn btn-light-blue">Sign Up</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card card-highlight"> <!-- Added card-highlight class for middle card -->
+          <div class="card-body">
+            <h5 class="card-title">Premium Plan</h5>
+            <p class="card-text">$20 per month</p>
+            <a href="#" class="btn btn-light-blue">Sign Up</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Enterprise Plan</h5>
+            <p class="card-text">$30 per month</p>
+            <a href="#" class="btn btn-light-blue">Sign Up</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    .icon {
-      &::after {
-        width: 0;
-      }
-    }
+  <script>
+    document.querySelectorAll('.accordion button').forEach(button => {
+      button.addEventListener('click', () => {
+        const accordionContent = button.nextElementSibling;
+        const ariaExpanded = button.getAttribute('aria-expanded') === 'true';
+        button.setAttribute('aria-expanded', !ariaExpanded);
 
-    + .accordion-content {
-      opacity: 1;
-      max-height: 9em;
-      transition: all 200ms linear;
-      will-change: opacity, max-height;
-    }
-  }
-
-  .accordion-content {
-    opacity: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: opacity 200ms linear, max-height 200ms linear;
-    will-change: opacity, max-height;
-
-    p {
-      font-size: 1rem;
-      font-weight: 300;
-      margin: 2em 0;
-    }
-  }
-}
-
-    </style>
-    <script>
-        const items = document.querySelectorAll(".accordion button");
-
-function toggleAccordion() {
-  const itemToggle = this.getAttribute('aria-expanded');
-  
-  for (i = 0; i < items.length; i++) {
-    items[i].setAttribute('aria-expanded', 'false');
-  }
-  
-  if (itemToggle == 'false') {
-    this.setAttribute('aria-expanded', 'true');
-  }
-}
-
-items.forEach(item => item.addEventListener('click', toggleAccordion));
-    </script>
-    </html>
+        if (ariaExpanded) {
+          accordionContent.style.maxHeight = 0;
+        } else {
+          accordionContent.style.maxHeight = accordionContent.scrollHeight + 'px';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
