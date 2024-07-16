@@ -49,9 +49,9 @@
 <body>
     <div class="container">
         <h1>Verify OTP</h1>
-        <p>Slot: <span id="slot"></span></p>
-        <p>Date: <span id="date"></span></p>
-        <p>Phone: <span id="phone"></span></p>
+        <p>Slot: <%= slot %></p>
+        <p>Date: <%= date %></p>
+        <p>Phone: <%= phone %></p>
         <form id="otpForm">
             <input type="text" id="otp" name="otp" placeholder="Enter OTP" required>
             <button type="submit">Verify OTP</button>
@@ -59,41 +59,31 @@
     </div>
 
     <script>
-         
-        document.addEventListener('DOMContentLoaded', function() {
-            const slot = sessionStorage.getItem('slot');
-            const date = sessionStorage.getItem('date');
-            const phone = sessionStorage.getItem('phone');
-            document.getElementById('slot').textContent = slot;
-            document.getElementById('date').textContent = date;
-            document.getElementById('phone').textContent = phone;
+        document.getElementById('otpForm').addEventListener('submit', function(event) {
+            event.preventDefault();
 
-            document.getElementById('otpForm').addEventListener('submit', function(event) {
-                event.preventDefault();
+            const otp = document.getElementById('otp').value;
+            const phone = '<%= phone %>'; // Get phone from the EJS variable
 
-                const otp = document.getElementById('otp').value;
-
-                fetch('/verify-otp', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ otp, phone })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.redirect) {
-                        // Perform the redirection
-                        window.location.href = data.redirect;
-                    } else if (data.error) {
-                        alert(data.error);
-                    } else if (data.errors) {
-                        alert(data.errors.map(err => err.msg).join('\n'));
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+            fetch('/verify-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ otp, phone })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                } else if (data.error) {
+                    alert(data.error);
+                } else if (data.errors) {
+                    alert(data.errors.map(err => err.msg).join('\n'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
         });
     </script>
