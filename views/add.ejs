@@ -3,21 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Appointment Notification</title>
     <style>
-        @keyframes popper {
+        @keyframes popperFadeInOut {
             0% {
-                transform: scale(0);
                 opacity: 0;
+                transform: scale(0.8);
             }
-            50% {
-                transform: scale(1.2);
+            20% {
                 opacity: 1;
+                transform: scale(1);
+            }
+            80% {
+                opacity: 1;
+                transform: scale(1);
             }
             100% {
-                transform: scale(1);
-                opacity: 1;
+                opacity: 0;
+                transform: scale(0.8);
             }
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
         }
 
         .popper {
@@ -25,17 +39,33 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: #4CAF50;
-            color: white;
-            padding: 20px;
-            border-radius: 4px;
+            background-color: white;
+            color: black;
+            padding: 20px 40px;
+            border-radius: 8px;
             font-size: 18px;
-            font-family: 'Roboto', sans-serif;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             display: none;
-            animation: popper 0.5s ease-out forwards;
+            text-align: center;
+            animation: popperFadeInOut 4s ease-in-out forwards;
+            z-index: 1000;
+        }
+
+        .popper img {
+            width: 50px;
+            height: 50px;
+            display: block;
+            margin: 0 auto 10px;
         }
     </style>
+</head>
+<body>
+    <h1>Appointment added successfully!</h1>
+    
+    <div class="popper" id="popper">
+        <img src="/images/ok.gif" alt="Success">
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             if (!('Notification' in window)) {
@@ -68,19 +98,13 @@
         });
 
         function showSuccessAnimation() {
-            const popper = document.createElement('div');
-            popper.className = 'popper';
-            popper.textContent = 'Appointment added successfully!';
-            document.body.appendChild(popper);
+            const popper = document.getElementById('popper');
             popper.style.display = 'block';
 
             setTimeout(() => {
-                window.location.href = '/';
-            }, 9000); // Redirect after 2 seconds
+                window.location.href = '/added';
+            }, 4000); // Redirect after 4 seconds
         }
     </script>
-</head>
-<body>
-    <h1>added</h1>
 </body>
 </html>

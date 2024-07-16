@@ -451,9 +451,6 @@ app.get('/add-appointment', (req, res) => {
 });
 
 app.get('/added', (req, res) => {
-    if (!req.session.otp_verified) {
-        return res.redirect('/');
-    }
     res.render(path.join(__dirname, 'views/add'));
 });
 
