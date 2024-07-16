@@ -5,6 +5,33 @@
   --progress-bar-color: #000;
   --lightbulb-color: black;
 }
+.heading {
+  padding-top: 180px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 900;
+    display: flex;
+  justify-content: center;
+  margin-left: 40px;
+  /* text-align: justify; */
+  }
+  
+  .heading .text {
+  font-size: 130px;
+  line-height: 100%;
+  /* text-align: justify; */
+  z-index: 0;
+  }
+
+@media (max-width: 768px) {
+  .heading {
+      padding-top: 100px;
+  }
+
+  .heading .text {
+      font-size: 50px;
+  }
+}
+
 
 body.dark-mode {
   --sidebar-bg-color: #23282d;
