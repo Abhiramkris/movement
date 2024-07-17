@@ -30,7 +30,7 @@
   
   /* Ensure free consultation link stands out */
   .free-consultation .nav-link {
-	background-color: #007bff;
+    background: linear-gradient(45deg, #1d1acb, #008CBA);
 	color: #fff;
 	border-radius: 5px;
 	padding: 5px 10px;

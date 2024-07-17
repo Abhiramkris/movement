@@ -249,13 +249,14 @@ font-size: 40px;
 .ctcbtn {
   z-index: 3;
   display: inline-block;
-  padding: 10px 20px;
-  background-color: #007bff;
+  padding: 3px 10px;
+  background: linear-gradient(45deg, #1d1acb, #008CBA);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   color: #fff;
+  font-weight: 500;
   text-decoration: none;
-  font-weight: bold;
   border-radius: 5px;
-  margin-top: 10px; /* Adjust top margin */
+  margin-top: 3px; /* Adjust top margin */
 }
 a{
   z-index: 3;

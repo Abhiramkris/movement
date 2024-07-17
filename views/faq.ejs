@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -128,7 +129,7 @@
       font-size: 0.9rem;
     }
 
-    .accordion [aria-expanded='true'] + .accordion-content {
+    .accordion [aria-expanded='true']+.accordion-content {
       display: block;
     }
 
@@ -136,6 +137,7 @@
       0% {
         opacity: 0;
       }
+
       100% {
         opacity: 1;
       }
@@ -181,11 +183,13 @@
 
     /* Highlight Middle Card */
     .card-highlight {
-      box-shadow: 0 0 10px rgba(26, 115, 232, 0.6); /* Adjust shadow color and opacity */
+      box-shadow: 0 0 10px rgba(26, 115, 232, 0.6);
+      /* Adjust shadow color and opacity */
     }
 
     .card-highlight .card-body {
-      background-color: #f0faff; /* Adjust highlight background color */
+      background-color: #f0faff;
+      /* Adjust highlight background color */
     }
 
     /* Media query for larger screens */
@@ -199,54 +203,74 @@
         margin-bottom: 0;
       }
     }
-    .row{
-      margin-top: 40px;
-    }
-    .row11{
+
+ 
+
+    .row11 {
       height: 40vw;
       background-color: #e5e5f7;
-opacity: 0.8;
-background-image: radial-gradient(#444cf7 0.5px, #e5e5f7 0.5px);
-background-size: 10px 10px;
-width: 80vw;
-padding-left: 30px;
-padding-right: 30px;
+      opacity: 0.8;
+      background-image: radial-gradient(#444cf7 0.5px, #e5e5f7 0.5px);
+      max-width: 100vw;
+      padding-left: 30px;
+      padding-right: 30px;
     }
   </style>
 </head>
+
 <body>
-  
-<nav class="navbar navbar-expand-lg navbar-light">
-  <a class="navbar-brand" href="/">
-    <img src="your-logo-url.png" alt="Logo"> <!-- Replace with your logo URL -->
-  </a>
-  <div class="free-consultation">
-    <a href="/checkslot" class="nav-link">Free Consultation</a>
+
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <a class="navbar-brand" href="/">
+      <img src="your-logo-url.png" alt="Logo"> <!-- Replace with your logo URL -->
+    </a>
+    <div class="free-consultation">
+      <a href="/checkslot" class="nav-link">Free Consultation</a>
+    </div>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="/howhelp/index">How we help <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/services">Services</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/conditions">Conditions</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/faq">FAQ</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About-us</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <br><br>
+  <!-- <div class="herohero">
+    <div class="header">We offer support and solutions for numerous problems</div> <br>
+    <div class="subhead">Do you need specialist advice?</div>
+    <div class="subhead">Our highly-skilled and professional team design personalised treatment plans to help you to manage your condition, achieve your goals, and live a pain-free life. Please call our specialist case managers to discuss your needs.</div> <br><br>
   </div>
-  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-    <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="/howhelp/index">How we help <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/services">Services</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/conditions">Conditions</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/faq">FAQ</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/about">About-us</a>
-      </li>
-    </ul>
-  </div>
-   </nav>
-<br> <br><br>
+  <style>
+    @media (max-width: 700px) {
+      .herohero {
+        margin-left: 20px;
+        width: 90%;
+      }
+    }
+
+    .herohero {
+      margin-left: 100px;
+      margin-top: 40px;
+      width: 60%;
+    }
+  </style> -->
+  <br> <br><br>
   <div class="container">
     <h2>Frequently Asked Questions</h2>
     <div class="accordion">
@@ -295,49 +319,49 @@ padding-right: 30px;
           <p>Our physiotherapists are all registered with the Chartered Society of Physiotherapists (CSP) and the Health & Care Professions Council (HCPC). If required, we can supply their registration number and you can check their details on the HCPC website.</p>
         </div>
       </div>
-    </div>
+    </div> </div>
 
     <h2>Pricing</h2>
     <div class="row11"> <br><br><br>
-    <div class="row">
-      <div class="col-lg-4 col-md-6 mb-4">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Basic Plan</h5>
-            <p class="card-text">49 Pounds For <b>One</b> Hour Session</p>
-            <p class="card-text">Free intial consultation</p>
-            <p class="card-text">Asses your conditions</p>
-            <p class="card-text">Treatment Sessions</p>
-            <a href="/checkslot" class="btn btn-light-blue">Sign Up</a>
+      <div class="row">
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Basic Plan</h5>
+              <p class="card-text">49 Pounds For <b>One</b> Hour Session</p>
+              <p class="card-text">Free intial consultation</p>
+              <p class="card-text">Asses your conditions</p>
+              <p class="card-text">Treatment Sessions</p>
+              <a href="/checkslot" class="btn btn-light-blue">Sign Up</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="card card-highlight">
+            <!-- Added card-highlight class for middle card -->
+            <div class="card-body">
+              <h5 class="card-title">Premium Plan</h5>
+              <p class="card-text">239 Pounds For <b>Five</b> Hour Session</p>
+              <p class="card-text">Free intial consultation</p>
+              <p class="card-text">Asses your conditions</p>
+              <p class="card-text">Treatment Sessions</p>
+              <a href="/checkslot" class="btn btn-light-blue">Sign Up</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Ultimate Plan</h5>
+              <p class="card-text">459 Pounds For <b>Ten</b> Hour Session</p>
+              <p class="card-text">Free intial consultation</p>
+              <p class="card-text">Asses your conditions</p>
+              <p class="card-text">Treatment Sessions</p>
+              <a href="/checkslot" class="btn btn-light-blue">Sign Up</a>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-lg-4 col-md-6 mb-4">
-        <div class="card card-highlight"> <!-- Added card-highlight class for middle card -->
-          <div class="card-body">
-            <h5 class="card-title">Premium Plan</h5>
-            <p class="card-text">239 Pounds For <b>Five</b> Hour Session</p>
-            <p class="card-text">Free intial consultation</p>
-            <p class="card-text">Asses your conditions</p>
-            <p class="card-text">Treatment Sessions</p>
-            <a href="/checkslot" class="btn btn-light-blue">Sign Up</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-4 col-md-6 mb-4">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Ultimate Plan</h5>
-            <p class="card-text">459 Pounds For <b>Ten</b> Hour Session</p>
-            <p class="card-text">Free intial consultation</p>
-            <p class="card-text">Asses your conditions</p>
-            <p class="card-text">Treatment Sessions</p>
-            <a href="/checkslot" class="btn btn-light-blue">Sign Up</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
   </div>
   <script>
     document.querySelectorAll('.accordion button').forEach(button => {

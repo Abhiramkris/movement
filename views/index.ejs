@@ -22,142 +22,155 @@
   <!-- Font Awesome CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<!-- cdn tailwing -->
+  <!-- cdn tailwing -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
   <!-- JavaScript Bundle with Popper -->
 </head>
+
 <body>
   <!-- <div id="preloader">
     <img src="/images/Docsymbol.gif" alt="Loading..."> <br>
 </div>
 <div id="overlay"></div> -->
 
-<style>
-  .live-chat {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000; /* Ensure it's above other content */
-    background: linear-gradient(45deg, #4CAF50, #008CBA); /* Gradient background */
-    color: white; /* Text color */
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Optional: Add a shadow */
-  }
+  <style>
+    .live-chat {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      /* Ensure it's above other content */
+      background: linear-gradient(45deg, #4CAF50, #008CBA);
+      /* Gradient background */
+      color: white;
+      /* Text color */
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      /* Optional: Add a shadow */
+    }
 
-  .live-chat:hover {
-    background: linear-gradient(45deg, #45a049, #00788a); /* Hover state gradient */
-  }
+    .live-chat:hover {
+      background: linear-gradient(45deg, #45a049, #00788a);
+      /* Hover state gradient */
+    }
 
-  .live-chat .icon {
-    margin-right: 5px;
-  }
+    .live-chat .icon {
+      margin-right: 5px;
+    }
 
-  .live-chat-modal {
-    position: fixed;
-    bottom: 80px;
-    right: 30px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    padding: 20px;
-    display: none; /* Initially hidden */
-    z-index: 1100; /* Higher z-index than live-chat button */
-  }
+    .live-chat-modal {
+      position: fixed;
+      bottom: 80px;
+      right: 30px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      display: none;
+      /* Initially hidden */
+      z-index: 1100;
+      /* Higher z-index than live-chat button */
+    }
 
-  .live-chat-modal.open {
-    display: block;
-  }
+    .live-chat-modal.open {
+      display: block;
+    }
 
-  .live-chat-modal .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    background: none;
-    border: none;
-    color: #007BFF; /* Text color */
-  }
+    .live-chat-modal .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: #007BFF;
+      /* Text color */
+    }
 
-  .live-chat-modal .form-group {
-    margin-bottom: 15px;
-  }
+    .live-chat-modal .form-group {
+      margin-bottom: 15px;
+    }
 
-  .live-chat-modal .form-group label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 5px;
-  }
+    .live-chat-modal .form-group label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
 
-  .live-chat-modal .form-group input[type="text"],
-  .live-chat-modal .form-group input[type="email"] {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
+    .live-chat-modal .form-group input[type="text"],
+    .live-chat-modal .form-group input[type="email"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
 
-  .live-chat-modal .form-group textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    resize: vertical; /* Allow vertical resizing of textarea */
-  }
+    .live-chat-modal .form-group textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      resize: vertical;
+      /* Allow vertical resizing of textarea */
+    }
 
-  .live-chat-modal .form-group button {
-    background-color: transparent; /* Transparent background */
-    color: #007BFF; /* Text color */
-    border: none;
-    cursor: pointer;
-    padding: 8px 12px;
-    border-radius: 5px;
-  }
+    .live-chat-modal .form-group button {
+      background-color: transparent;
+      /* Transparent background */
+      color: #007BFF;
+      /* Text color */
+      border: none;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 5px;
+    }
 
-  .live-chat-modal .form-group button:hover {
-    background-color: #f0f0f0; /* Hover background color */
-  }
-</style>
-<nav class="navbar navbar-expand-lg navbar-light">
-  <a class="navbar-brand" href="/">
-    <img src="your-logo-url.png" alt="Logo"> <!-- Replace with your logo URL -->
-  </a>
-  <div class="free-consultation">
-    <a href="/checkslot" class="nav-link">Free Consultation</a>
-  </div>
-  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-    <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="/howhelp/index">How we help <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/services">Services</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/conditions">Conditions</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/faq">FAQ</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/about">About-us</a>
-      </li>
-    </ul>
-  </div>
-   </nav>
-<script>
-  $(document).ready(function() {
-    $('.navbar-toggler').click(function() {
-      $('#navbarNav').collapse('toggle');
+    .live-chat-modal .form-group button:hover {
+      background-color: #f0f0f0;
+      /* Hover background color */
+    }
+  </style>
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <a class="navbar-brand" href="/">
+      <img src="your-logo-url.png" alt="Logo"> <!-- Replace with your logo URL -->
+    </a>
+    <div class="free-consultation">
+      <a href="/checkslot" class="nav-link">Free Consultation</a>
+    </div>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="/howhelp/index">How we help <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/services">Services</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/conditions">Conditions</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/faq">FAQ</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About-us</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <script>
+    $(document).ready(function() {
+      $('.navbar-toggler').click(function() {
+        $('#navbarNav').collapse('toggle');
+      });
     });
-  });
-</script>
+  </script>
 
   <div class="live-chat" onclick="toggleLiveChat()">
     <span class="icon"><i class="fas fa-comments"></i></span>Live Chat
@@ -186,53 +199,58 @@
       </div>
     </form>
   </div>
-<script>
-  // Define the toggleLiveChat function
-  function toggleLiveChat() {
-    var modal = document.getElementById('live-chat-modal');
-    if (modal) {
-      modal.classList.toggle('open');
+  <script>
+    // Define the toggleLiveChat function
+    function toggleLiveChat() {
+      var modal = document.getElementById('live-chat-modal');
+      if (modal) {
+        modal.classList.toggle('open');
+      }
     }
-  }
 
-  // Event listener for form submission
-  document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('live-chat-form').addEventListener('submit', function(event) {
-      event.preventDefault(); // Prevent default form submission
+    // Event listener for form submission
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('live-chat-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
 
-      // Collect form data
-      var name = document.getElementById('name').value;
-      var email = document.getElementById('email').value;
-      var phone = document.getElementById('phone').value;
-      var question = document.getElementById('question').value;
+        // Collect form data
+        var name = document.getElementById('name').value;
+        var email = document.getElementById('email').value;
+        var phone = document.getElementById('phone').value;
+        var question = document.getElementById('question').value;
 
-      // Send form data to server using fetch
-      fetch('/save-chat-query', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ name: name, email: email, phone: phone, question: question })
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Form submission successful:', data);
-        toggleLiveChat(); // Close the modal after successful submission
-        alert("we will get to ypu soon");
-      })
-      .catch(error => {
-        console.error('Error submitting form:', error);
-        // Optionally, show an error message to the user
+        // Send form data to server using fetch
+        fetch('/save-chat-query', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              name: name,
+              email: email,
+              phone: phone,
+              question: question
+            })
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log('Form submission successful:', data);
+            toggleLiveChat(); // Close the modal after successful submission
+            alert("we will get to ypu soon");
+          })
+          .catch(error => {
+            console.error('Error submitting form:', error);
+            // Optionally, show an error message to the user
+          });
       });
     });
-  });
-</script>
+  </script>
 
 
   <section class="showcase">
     <img src="/images/hero.jpg"></img>
     <div class="overlay"></div>
-    <div class="text1"> 
+    <div class="text1">
       <h2 class="header1">Physiotherapy at <span class="highlight">home.</span></h2>
       <h2 class="header1">We treat</h2>
       <section class="animation">
@@ -258,338 +276,342 @@
     </div>
   </section>
 
-    <div class="sectionstart"> 
-      <div class="header"> Personalised care delivered directly to your door steps</div>
-      <ul class="custom-list">
-        <li class="subhead">Convenient treatment options available on demand</li>
-        <li class="subhead">Receive care in the comfort of your home, care home, or workplace</li>
-        <li class="subhead">Services available seven days a week</li>
-        <li class="subhead">Flexible scheduling with weekday, evening, and weekend appointments</li>
-        <li class="subhead">Avoid the hassle of traveling to a clinic or hospital</li>
-        <img src="images/image2.jpg" alt="services at home" class="hidingimgclass">
+  <div class="sectionstart">
+    <div class="header"> Personalised care delivered directly to your door steps</div>
+    <ul class="custom-list">
+      <li class="subhead">Convenient treatment options available on demand</li>
+      <li class="subhead">Receive care in the comfort of your home, care home, or workplace</li>
+      <li class="subhead">Services available seven days a week</li>
+      <li class="subhead">Flexible scheduling with weekday, evening, and weekend appointments</li>
+      <li class="subhead">Avoid the hassle of traveling to a clinic or hospital</li>
+      <img src="images/image2.jpg" alt="services at home" class="hidingimgclass">
 
-      </ul>
-    </div>
-<br><br>
-    <div class="sectionstart">
+    </ul>
+  </div>
+  <br><br>
+  <div class="sectionstart">
     <div class="container">
       <div class="header">Why Movement Science</div><br> <br>
       <div class="imagetext">
-          <div class="image">
-              <img src="https://blog.rehabselect.net/hubfs/orthopedic%20rehab%20physical%20therapy.jpeg" alt="doc">
-          </div>
-          <div class="text">
-              <div class="subhead"><span style="font-weight: 600;">Dedicated to helping you feel better</span></div>
-              <div class="subhead">
-                Home Physio Group offers an extensive selection of services for adults, children, and the elderly across the UK. We can arrange one-off appointments and long-term bookings with one of our highly-skilled physiotherapists at a time to suit you.
-                Our expert and experienced physiotherapists design customised treatment plans to help you to manage your condition, achieve your goals, and live a pain-free life.<br>
-                  <a href="#" class="ctcbtn">Book free Consultancy</a>
-              </div>
-          </div>
-      </div>
-  </div>
-</div>
-
-<br><br>
-
-<div class="sectionstart">
-  <div class="container">
-    <div class="imagetext">
-    
+        <div class="image">
+          <img src="https://blog.rehabselect.net/hubfs/orthopedic%20rehab%20physical%20therapy.jpeg" alt="doc">
+        </div>
         <div class="text">
-            <div class="subhead"><span style="font-weight: 600;">Dedicated to helping you feel better</span></div>
-            <div class="subhead">
-              Home Physio Group offers an extensive selection of services for adults, children, and the elderly across the UK. We can arrange one-off appointments and long-term bookings with one of our highly-skilled physiotherapists at a time to suit you.
-              Our expert and experienced physiotherapists design customised treatment plans to help you to manage your condition, achieve your goals, and live a pain-free life.<br>
-                <a href="#" class="ctcbtn">Book free Consultancy</a>
-            </div>
+          <div class="subhead"><span style="font-weight: 600;">Dedicated to helping you feel better</span></div>
+          <div class="subhead">
+            Home Physio Group offers an extensive selection of services for adults, children, and the elderly across the UK. We can arrange one-off appointments and long-term bookings with one of our highly-skilled physiotherapists at a time to suit you.
+            Our expert and experienced physiotherapists design customised treatment plans to help you to manage your condition, achieve your goals, and live a pain-free life.<br> <br>
+            <a href="#" class="ctcbtn">Book free Consultancy</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br><br>
+
+  <div class="sectionstart">
+    <div class="container">
+      <div class="imagetext">
+
+        <div class="text">
+          <div class="subhead"><span style="font-weight: 600;">Dedicated to helping you feel better</span></div>
+          <div class="subhead">
+            Home Physio Group offers an extensive selection of services for adults, children, and the elderly across the UK. We can arrange one-off appointments and long-term bookings with one of our highly-skilled physiotherapists at a time to suit you.
+            Our expert and experienced physiotherapists design customised treatment plans to help you to manage your condition, achieve your goals, and live a pain-free life.<br> <br>
+            <a href="#" class="ctcbtn">Sechedule a Free Call</a>
+          </div>
         </div> <br>
         <div class="image">
           <img src="/images/image4.jpg" alt="doc">
-      </div>
-    </div>
-</div>
-</div>
-
-<div class="sectionstart">
-  <div class="container">
-    <div class="header">Physiotherapy you can trust</div><br> <br>
-    <div class="iframe-container">
-      <iframe width="800px" height="600px" src="https://www.youtube.com/embed/CtVHByJoGek?list=RDCtVHByJoGek" title="Kamal. - free flow" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-  </div>
-  </div>
-</div>
-
-<br><br>
-
-<div class="testi">
-  
-<div class="col-lg-10 offset-lg-1 pt-5 pb-5 bg-#010f49 text-light">
-  <div id="client-testimonial-carousel" class="carousel slide" data-ride="carousel" style="height:200px;">
-    <div class="carousel-inner" role="listbox">
-      <div class="carousel-item active text-center p-4">
-        <blockquote class="blockquote text-center">
-          <p class="mb-0"><i class="fa fa-quote-left"></i> Everybody is a genius. But if you judge a fish by its ability to climb a tree, it will live its whole life believing that it is stupid.
-          </p> <br>
-          <footer class="blockquote-footer">Albert Einstein <cite title="Source Title">genius</cite></footer>
-          <!-- Client review stars -->
-          <!-- "fas fa-star" for a full star, "far fa-star" for an empty star, "far fa-star-half-alt" for a half star. -->
-          <p class="client-review-stars">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star-half-alt"></i>
-            <i class="far fa-star"></i>
-          </p>
-        </blockquote>
-      </div>
-      <div class="carousel-item text-center p-4">
-        <blockquote class="blockquote text-center">
-          <p class="mb-0"><i class="fa fa-quote-left"></i> Imagination is more important than knowledge. Knowledge is limited. Imagination encircles the world.
-          </p> <br>
-          <footer class="blockquote-footer">Albert Einstein <cite title="Source Title">genius</cite></footer>
-          <!-- Client review stars -->
-          <!-- "fas fa-star" for a full star, "far fa-star" for an empty star, "far fa-star-half-alt" for a half star. -->
-          <p class="client-review-stars">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-          </p>
-        </blockquote>
-      </div>
-      <div class="carousel-item text-center p-4">
-        <blockquote class="blockquote text-center">
-          <p class="mb-0"><i class="fa fa-quote-left"></i> A person who never made a mistake never tried anything new.
-          </p><br>
-          <footer class="blockquote-footer">Albert Einstein <cite title="Source Title">genius</cite></footer>
-          <!-- Client review stars -->
-          <!-- "fas fa-star" for a full star, "far fa-star" for an empty star, "far fa-star-half-alt" for a half star. -->
-          <p class="client-review-stars">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-          </p>
-        </blockquote>
-      </div>
-    </div>
-    <ol class="carousel-indicators">
-      <li data-target="#client-testimonial-carousel" data-slide-to="0" class="active"></li>
-      <li data-target="#client-testimonial-carousel" data-slide-to="1"></li>
-      <li data-target="#client-testimonial-carousel" data-slide-to="2"></li>
-    </ol>
-  </div>
-</div>
-</div>
-
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<!-- Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<!-- Bootstrap JS -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <!-- ready to rec cover? -->
-    <div class="ready">
-      <div class="content">
-        <br>
-        <h1 class="title">Ready to recover?
-          <div class="aurora">
-            <div class="aurora__item"></div>
-            <div class="aurora__item"></div>
-            <div class="aurora__item"></div>
-            <div class="aurora__item"></div>
-          </div>
-        </h1>
-        <p class="subtitle">Call us <a href=""></a> or <a href="">book appointment</a></p>
-        <br> <br><br>
-      </div>
-    </div>
-  
-    <footer class="footer-area footer--light">
-      <div class="footer-big">
-        <!-- start .container -->
-        <div class="container">
-          <div class="row">
-            <div class="col-md-3 col-sm-12">
-              <div class="footer-widget">
-                <div class="widget-about">
-                  <img src="http://placehold.it/250x80" alt="" class="img-fluid">
-                  <p>location map here</p>
-                  <ul class="contact-details">
-                    <li>
-                      <span class="icon-earphones"></span> Call Us:
-                      <a href="tel:344-755-111">3-1-111</a>
-                    </li>
-                    <li>
-                      <span class="icon-envelope-open"></span>
-                      <a href="mailto:support@aazztech.com">support@.com</a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <!-- Ends: .footer-widget -->
-            </div>
-            <!-- end /.col-md-4 -->
-            <div class="col-md-3 col-sm-4">
-              <div class="footer-widget">
-                <div class="footer-menu footer-menu--1">
-                  <h4 class="footer-widget-title">Popular Category</h4>
-                  <ul>
-                    <li>
-                      <a href="/admin/login">Admin login</a>
-                    </li>
-                    <li>
-                      <a href="#">Plugins</a>
-                    </li>
-                    <li>
-                      <a href="#">Joomla Template</a>
-                    </li>
-                    <li>
-                      <a href="#">Admin Template</a>
-                    </li>
-                    <li>
-                      <a href="#">HTML Template</a>
-                    </li>
-                  </ul>
-                </div>
-                <!-- end /.footer-menu -->
-              </div>
-              <!-- Ends: .footer-widget -->
-            </div>
-            <!-- end /.col-md-3 -->
-    
-            <div class="col-md-3 col-sm-4">
-              <div class="footer-widget">
-                <div class="footer-menu">
-                  <h4 class="footer-widget-title">Our Company</h4>
-                  <ul>
-                    <li>
-                      <a href="#">About Us</a>
-                    </li>
-                    <li>
-                      <a href="#">How It Works</a>
-                    </li>
-                    <li>
-                      <a href="#">Affiliates</a>
-                    </li>
-                    <li>
-                      <a href="#">Testimonials</a>
-                    </li>
-                    <li>
-                      <a href="#">Contact Us</a>
-                    </li>
-                    <li>
-                      <a href="#">Plan &amp; Pricing</a>
-                    </li>
-                    <li>
-                      <a href="#">Blog</a>
-                    </li>
-                  </ul>
-                </div>
-                <!-- end /.footer-menu -->
-              </div>
-              <!-- Ends: .footer-widget -->
-            </div>
-            <!-- end /.col-lg-3 -->
-    
-            <div class="col-md-3 col-sm-4">
-              <div class="footer-widget">
-                <div class="footer-menu no-padding">
-                  <h4 class="footer-widget-title">Help Support</h4>
-                  <ul>
-                    <li>
-                      <a href="#">Support Forum</a>
-                    </li>
-                    <li>
-                      <a href="#">Terms &amp; Conditions</a>
-                    </li>
-                    <li>
-                      <a href="#">Support Policy</a>
-                    </li>
-                    <li>
-                      <a href="#">Refund Policy</a>
-                    </li>
-                    <li>
-                      <a href="#">FAQs</a>
-                    </li>
-                    <li>
-                      <a href="#">Buyers Faq</a>
-                    </li>
-                    <li>
-                      <a href="#">Sellers Faq</a>
-                    </li>
-                  </ul>
-                </div>
-                <!-- end /.footer-menu -->
-              </div>
-              <!-- Ends: .footer-widget -->
-            </div>
-            <!-- Ends: .col-lg-3 -->
-    
-          </div>
-          <!-- end /.row -->
-        </div>
-        <!-- end /.container -->
-      </div>
-      <!-- end /.footer-big -->
-    
-      <div class="mini-footer">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="copyright-text">
-                <p>© 2024
-                  <a href="#">Movemnet science</a>. All rights reserved. Created by
-                  <a href="#">crem.create</a>
-                </p>
-              </div>
-    
-              <div class="go_top">
-                <span class="icon-arrow-up"></span>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
-    </footer>
+    </div>
+  </div>
+<br>
+  <div class="sectionstart">
+    <div class="container">
+      <div class="header">Physiotherapy you can trust</div><br> <br> <br>
+      <div class="iframe-container">
+        <iframe width="800px" height="600px" src="https://www.youtube.com/embed/CtVHByJoGek?list=RDCtVHByJoGek" title="Kamal. - free flow" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+
+  <br><br>
+
+  <div class="testi">
+
+    <div class="col-lg-10 offset-lg-1 pt-5 pb-5 bg-#010f49 text-light">
+      <div id="client-testimonial-carousel" class="carousel slide" data-ride="carousel" style="height:200px;">
+        <div class="carousel-inner" role="listbox">
+          <div class="carousel-item active text-center p-4">
+            <blockquote class="blockquote text-center">
+              <p class="mb-0"><i class="fa fa-quote-left"></i> Everybody is a genius. But if you judge a fish by its ability to climb a tree, it will live its whole life believing that it is stupid.
+              </p> <br>
+              <footer class="blockquote-footer">Albert Einstein <cite title="Source Title">genius</cite></footer>
+              <!-- Client review stars -->
+              <!-- "fas fa-star" for a full star, "far fa-star" for an empty star, "far fa-star-half-alt" for a half star. -->
+              <p class="client-review-stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <i class="far fa-star"></i>
+              </p>
+            </blockquote>
+          </div>
+          <div class="carousel-item text-center p-4">
+            <blockquote class="blockquote text-center">
+              <p class="mb-0"><i class="fa fa-quote-left"></i> Imagination is more important than knowledge. Knowledge is limited. Imagination encircles the world.
+              </p> <br>
+              <footer class="blockquote-footer">Albert Einstein <cite title="Source Title">genius</cite></footer>
+              <!-- Client review stars -->
+              <!-- "fas fa-star" for a full star, "far fa-star" for an empty star, "far fa-star-half-alt" for a half star. -->
+              <p class="client-review-stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </p>
+            </blockquote>
+          </div>
+          <div class="carousel-item text-center p-4">
+            <blockquote class="blockquote text-center">
+              <p class="mb-0"><i class="fa fa-quote-left"></i> A person who never made a mistake never tried anything new.
+              </p><br>
+              <footer class="blockquote-footer">Albert Einstein <cite title="Source Title">genius</cite></footer>
+              <!-- Client review stars -->
+              <!-- "fas fa-star" for a full star, "far fa-star" for an empty star, "far fa-star-half-alt" for a half star. -->
+              <p class="client-review-stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </p>
+            </blockquote>
+          </div>
+        </div>
+        <ol class="carousel-indicators">
+          <li data-target="#client-testimonial-carousel" data-slide-to="0" class="active"></li>
+          <li data-target="#client-testimonial-carousel" data-slide-to="1"></li>
+          <li data-target="#client-testimonial-carousel" data-slide-to="2"></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <!-- Popper.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- ready to rec cover? -->
+  <div class="ready">
+    <div class="content">
+      <br>
+      <h1 class="title">Ready to recover?
+        <div class="aurora">
+          <div class="aurora__item"></div>
+          <div class="aurora__item"></div>
+          <div class="aurora__item"></div>
+          <div class="aurora__item"></div>
+        </div>
+      </h1>
+      <p class="subtitle">Call us <a href="tel:+44 07930167674"></a> or <a href="/checkslot">book appointment</a></p>
+      <br> <br><br>
+    </div>
+  </div>
+
+  <footer class="footer-area footer--light">
+    <div class="footer-big">
+      <!-- start .container -->
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3 col-sm-12">
+            <div class="footer-widget">
+              <div class="widget-about">
+                <img src="http://placehold.it/250x80" alt="" class="img-fluid">
+                <p>location map here</p>
+                <ul class="contact-details">
+                  <li>
+                    <span class="icon-earphones"></span> Call Us:
+                    <a href="tel:+44 07930167674">+44 07930167674</a>
+                  </li>
+                  <li>
+                    <span class="icon-envelope-open"></span>
+                    <a href="mailto:info@movement-science.com">info@movement-science.com</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- Ends: .footer-widget -->
+          </div>
+          <!-- end /.col-md-4 -->
+          <div class="col-md-3 col-sm-4">
+            <div class="footer-widget">
+              <div class="footer-menu footer-menu--1">
+                <h4 class="footer-widget-title">Popular Category</h4>
+                <ul>
+                  <li>
+                    <a href="/admin/login">Admin login</a>
+                  </li>
+                  <li>
+                    <a href="howhelp/index">How we help</a>
+                  </li>
+                  <li>
+                    <a href="/services">Services</a>
+                  </li>
+                  <li>
+                    <a href="/conditions">Conditions we treat</a>
+                  </li>
+                  <li>
+                    <a href="/faq">FAQ's</a>
+                  </li>
+                </ul>
+              </div>
+              <!-- end /.footer-menu -->
+            </div>
+            <!-- Ends: .footer-widget -->
+          </div>
+          <!-- end /.col-md-3 -->
+
+          <div class="col-md-3 col-sm-4">
+            <div class="footer-widget">
+              <div class="footer-menu">
+                <h4 class="footer-widget-title">Our Company</h4>
+                <ul>
+                  <li>
+                    <a href="#">About Us</a>
+                  </li>
+                  <li>
+                    <a href="/callus">Sechedule a call</a>
+                  </li>
+                  <li>
+                    <a href="/checkslot">Book-appointment</a>
+                  </li>
+                  <li>
+                    <a href="#">Testimonials</a>
+                  </li>
+                  <li>
+                    <a href="tel:+44 07930167674">Contact Us</a>
+                  </li>
+                  <li>
+                    <a href="/faq">Plan &amp; Pricing</a>
+                  </li>
+                  <li>
+                    <a href="/error">Blog</a>
+                  </li>
+                </ul>
+              </div>
+              <!-- end /.footer-menu -->
+            </div>
+            <!-- Ends: .footer-widget -->
+          </div>
+          <!-- end /.col-lg-3 -->
+
+          <div class="col-md-3 col-sm-4">
+            <div class="footer-widget">
+              <div class="footer-menu no-padding">
+                <h4 class="footer-widget-title">Help Support</h4>
+                <ul>
+                  <li>
+                    <a href="/contactus">Support Forum</a>
+                  </li>
+                  <li>
+                    <a href="/error">Terms &amp; Conditions</a>
+                  </li>
+                  <li>
+                    <a href="#">Support Policy</a>
+                  </li>
+                  <li>
+                    <a href="/faq">FAQs</a>
+                  </li> <br>
+                  <div class="social-icons">
+                    <style>
+                      .social-icons a {
+                        color: #023974;
+                        margin: 0 10px;
+                        text-decoration: none;
+                        font-size: 24px;
+                      }
   
-  
-  
+                      .social-icons a:hover {
+                        color: #ddd;
+                      }
+                    </style>
+                    <a href="https://www.facebook.com" target="_blank" class="fab fa-facebook-f"></a>
+                    <a href="https://www.twitter.com" target="_blank" class="fab fa-twitter"></a>
+                    <a href="https://www.instagram.com" target="_blank" class="fab fa-instagram"></a>
+                  </div>
+                </ul>
+              </div>
+              <!-- end /.footer-menu -->
+            </div>
+            <!-- Ends: .footer-widget -->
+          </div>
+          <!-- Ends: .col-lg-3 -->
+
+        </div>
+        <!-- end /.row -->
+      </div>
+      <!-- end /.container -->
+    </div>
+    <!-- end /.footer-big -->
+
+    <div class="mini-footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="copyright-text">
+              <p>© 2024
+                <a href="#">Movemnet science</a>. All rights reserved. Created by
+                <a href="#">crem.create</a>
+              </p>
+            </div>
+
+            <div class="go_top">
+              <span class="icon-arrow-up"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+
 </body>
 
 <script>
-window.addEventListener('load', function() {
+  window.addEventListener('load', function() {
     const preloader = document.getElementById('preloader');
     const overlay = document.getElementById('overlay');
     const content = document.getElementById('content');
 
     setTimeout(() => {
-        preloader.style.display = 'none';
-        overlay.style.width = '200%';
-        overlay.style.height = '200%';
+      preloader.style.display = 'none';
+      overlay.style.width = '200%';
+      overlay.style.height = '200%';
     }, 500); // Change the timeout duration as needed
 
     overlay.addEventListener('transitionend', () => {
-        setTimeout(() => {
-            overlay.style.opacity = '0';
-        }, 10); // Delay to ensure the overlay is fully expanded before starting to fade out
+      setTimeout(() => {
+        overlay.style.opacity = '0';
+      }, 10); // Delay to ensure the overlay is fully expanded before starting to fade out
     });
 
     overlay.addEventListener('transitionend', () => {
-        if (overlay.style.opacity === '0') {
-            content.style.display = 'block';
-            document.body.style.overflow = 'auto';
-            overlay.style.display = 'none';
-        }
+      if (overlay.style.opacity === '0') {
+        content.style.display = 'block';
+        document.body.style.overflow = 'auto';
+        overlay.style.display = 'none';
+      }
     });
-});
-
-
-
-
+  });
 </script>
 
 <!-- Add this script tag at the end of your HTML body -->
@@ -604,4 +626,5 @@ window.addEventListener('load', function() {
 <!-- Bootstrap JS -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>
