@@ -4,27 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tabbed Content</title>
-  
- <link rel="stylesheet" href="css/style.css">
- <link rel="stylesheet" href="css/aura.css">
- <link rel="stylesheet" href="css/nav.css">
- <link rel="stylesheet" href="css/footer.css">
- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
- <link rel="preconnect" href="https://fonts.googleapis.com">
- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
- <!-- Font Awesome CSS -->
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-  <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <!-- Custom CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/aura.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Font Awesome CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  
   <style>
     .container {
       margin-top: 50px;
@@ -34,8 +33,8 @@
     }
     .tab-content.active {
       display: flex;
-      flex-wrap: wrap; /* Allows wrapping of items */
-      justify-content: space-between; /* Distribute space between items */
+      flex-wrap: wrap; 
+      justify-content: flex-start;
     }
     .tab-buttons {
       display: flex;
@@ -46,30 +45,28 @@
       border: none;
       background-color: #f1f1f1;
       cursor: pointer;
-      margin-right: 10px; /* Add space between buttons */
+      margin-right: 10px;
     }
     .tab-buttons button.active {
       background-color: #007BFF;
       color: white;
     }
     .content-box {
-      background-color: #007BFF;
-      color: white;
+      border: 1px solid lightblue;
       padding: 10px;
-      display: flex;
       margin-bottom: 10px;
       border-radius: 5px;
-      width: 10%; /* Control the width of each box */
-      min-width: 150px; /* Ensure boxes are not too small */
-      box-sizing: border-box; /* Ensure padding is included in width */
+      min-width: 150px;
+      margin-right: 10px;
+      box-sizing: border-box;
     }
   </style>
 </head>
 <body>
-  
+
 <nav class="navbar navbar-expand-lg navbar-light">
   <a class="navbar-brand" href="/">
-    <img src="your-logo-url.png" alt="Logo"> <!-- Replace with your logo URL -->
+    <img src="your-logo-url.png" alt="Logo">
   </a>
   <div class="free-consultation">
     <a href="/checkslot" class="nav-link">Free Consultation</a>
@@ -96,81 +93,93 @@
       </li>
     </ul>
   </div>
-   </nav>
+</nav>
 
-  <div class="container">
-    <div class="tab-buttons">
-      <button class="tab-btn active" data-tab="all">All</button>
-      <button class="tab-btn" data-tab="tab1">Tab 1</button>
-      <button class="tab-btn" data-tab="tab2">Tab 2</button>
-      <button class="tab-btn" data-tab="tab3">Tab 3</button>
-    </div>
-    <div id="all" class="tab-content active">
-      <!-- All content will be populated by JavaScript -->
-    </div>
-    <div id="tab1" class="tab-content">
-      <div class="content-box">Tab 1 Content 1</div>
-      <div class="content-box">Tab 1 Content 2</div>
-      <div class="content-box">Tab 1 Content 1</div>
-      <div class="content-box">Tab 1 Content 2</div>
-      <div class="content-box">Tab 1 Content 1</div>
-      <div class="content-box">Tab 1 Content 2</div>
-    </div>
-    <div id="tab2" class="tab-content">
-      <div class="content-box">Tab 2 Content 1</div>
-      <div class="content-box">Tab 2 Content 2</div>
-      <div class="content-box">Tab 1 Content 1</div>
-      <div class="content-box">Tab 1 Content 2</div>
-      <div class="content-box">Tab 1 Content 1</div>
-      <div class="content-box">Tab 1 Content 2</div>
-      <div class="content-box">Tab 1 Content 1</div>
-      <div class="content-box">Tab 1 Content 2</div>
-    </div>
-    <div id="tab3" class="tab-content">
-      <div class="content-box">Tab 3 Content 1</div>
-      <div class="content-box">Tab 3 Content 2</div>
-      <div class="content-box">Tab 1 Content 1</div>
-      <div class="content-box">Tab 1 Content 2</div>
-      <div class="content-box">Tab 1 Content 1</div>
-      <div class="content-box">Tab 1 Content 2</div>
-      <div class="content-box">Tab 1 Content 1</div>
-      <div class="content-box">Tab 1 Content 2</div>
-    </div>
+<div class="container">
+  <div class="tab-buttons">
+    <button class="tab-btn active" data-tab="all">All</button>
+    <button class="tab-btn" data-tab="musculoskeletal">Musculoskeletal</button>
+    <button class="tab-btn" data-tab="neurological">Neurological</button>
+    <button class="tab-btn" data-tab="respiratory">Respiratory</button>
+    <button class="tab-btn" data-tab="general">General Conditions</button>
   </div>
+  <div id="all" class="tab-content active">
+    <!-- All content will be populated by JavaScript -->
+  </div>
+  <div id="musculoskeletal" class="tab-content">
+    <div class="content-box">Neck pain</div>
+    <div class="content-box">Back pain</div>
+    <div class="content-box">Carpal tunnel syndrome</div>
+    <div class="content-box">Disc herniation</div>
+    <div class="content-box">Knee pain</div>
+    <div class="content-box">Tennis elbow</div>
+    <div class="content-box">Foot pain</div>
+    <div class="content-box">Fibromyalgia</div>
+    <div class="content-box">Fractures</div>
+    <div class="content-box">Ankle sprain</div>
+    <div class="content-box">Plantar fasciitis</div>
+    <div class="content-box">Temporomandibular joint dysfunction</div>
+    <div class="content-box">Shoulder problem</div>
+    <div class="content-box">Sports injury</div>
+    <div class="content-box">Rotator cuff injury</div>
+    <div class="content-box">Frozen shoulder</div>
+    <div class="content-box">Anterior cruciate ligament injury</div>
+    <div class="content-box">Poor posture</div>
+    <div class="content-box">Sciatica</div>
+    <div class="content-box">Osteoarthritis</div>
+  </div>
+  <div id="neurological" class="tab-content">
+    <div class="content-box">Bell’s palsy</div>
+    <div class="content-box">Down syndrome</div>
+    <div class="content-box">Vertigo</div>
+    <div class="content-box">Cerebral palsy</div>
+    <div class="content-box">Stroke</div>
+    <div class="content-box">Multiple sclerosis</div>
+    <div class="content-box">Spinal cord injuries</div>
+    <div class="content-box">Parkinson’s disease</div>
+    <div class="content-box">Piriformis syndrome</div>
+  </div>
+  <div id="respiratory" class="tab-content">
+    <div class="content-box">Bronchitis</div>
+    <div class="content-box">Bronchiectasis</div>
+    <div class="content-box">Asthma</div>
+  </div>
+  <div id="general" class="tab-content">
+    <div class="content-box">Chronic pain</div>
+    <div class="content-box">Post surgery rehabilitation</div>
+    <div class="content-box">Dislocations rehabilitation</div>
+  </div>
+</div>
 
-  <!-- jQuery -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <!-- Custom JavaScript -->
-  <script>
-    $(document).ready(function() {
-      // Function to switch tabs
-      function switchTab(tabId) {
-        $('.tab-content').removeClass('active');
-        $('#' + tabId).addClass('active');
-        $('.tab-btn').removeClass('active');
-        $('.tab-btn[data-tab="' + tabId + '"]').addClass('active');
-      }
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+  $(document).ready(function() {
+    function switchTab(tabId) {
+      $('.tab-content').removeClass('active');
+      $('#' + tabId).addClass('active');
+      $('.tab-btn').removeClass('active');
+      $('.tab-btn[data-tab="' + tabId + '"]').addClass('active');
+    }
 
-      // Event listener for tab buttons
-      $('.tab-btn').click(function() {
-        var tabId = $(this).data('tab');
-        switchTab(tabId);
-      });
-
-      // Populate "All" tab with content from all other tabs
-      function populateAllTab() {
-        var allContent = '';
-        $('.tab-content').not('#all').each(function() {
-          allContent += $(this).html();
-        });
-        $('#all').html(allContent);
-      }
-
-      // Initial population of "All" tab
-      populateAllTab();
+    $('.tab-btn').click(function() {
+      var tabId = $(this).data('tab');
+      switchTab(tabId);
     });
-  </script>
-</body>
+
+    function populateAllTab() {
+      var allContent = '';
+      $('.tab-content').not('#all').each(function() {
+        allContent += $(this).html();
+      });
+      $('#all').html(allContent);
+    }
+
+    populateAllTab();
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <!-- Popper.js -->
@@ -178,4 +187,6 @@
 <!-- Bootstrap JS -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+
+</body>
 </html>
