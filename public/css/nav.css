@@ -34,6 +34,7 @@
 	color: #fff;
 	border-radius: 5px;
 	padding: 5px 10px;
+  margin-left: 40px;
   }
   
   .free-consultation .nav-link:hover {
@@ -52,6 +53,13 @@
   
   /* Adjust the navbar brand for better visibility */
   .navbar-brand img {
+    margin-left: 6px;
 	height: 40px;
   }
+
+  @media (max-width:991px) {
+    .free-consultation .nav-link {
+      margin-left: 3px;
+    }
+   }
   

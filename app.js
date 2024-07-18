@@ -94,6 +94,8 @@ function requireAdmin(req, res, next) {
     }
 }
 
+
+
 // Login route
 router.get('/login', (req, res) => {
     res.render('admin/login'); // Assuming you have a login form view (e.g., login.ejs)
@@ -703,7 +705,13 @@ app.get('/conditions', (req, res) => {
 app.get('/faq', (req, res) => {
     res.render(path.join(__dirname, 'views/faq'));
 });
+app.get('/error', (req, res) => {
+    res.render(path.join(__dirname, 'views/error'));
+});
 
+app.use((req, res) => {
+    res.redirect('/error');
+});
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error Page</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="error-container">
+    <div class="error-content">
+      <div class="bouncing-icon">
+        <img src="https://media.giphy.com/media/2t9lUyyGBN6RXEHevr/giphy.gif" alt="Error">
+      </div>
+      <h1>Oops! Something went wrong.</h1>
+      <p>We're sorry, but the page you requested could not be found.</p>
+      <a href="/" class="btn-home">Go to Homepage</a>
+      <div class="error-gif">
+        <!-- <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExaWtobngxZGg3Ym02enZ2ZWw5NXkyN3B2eGh3NTBmMjVpd3JtNTd5YyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o6Zt6ML6BklcajjsA/giphy.webp" alt="Error"> -->
+      </div>
+    </div>
+  </div>
+</body>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f7f9fc;
+  font-family: 'Roboto', sans-serif;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.error-content {
+  text-align: center;
+  background: whitesmoke;
+  padding: 2rem;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 90%;
+}
+
+.bouncing-icon img {
+  width: 100px;
+  height: auto;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-30px);
+  }
+  60% {
+    transform: translateY(-15px);
+  }
+}
+
+.error-content h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #d9534f;
+  margin: 1rem 0;
+}
+
+.error-content p {
+  font-size: 1rem;
+  color: #5a5a5a;
+  margin-bottom: 1.5rem;
+}
+
+.btn-home {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  color: #fff;
+  background-color: #007bff;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.btn-home:hover {
+  background-color: #0056b3;
+}
+
+.error-gif img {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  margin-top: 1.5rem;
+  border-radius: 5px;
+}
+
+</style>
+</html>
