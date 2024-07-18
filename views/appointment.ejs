@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Appointment</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Appointment</title>
+  <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/aura.css">
   <link rel="stylesheet" href="css/nav.css">
   <link rel="stylesheet" href="css/footer.css">
@@ -21,48 +22,69 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-        }
-        .container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .container h1 {
-            margin-bottom: 20px;
-        }
-        .container input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .container button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .container button:hover {
-            background-color: #45a049;
-        }
-    </style>
-</head>
-<body>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      background-color: #f0f0f0;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .container h1 {
+      margin-bottom: 30px;
+      font-weight: 500;
+      font-family: 'Google Sans', Arial, sans-serif;
+      font-size: 30px;
+    }
+
+    .container input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .container button {
+      width: 100%;
+      padding: 10px;
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .container button:hover {
+      background-color: #45a049;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-size: 14px;
+      font-weight: 500;
+    }
     
-<nav class="navbar navbar-expand-lg navbar-light">
+    @media (min-width: 768px) {
+      .container {
+        max-width: 600px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-light">
     <a class="navbar-brand" href="/">
       <img src="your-logo-url.png" alt="Logo"> <!-- Replace with your logo URL -->
     </a>
@@ -91,49 +113,57 @@
         </li>
       </ul>
     </div>
-     </nav>
-    <div class="container">
-        <h1>Add Appointment</h1>
-        <form id="appointmentForm">
-            <input type="text" id="name" name="name" placeholder="Enter your name" required>
-            <input type="text" id="address" name="address" placeholder="Enter your address" required>
-            <input type="email" id="email" name="email" placeholder="Enter your email" required>
-            <button type="submit">Submit</button>
-        </form>
-    </div>
-    <script>
-        document.getElementById('appointmentForm').addEventListener('submit', function(event) {
-            event.preventDefault();
+  </nav>
+  <br><br><br>
+  <div class="container">
+    <h1>Add Appointment</h1>
+    <form id="appointmentForm">
+      <label for="city">Name:</label>
+      <input type="text" id="name" name="name" placeholder="Enter your name" required>
+      <label for="city">Address:</label>
+      <input type="text" id="address" name="address" placeholder="Enter your address" required>
+      <label for="city">Email:</label>
+      <input type="email" id="email" name="email" placeholder="Enter your email" required>
+      <button type="submit" class="btn">Submit</button>
+    </form>
+  </div>
+  <script>
+    document.getElementById('appointmentForm').addEventListener('submit', function(event) {
+      event.preventDefault();
 
-            const name = document.getElementById('name').value;
-            const address = document.getElementById('address').value;
-            const email = document.getElementById('email').value;
+      const name = document.getElementById('name').value;
+      const address = document.getElementById('address').value;
+      const email = document.getElementById('email').value;
 
-            fetch('/add-appointment', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ name, address, email })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Appointment added successfully!');
-                    // Optionally, redirect to another page or clear form fields
-                } else if (data.redirect) {
-                    window.location.href = data.redirect;
-                } else if (data.error) {
-                    alert(data.error);
-                } else if (data.errors) {
-                    alert(data.errors.map(err => err.msg).join('\n'));
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+      fetch('/add-appointment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name,
+            address,
+            email
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Appointment added successfully!');
+            // Optionally, redirect to another page or clear form fields
+          } else if (data.redirect) {
+            window.location.href = data.redirect;
+          } else if (data.error) {
+            alert(data.error);
+          } else if (data.errors) {
+            alert(data.errors.map(err => err.msg).join('\n'));
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
         });
-    </script>
+    });
+  </script>
 </body>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -141,159 +171,5 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <!-- Bootstrap JS -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<footer class="footer-area footer--light">
-  <div class="footer-big">
-    <!-- start .container -->
-    <div class="container">
-      <div class="row">
-        <div class="col-md-3 col-sm-12">
-          <div class="footer-widget">
-            <div class="widget-about">
-              <img src="http://placehold.it/250x80" alt="" class="img-fluid">
-              <p>location map here</p>
-              <ul class="contact-details">
-                <li>
-                  <span class="icon-earphones"></span> Call Us:
-                  <a href="tel:+44 07930167674">+44 07930167674</a>
-                </li>
-                <li>
-                  <span class="icon-envelope-open"></span>
-                  <a href="mailto:info@movement-science.com">info@movement-science.com</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <!-- Ends: .footer-widget -->
-        </div>
-        <!-- end /.col-md-4 -->
-        <div class="col-md-3 col-sm-4">
-          <div class="footer-widget">
-            <div class="footer-menu footer-menu--1">
-              <h4 class="footer-widget-title">Popular Category</h4>
-              <ul>
-                <li>
-                  <a href="/admin/login">Admin login</a>
-                </li>
-                <li>
-                  <a href="howhelp/index">How we help</a>
-                </li>
-                <li>
-                  <a href="/services">Services</a>
-                </li>
-                <li>
-                  <a href="/conditions">Conditions we treat</a>
-                </li>
-                <li>
-                  <a href="/faq">FAQ's</a>
-                </li>
-              </ul>
-            </div>
-            <!-- end /.footer-menu -->
-          </div>
-          <!-- Ends: .footer-widget -->
-        </div>
-        <!-- end /.col-md-3 -->
 
-        <div class="col-md-3 col-sm-4">
-          <div class="footer-widget">
-            <div class="footer-menu">
-              <h4 class="footer-widget-title">Our Company</h4>
-              <ul>
-                <li>
-                  <a href="#">About Us</a>
-                </li>
-                <li>
-                  <a href="/callus">Sechedule a call</a>
-                </li>
-                <li>
-                  <a href="/checkslot">Book-appointment</a>
-                </li>
-                <li>
-                  <a href="#">Testimonials</a>
-                </li>
-                <li>
-                  <a href="tel:+44 07930167674">Contact Us</a>
-                </li>
-                <li>
-                  <a href="/faq">Plan &amp; Pricing</a>
-                </li>
-                <li>
-                  <a href="/error">Blog</a>
-                </li>
-              </ul>
-            </div>
-            <!-- end /.footer-menu -->
-          </div>
-          <!-- Ends: .footer-widget -->
-        </div>
-        <!-- end /.col-lg-3 -->
-
-        <div class="col-md-3 col-sm-4">
-          <div class="footer-widget">
-            <div class="footer-menu no-padding">
-              <h4 class="footer-widget-title">Help Support</h4>
-              <ul>
-                <li>
-                  <a href="/contactus">Support Forum</a>
-                </li>
-                <li>
-                  <a href="/error">Terms &amp; Conditions</a>
-                </li>
-                <li>
-                  <a href="#">Support Policy</a>
-                </li>
-                <li>
-                  <a href="/faq">FAQs</a>
-                </li> <br>
-                <div class="social-icons">
-                  <style>
-                    .social-icons a {
-                      color: #023974;
-                      margin: 0 10px;
-                      text-decoration: none;
-                      font-size: 24px;
-                    }
-
-                    .social-icons a:hover {
-                      color: #ddd;
-                    }
-                  </style>
-                  <a href="https://www.facebook.com" target="_blank" class="fab fa-facebook-f"></a>
-                  <a href="https://www.twitter.com" target="_blank" class="fab fa-twitter"></a>
-                  <a href="https://www.instagram.com" target="_blank" class="fab fa-instagram"></a>
-                </div>
-              </ul>
-            </div>
-            <!-- end /.footer-menu -->
-          </div>
-          <!-- Ends: .footer-widget -->
-        </div>
-        <!-- Ends: .col-lg-3 -->
-
-      </div>
-      <!-- end /.row -->
-    </div>
-    <!-- end /.container -->
-  </div>
-  <!-- end /.footer-big -->
-
-  <div class="mini-footer">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="copyright-text">
-            <p>© 2024
-              <a href="/">Movemnet science</a>. All rights reserved. Created by
-              <a href="https://www.instagram.com/crem.create?igsh=ZjFscW1kZjhtNTBw">crem.create</a>
-            </p>
-          </div>
-
-          <div class="go_top">
-            <span class="icon-arrow-up"></span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</footer>
 </html>
