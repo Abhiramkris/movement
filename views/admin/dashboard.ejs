@@ -72,7 +72,8 @@
   <button id="logout-btn">Logout</button> <br>
   <!-- Add this button to your dashboard page -->
   <button type="button" id="see-history-btn">See History</button>
-
+<a href="/appointmentsall"><button>aproved appointments</button></a>
+<a href="/admin/live-chat-queries"><button>live chat</button></a>
   <% if (appointments && appointments.length > 0) { %>
   <% appointments.forEach(appointment => { %>
   <div class="appointment-box">
@@ -104,6 +105,7 @@
         document.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
         // Example: Reset select elements
         document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+        window.location.href = '/admin/dashboard';
     });
 });
 
@@ -168,6 +170,7 @@
           if (response.ok) {
             const data = await response.json();
             alert(data.message); // Show success message or handle response
+            window.location.href = '/admin/dashboard';
             // Optionally update UI or redirect
           } else {
             const errorText = await response.text();

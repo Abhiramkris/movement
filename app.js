@@ -70,39 +70,6 @@ db.connect(err => {
 });
 
 
-app.post('/save-chat-query', (req, res) => {
-    const { name, email, phone, question } = req.body;
-    console.log(req.body); 
-    // Validate incoming data (optional)
-    if (!name || !email || !phone || !question) {
-      return res.status(400).json({ message: 'Missing required fields' });
-    }
-  
-    // Insert into database
-    db.query('INSERT INTO chat_queries (name, email, phone, question) VALUES (?, ?, ?, ?)', [name, email, phone, question], (error, results) => {
-      if (error) {
-        console.error('Error inserting chat query:', error);
-        return res.status(500).json({ message: 'Failed to save query', error: error.message });
-      }
-      res.json({ message: 'Query saved successfully' });
-    });
-  });
-
-  app.get('/admin/live-chat-queries', (req, res) => {
-    // Example SQL query to retrieve live chat queries
-    const sql = 'SELECT * FROM chat_queries ORDER BY id DESC';
-  
-    db.query(sql, (err, results) => {
-      if (err) {
-        console.error('Error fetching live chat queries:', err);
-        res.status(500).json({ error: 'Internal Server Error' });
-        return;
-      }
-      // Assuming results is an array of chat queries
-      res.json(results);
-    });
-  });
-
 // Example function using async/await with mysql2
 // async function fetchAppointments() {
 //     try {
@@ -159,6 +126,39 @@ router.get('/logout', (req, res) => {
     });
 });
 
+
+app.post('/save-chat-query', (req, res) => {
+    const { name, email, phone, question } = req.body;
+    console.log(req.body); 
+    // Validate incoming data (optional)
+    if (!name || !email || !phone || !question) {
+      return res.status(400).json({ message: 'Missing required fields' });
+    }
+  
+    // Insert into database
+    db.query('INSERT INTO chat_queries (name, email, phone, question) VALUES (?, ?, ?, ?)', [name, email, phone, question], (error, results) => {
+      if (error) {
+        console.error('Error inserting chat query:', error);
+        return res.status(500).json({ message: 'Failed to save query', error: error.message });
+      }
+      res.json({ message: 'Query saved successfully' });
+    });
+  });
+
+  app.get('/admin/live-chat-queries',requireAdmin, (req, res) => {
+    // Example SQL query to retrieve live chat queries
+    const sql = 'SELECT * FROM chat_queries ORDER BY id DESC';
+  
+    db.query(sql, (err, results) => {
+      if (err) {
+        console.error('Error fetching live chat queries:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+        return;
+      }
+      // Assuming results is an array of chat queries
+      res.json(results);
+    });
+  });
 
 // Admin dashboard route filter here
 router.get('/dashboard', requireAdmin, (req, res) => {
@@ -277,7 +277,7 @@ module.exports = router;
 router.post('/patient-history', requireAdmin, (req, res) => {
     const { name } = req.body;
 
-    db.query('SELECT * FROM approved_appointments WHERE name = ?', [name], (error, results) => {
+    db.query('SELECT * FROM approved_appointments WHERE LOWER(name) = LOWER(?)', [name], (error, results) => {
         if (error) {
             console.error('Error fetching patient history:', error);
             return res.status(500).json({ message: 'Failed to fetch patient history', error: error.message });
@@ -308,17 +308,6 @@ router.post('/patient-history', requireAdmin, (req, res) => {
 module.exports = router;
 
 
-
-// Admin verified appointments route
-// router.get('/verified-appointments', requireAdmin, (req, res) => {
-//     db.query('SELECT * FROM verified_appointments ORDER BY date ASC', (err, verifiedAppointments) => {
-//         if (err) {
-//             console.error('Error fetching verified appointments:', err);
-//             return res.status(500).send('Internal Server Error');
-//         }
-//         res.render('admin/verified-appointments', { verifiedAppointments });
-//     });
-// });
 
 
 
@@ -353,15 +342,12 @@ const transporter = nodemailer.createTransport({
 // });
 
 
-// Cron job to run every day at a specified time (e.g., 8:00 AM)
-cron.schedule('0 15 * * *', () => {
-    sendAppointmentEmails();
-});
-
 function sendAppointmentEmails() {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const dateString = tomorrow.toISOString().split('T')[0];
+    
+    console.log(`Fetching appointments for date: ${dateString}`);
 
     db.query('SELECT * FROM appointments WHERE date = ?', [dateString], (err, results) => {
         if (err) {
@@ -374,6 +360,7 @@ function sendAppointmentEmails() {
             return;
         }
 
+        console.log(`Found ${results.length} appointments for tomorrow.`);
         results.forEach(appointment => {
             sendEmail(appointment);
         });
@@ -390,7 +377,7 @@ function sendEmail(appointment) {
 
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-            return console.log('Error sending email:', error);
+            return console.error('Error sending email:', error);
         }
         console.log('Email sent:', info.response);
     });
@@ -416,8 +403,11 @@ function generateEmailHtml(appointment) {
     return emailHtml;
 }
 
-// Test the function manually (optional, for debugging)
-//sendAppointmentEmails();
+// Schedule the task to run every hour
+setInterval(sendAppointmentEmails, 60 * 60 * 1000); // 60 * 60 * 1000 ms = 1 hour
+
+// Run the task immediately on startup
+sendAppointmentEmails();
 
 
 app.get('/', (req, res) => {
@@ -546,8 +536,8 @@ app.post('/verify-otp', [
         });
 });
 
-app.get('/appointmentsall', (req, res) => {
-    db.query('SELECT * FROM appointments', (error, results) => {
+app.get('/appointmentsall',requireAdmin, (req, res) => {
+    db.query('SELECT * FROM approved_appointments', (error, results) => {
         if (error) {
             console.error('Error fetching appointments:', error);
             return res.status(500).json({ message: 'Failed to fetch appointments', error: error.message });
@@ -669,8 +659,8 @@ app.get('/howhelp/backtowork', (req, res) => {
     res.render(path.join(__dirname, 'views/howhelp/backtowork'));
 });
 
-app.get('/howhelp/mobility', (req, res) => {
-    res.render(path.join(__dirname, 'views/howhelp/mobility'));
+app.get('/howhelp/mobilediff', (req, res) => {
+    res.render(path.join(__dirname, 'views/howhelp/mobilediff'));
 });
 
 

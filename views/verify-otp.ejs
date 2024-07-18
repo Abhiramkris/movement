@@ -33,15 +33,21 @@
     }
 
     .container {
-      background-color: white;
-      padding: 20px;
+      background-color: #fff;
+      padding: 40px;
       border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
     }
 
     .container h1 {
-      margin-bottom: 20px;
+      margin-bottom: 30px;
+      font-weight: 500;
+      font-family: 'Google Sans', Arial, sans-serif;
+      font-size: 30px;
     }
+
 
     .container p {
       margin-bottom: 20px;
@@ -58,7 +64,7 @@
     .container button {
       width: 100%;
       padding: 10px;
-      background-color: #4CAF50;
+      background-color: #1a73e8;
       color: white;
       border: none;
       border-radius: 4px;
@@ -67,6 +73,13 @@
 
     .container button:hover {
       background-color: #45a049;
+    }
+    
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-size: 14px;
+      font-weight: 500;
     }
   </style>
 </head>
@@ -110,6 +123,7 @@
     <p>Date: <span id="date"></span></p>
     <p>Phone: <span id="phone"></span></p>
     <form id="otpForm">
+      <label for="city">enter the sent otp:</label>
       <input type="text" id="otp" name="otp" placeholder="Enter OTP" required>
       <button type="submit">Verify OTP</button>
     </form>
