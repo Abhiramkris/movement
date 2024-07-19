@@ -262,7 +262,7 @@
 .typewriter {
   display: inline-block;
     overflow: hidden;
-    border-right: .05em solid orange; /* Cursor */
+    border-right: .25em solid white; /* Cursor */
     margin: 0 auto;
     letter-spacing: .05em;
     z-index: 1000;
@@ -296,11 +296,16 @@ font-size: 40px;
     </style>
 
     <script>
-      const texts = [
+    const texts = [
+    "After surgery",
+    "Aches and pain",
+    "Mobility problems",
     "Musculoskeletal rehabilitation",
+    "Sports injury",
+    "Adults and Children",
     "Cardio respiratory condition",
     "Neurological rehabilitation",
-    "Massage and soft-tissue mobilisation"
+    "Massage and soft tissue mobilisation"
 ];
 
 let currentIndex = 0;
@@ -310,7 +315,7 @@ function typeWriter(text, i, fnCallback) {
         document.getElementById("typewriter-text").innerHTML = text.substring(0, i + 1);
         setTimeout(function() {
             typeWriter(text, i + 1, fnCallback);
-        }, 20);
+        }, 20); // Adjust typing speed
     } else if (typeof fnCallback === 'function') {
         setTimeout(fnCallback, 1000);
     }
@@ -322,10 +327,14 @@ function startTextAnimation() {
             currentIndex++;
             startTextAnimation();
         });
+    } else {
+        currentIndex = 0; // Reset the index to loop
+        startTextAnimation();
     }
 }
 
 startTextAnimation();
+
     </script>
       <!-- <section class="animation">
         <div class="text-wrapper">
@@ -435,17 +444,20 @@ startTextAnimation();
   <br><br>
 
   <div class="sectionstart">
-    <div class="header"> Personalised care delivered directly to your door steps</div>
-    <ul class="custom-list">
-      <li class="subhead">Convenient treatment options available on demand</li>
-      <li class="subhead">Receive care in the comfort of your home, care home, or workplace</li>
-      <li class="subhead">Services available seven days a week</li>
-      <li class="subhead">Flexible scheduling with weekday, evening, and weekend appointments</li>
-      <li class="subhead">Avoid the hassle of traveling to a clinic or hospital</li>
-      <!-- <img src="images/image2.jpg" alt="services at home" class="hidingimgclass"> -->
-
-    </ul>
-  </div>
+    <div class="container">
+      <div class="header"> Personalised care delivered directly to your door steps</div>
+      <ul class="custom-list">
+        <li class="subhead">Convenient treatment options available on demand</li>
+        <li class="subhead">Receive care in the comfort of your home, care home, or workplace</li>
+        <li class="subhead">Services available seven days a week</li>
+        <li class="subhead">Flexible scheduling with weekday, evening, and weekend appointments</li>
+        <li class="subhead">Avoid the hassle of traveling to a clinic or hospital</li>
+        <!-- <img src="images/image2.jpg" alt="services at home" class="hidingimgclass"> -->
+  
+      </ul>
+    </div>
+    </div>
+    
   <br><br>
 
 
@@ -469,12 +481,11 @@ startTextAnimation();
   </div> -->
   <br>
   <div class="sectionstart">
-    <div class="container">
       <div class="header">Physiotherapy you can trust</div><br> <br> <br>
       <div class="iframe-container">
         <iframe width="800px" height="600px" src="https://www.youtube.com/embed/CtVHByJoGek?list=RDCtVHByJoGek" title="Kamal. - free flow" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
       </div>
-    </div>
+
   </div>
 
   <br><br>
