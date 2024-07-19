@@ -251,91 +251,101 @@
     <img src="/images/hero.jpg"></img>
     <div class="overlay"></div>
     <div class="text1"> <br> <br><br>
-      <h2 class="header1">Physiotherapy at <span class="highlight">home.</span></h2> 
+      <h2 class="header1">Physiotherapy at <span class="highlight"><br>home.</span></h2>
       <h2 class="header1">Specialising in</h2>
       <div class="typewriter">
         <h1 class="typewriter-text" id="typewriter-text"></h1>
-    </div>
-    <style>
+      </div>
+      <style>
+        .typewriter {
+          display: inline-block;
+          overflow: hidden;
+          border-right: .25em solid white;
+          /* Cursor */
+          margin: 0 auto;
+          letter-spacing: .05em;
+          z-index: 1000;
+        }
 
+        @keyframes typing {
+          from {
+            width: 0
+          }
 
-.typewriter {
-  display: inline-block;
-    overflow: hidden;
-    border-right: .25em solid white; /* Cursor */
-    margin: 0 auto;
-    letter-spacing: .05em;
-    z-index: 1000;
-}
+          to {
+            width: 100%
+          }
+        }
 
-@keyframes typing {
-    from { width: 0 }
-    to { width: 100% }
-}
+        @keyframes blink-caret {
 
-@keyframes blink-caret {
-    from, to { border-color: transparent }
-    50% { border-color: orange; }
-}
+          from,
+          to {
+            border-color: transparent
+          }
 
-.typewriter-text {
-    animation: blink-caret .25s step-end infinite;
-    position: relative;
-color: rgb(250, 250, 250);
-font-size: 40px;
- font-family: "Poppins", sans-serif;
-  font-weight: 700;
-  margin-left: 3px;
-}
-@media (max-width: 801px)
-{
-  .typewriter-text {
-    font-size: 28px;
-  }
-}
-    </style>
+          50% {
+            border-color: orange;
+          }
+        }
 
-    <script>
-    const texts = [
-    "After surgery",
-    "Aches and pain",
-    "Mobility problems",
-    "Musculoskeletal rehabilitation",
-    "Sports injury",
-    "Adults and Children",
-    "Cardio respiratory condition",
-    "Neurological rehabilitation",
-    "Massage and soft tissue mobilisation"
-];
+        .typewriter-text {
+          animation: blink-caret .25s step-end infinite;
+          position: relative;
+          color: rgb(250, 250, 250);
+          font-size: 40px;
+          font-family: "Poppins", sans-serif;
+          font-weight: 700;
+          margin-left: 3px;
+        }
 
-let currentIndex = 0;
+        @media (max-width: 801px) {
+          .typewriter-text {
+            font-size: 28px;
+          }
+        }
+      </style>
 
-function typeWriter(text, i, fnCallback) {
-    if (i < text.length) {
-        document.getElementById("typewriter-text").innerHTML = text.substring(0, i + 1);
-        setTimeout(function() {
-            typeWriter(text, i + 1, fnCallback);
-        }, 20); // Adjust typing speed
-    } else if (typeof fnCallback === 'function') {
-        setTimeout(fnCallback, 1000);
-    }
-}
+      <script>
+        const texts = [
+          "After surgery",
+          "Aches and pain",
+          "Mobility problems",
+          "Musculoskeletal rehabilitation",
+          "Sports injury",
+          "Adults and Children",
+          "Cardio respiratory condition",
+          "Neurological rehabilitation",
+          "Massage and soft tissue mobilisation"
+        ];
 
-function startTextAnimation() {
-    if (currentIndex < texts.length) {
-        typeWriter(texts[currentIndex], 0, function() {
-            currentIndex++;
+        let currentIndex = 0;
+
+        function typeWriter(text, i, fnCallback) {
+          if (i < text.length) {
+            document.getElementById("typewriter-text").innerHTML = text.substring(0, i + 1);
+            setTimeout(function() {
+              typeWriter(text, i + 1, fnCallback);
+            }, 20); // Adjust typing speed
+          } else if (typeof fnCallback === 'function') {
+            setTimeout(fnCallback, 1000);
+          }
+        }
+
+        function startTextAnimation() {
+          if (currentIndex < texts.length) {
+            typeWriter(texts[currentIndex], 0, function() {
+              currentIndex++;
+              startTextAnimation();
+            });
+          } else {
+            currentIndex = 0; // Reset the index to loop
             startTextAnimation();
-        });
-    } else {
-        currentIndex = 0; // Reset the index to loop
+          }
+        }
+
         startTextAnimation();
-    }
-}
-
-startTextAnimation();
-
-    </script>
+      </script>
       <!-- <section class="animation">
         <div class="text-wrapper">
           <div class="first">
@@ -364,34 +374,27 @@ startTextAnimation();
       <!-- <a href="#" class="ctcbtn">Book free Consultancy</a> -->
     </div>
   </section>
-  <div class="sectionstart">
-    <div class="container">
-      <div class="header">Why Movement Science</div><br> <br>
-      <div class="imagetext">
-        <div class="image">
-          <img src="https://blog.rehabselect.net/hubfs/orthopedic%20rehab%20physical%20therapy.jpeg" alt="doc">
-        </div>
-        <div class="text">
-          <div class="subhead">
-            Movement science has an excellent team of highly qualified physiotherapists working close to you, provide expert physical and rehabilitation treatments with the aim to restore pain, movement, and strength, enabling our patients not only to achieve their goals and perform better, but also to prevent future injury<br> <br>
-            <!-- <div class="subhead"><span style="font-weight: 600;">Dedicated to helping you feel better</span></div> -->
-            <a href="/contactus" class="ctcbtn">Schedule A Free Call</a>
-          </div>
-        </div>
+  <div class="container">
+    <div class="header">Why Movement Science</div>
+    <div class="imagetext">
+      <div class="image">
+        <img src="https://blog.rehabselect.net/hubfs/orthopedic%20rehab%20physical%20therapy.jpeg" alt="doc">
+      </div>
+      <div class="subhead">
+        Movement science has an excellent team of highly qualified physiotherapists working close to you, provide expert physical and rehabilitation treatments with the aim to restore pain, movement, and strength, enabling our patients not only to achieve their goals and perform better, but also to prevent future injury<br> <br>
+        <!-- <div class="subhead"><span style="font-weight: 600;">Dedicated to helping you feel better</span></div> -->
+        <a href="/contactus" class="ctcbtn">Schedule A Free Call</a>
       </div>
     </div>
   </div>
   <br> <br>
 
-  <div class="sectionstart">
-    <div class="container">
-      <div class="header">Dedicated to serve customers for Years now</div>
-      <div class="subhead">
-        <!-- <div class="subhead"><span style="font-weight: 600;">Dedicated to helping you feel better</span></div> -->
-        To address those minor issues, minimize your risk of falls, and alleviate your aches and pains, schedule your free initial assessment today.<br><br><br>
-      </div>
+  <div class="container">
+    <div class="header">Dedicated to serve customers for Years now</div>
+    <div class="subhead">
+      <!-- <div class="subhead"><span style="font-weight: 600;">Dedicated to helping you feel better</span></div> -->
+      To address those minor issues, minimize your risk of falls, and alleviate your aches and pains, schedule your free initial assessment today.<br><br><br>
     </div>
-    
   </div>
   <div class="box">
     <a href="/icon1" class="icon2">
@@ -409,43 +412,44 @@ startTextAnimation();
   </div>
   <style>
     .box {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    gap: 10px;
-    background-color: #007bff; /* Blue background */
-    padding: 60px;
-    width: 90vw; /* Responsive width */
-    max-width: 1000px; /* Maximum width */
-    box-sizing: border-box;
-    margin: 0 auto; /* Center the box horizontally */
-}
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 10px;
+      background-color: #007bff;
+      /* Blue background */
+      padding: 60px;
+      width: 90vw;
+      /* Responsive width */
+      max-width: 1000px;
+      /* Maximum width */
+      box-sizing: border-box;
+      margin: 0 auto;
+      /* Center the box horizontally */
+    }
 
-.icon2 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 8px;
-    text-decoration: none;
-    transition: background-color 0.3s;
-}
+    .icon2 {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
 
-.icon2:hover {
+    .icon2:hover {}
 
-}
-
-.icon2 img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-}
-
+    .icon2 img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
   </style>
   <br><br>
 
-  <div class="sectionstart">
+
     <div class="container">
-      <div class="header"> Personalised care delivered directly to your door steps</div>
+      <div class="header"> Personalised care delivered directly to your door steps</div> <br>
       <ul class="custom-list">
         <li class="subhead">Convenient treatment options available on demand</li>
         <li class="subhead">Receive care in the comfort of your home, care home, or workplace</li>
@@ -453,12 +457,9 @@ startTextAnimation();
         <li class="subhead">Flexible scheduling with weekday, evening, and weekend appointments</li>
         <li class="subhead">Avoid the hassle of traveling to a clinic or hospital</li>
         <!-- <img src="images/image2.jpg" alt="services at home" class="hidingimgclass"> -->
-  
+
       </ul>
     </div>
-    </div>
-    
-  <br><br>
 
 
   <!-- <div class="sectionstart">
@@ -480,11 +481,11 @@ startTextAnimation();
     </div>
   </div> -->
   <br>
-  <div class="sectionstart">
-      <div class="header">Physiotherapy you can trust</div><br> <br> <br>
-      <div class="iframe-container">
-        <iframe width="800px" height="600px" src="https://www.youtube.com/embed/CtVHByJoGek?list=RDCtVHByJoGek" title="Kamal. - free flow" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-      </div>
+  <div class="container">
+    <div class="header">Physiotherapy you can trust</div>
+    <div class="iframe-container">
+      <iframe width="800px" height="600px" src="https://www.youtube.com/embed/CtVHByJoGek?list=RDCtVHByJoGek" title="Kamal. - free flow" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
 
   </div>
 

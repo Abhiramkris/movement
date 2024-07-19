@@ -188,13 +188,14 @@
 .custom-list {
   list-style-type: none;
   /* Remove default bullet points */
+  margin-left: -25px;
 
 }
 
 .custom-list li {
   position: relative;
   /* Required for pseudo-element positioning */
-  padding-left: 25px;
+  padding-left: 15px;
   /* Space for the tick icon */
   margin-bottom: 17px;
   /* Adjust spacing between list items */
@@ -209,7 +210,7 @@
   /* Adjust size of the tick icon */
   position: absolute;
   /* Position relative to the list item */
-  left: -3px;
+  left: -15px;
   /* Align tick to the left */
   top: 3px;
   /* Adjust vertical alignment */
@@ -234,17 +235,16 @@
 
   .subhead {
     font-weight: 400;
-    margin-left: 15px;
+    margin-left: 20px;
     margin-top: 10px;
     font-size: 18px;
     max-width: 90%;
     line-height: 30px;
-    padding-bottom: 5px;
+    text-align: left;
   }
 
   .text1 {
     padding: 20px;
-    ;
     margin-top: 5svh;
     line-height: 32px;
   }
@@ -253,7 +253,6 @@
     position: relative;
     font-size: 25px;
     max-width: 100%;
-    padding: 10px;
     margin-left: 20px;
   }
 
@@ -262,54 +261,52 @@
     /* Adjust size of the tick icon */
   }
 
-  .sectionstart {
-    padding: 0;
-  }
 
 }
 
+
 .container {
+  padding: 20px;
   max-width: 1200px;
-  /* Adjust max width as per your design */
   margin: 0 auto;
-  /* Center align container */
+}
+
+.header {
+  font-size: 2em;
+  text-align: center;
+  margin-bottom: 20px;
+  text-align: left;
 }
 
 .imagetext {
   display: flex;
-  /* Use flexbox for layout */
-  align-items: center;
-  /* Center align items vertically */
+  align-items: left;
   justify-content: space-between;
-  /* Space items evenly */
-  margin-top: 20px;
-  /* Adjust top margin */
+  flex-wrap: wrap;
 }
 
 .image {
   flex: 1;
-  /* Take up 50% of the container */
   margin-right: 20px;
-  /* Margin between image and text */
+  max-width:600px; /* Minimum width to ensure image doesn't get too small */
 }
 
 .image img {
   max-width: 100%;
-  /* Ensure image does not exceed its container */
   height: auto;
-  /* Maintain aspect ratio */
 }
 
-.text {
-  flex: 1;
-  /* Take up 50% of the container */
+.subhead {
+  flex: 2;
+  min-width: 300px; /* Minimum width to ensure text doesn't get too small */
+  text-align: left;
 }
 
 
 .ctcbtn {
   z-index: 3;
   display: inline-block;
-  padding: 3px 10px;
+  padding: 3px 15px;
   background: linear-gradient(45deg, #1d1acb, #008CBA);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   color: #fff;
@@ -344,27 +341,14 @@ a {
 @media (max-width: 768px) {
   .imagetext {
     flex-direction: column;
-    /* Stack items vertically on smaller screens */
-    font-weight: 400;
-    margin-left: 25px;
-    margin-top: 10px;
-    font-size: 18px;
-    max-width: 100%;
-    line-height: 30px;
-    padding-bottom: 5px;
-  }
+}
 
-
-
-
-  .image {
-    max-width: 100%;
-    /* Full width for image on smaller screens */
-    margin-left: 0;
-    /* Remove margin for image */
+.image {
+    margin-right: 0;
     margin-bottom: 20px;
-    /* Space between image and text */
-  }
+    max-width: 90vw;
+}
+
 }
 
 .iframe-container {
