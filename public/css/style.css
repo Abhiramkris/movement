@@ -139,12 +139,14 @@ font-size: 40px;
 }
 
 @keyframes text-animation {
-  5% { transform: translateY(0); }
-  27% { transform: translateY(-50px); }
-  47% { transform: translateY(-100px); }
-  67% { transform: translateY(-150px); }
-  86% { transform: translateY(-200px); }
-  96% { transform: translateY(-220px); }
+  8% { transform: translateY(0); }
+  23% { transform: translateY(-50px); }
+  38% { transform: translateY(-100px); }
+  53% { transform: translateY(-150px); }
+  70% { transform: translateY(-200px); }
+  85% { transform: translateY(-250px); }
+  95% { transform: translateY(-300px); }
+  97% { transform: translateY(-320px); }
 
 }
 
