@@ -250,10 +250,84 @@
   <section class="showcase">
     <img src="/images/hero.jpg"></img>
     <div class="overlay"></div>
-    <div class="text1">
-      <h2 class="header1">Physiotherapy at <span class="highlight">home.</span></h2>
-      <h2 class="header1">We are Specialist in</h2>
-      <section class="animation">
+    <div class="text1"> <br> <br><br>
+      <h2 class="header1">Physiotherapy at <span class="highlight">home.</span></h2> 
+      <h2 class="header1">Specialising in</h2>
+      <div class="typewriter">
+        <h1 class="typewriter-text" id="typewriter-text"></h1>
+    </div>
+    <style>
+
+
+.typewriter {
+  display: inline-block;
+    overflow: hidden;
+    border-right: .05em solid orange; /* Cursor */
+    margin: 0 auto;
+    letter-spacing: .05em;
+    z-index: 1000;
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: orange; }
+}
+
+.typewriter-text {
+    animation: blink-caret .25s step-end infinite;
+    position: relative;
+color: rgb(250, 250, 250);
+font-size: 40px;
+ font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  margin-left: 3px;
+}
+@media (max-width: 801px)
+{
+  .typewriter-text {
+    font-size: 28px;
+  }
+}
+    </style>
+
+    <script>
+      const texts = [
+    "Musculoskeletal rehabilitation",
+    "Cardio respiratory condition",
+    "Neurological rehabilitation",
+    "Massage and soft-tissue mobilisation"
+];
+
+let currentIndex = 0;
+
+function typeWriter(text, i, fnCallback) {
+    if (i < text.length) {
+        document.getElementById("typewriter-text").innerHTML = text.substring(0, i + 1);
+        setTimeout(function() {
+            typeWriter(text, i + 1, fnCallback);
+        }, 20);
+    } else if (typeof fnCallback === 'function') {
+        setTimeout(fnCallback, 1000);
+    }
+}
+
+function startTextAnimation() {
+    if (currentIndex < texts.length) {
+        typeWriter(texts[currentIndex], 0, function() {
+            currentIndex++;
+            startTextAnimation();
+        });
+    }
+}
+
+startTextAnimation();
+    </script>
+      <!-- <section class="animation">
         <div class="text-wrapper">
           <div class="first">
             <h2 class="header1">After surgery</h2>
@@ -277,7 +351,7 @@
             <h2 class="header1">Muscular Skeletal</h2>
           </div>
         </div>
-      </section> <br>
+      </section> <br> -->
       <!-- <a href="#" class="ctcbtn">Book free Consultancy</a> -->
     </div>
   </section>

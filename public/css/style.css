@@ -74,7 +74,7 @@
   z-index: 2;
   height: 70%;
   flex: 1;
-  padding: 85px;
+  padding: 95px;
 } 
 
 .header
@@ -187,11 +187,11 @@ font-size: 40px;
     font-size: 30px;
   }
   .subhead1{
-    margin-top: 5px;
     font-size: 18px;
     width: 90%;
     line-height: 17px;
   }
+
   .subhead{
     font-weight: 400;
     margin-left: 25px;
@@ -203,23 +203,22 @@ font-size: 40px;
   }
   .text1{
     padding: 20px;;
-    margin-top: 20vh;
+    margin-top:5svh;
     line-height: 32px;
   }
   .header{
     position: relative;
     font-size: 25px;
     max-width:100%;
-    padding: 30px;
-    margin-top: -30px;
+    padding: 10px;
   }
   .custom-list li::before {
     font-size: 18px; /* Adjust size of the tick icon */
   }
   .sectionstart{
     padding: 0;
-    margin-top: 10px;
   }
+
 }
 .container {
   max-width: 1200px; /* Adjust max width as per your design */
@@ -291,6 +290,7 @@ a{
   }
 
  
+
 
   .image {
       max-width: 100%; /* Full width for image on smaller screens */
