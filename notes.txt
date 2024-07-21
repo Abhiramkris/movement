@@ -150,3 +150,16 @@ add for call listing
 /admin/live-chat-queries
 /save-chat-query
 /appointmentsall
+DB_NAME=movement
+DB_PASSWORD=
+DB_USER=root
+DB_HOST=localhost
+DB_PORT=
+TWILIO_SERVICE_SID=
+TWILIO_AUTH_TOKEN=
+TWILIO_ACCOUNT_SID=
+EMAIL_USER=noreply.movementscience@gmail.com
+EMAIL_PASS=
+ADMIN_USERNAME=user
+ADMIN_PASSWORD=pass
+

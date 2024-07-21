@@ -18,8 +18,8 @@
             padding: 40px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 800px;
+            width: 90%;
+            max-width: 1000px;
             margin: auto;
         }
         h1 {
@@ -27,7 +27,7 @@
             font-weight: 500;
         }
         table {
-            width: 100%;
+            width: 90%;
             border-collapse: collapse;
         }
         table, th, td {
@@ -48,6 +48,7 @@
         <table>
             <thead>
                 <tr>
+                    <th>name</th>
                     <th>ID</th>
                     <th>Date</th>
                     <th>Phone</th>
@@ -58,6 +59,7 @@
             <tbody>
                 <% appointments.forEach(appointment => { %>
                     <tr>
+                        <td><%= appointment.name %></td>
                         <td><%= appointment.id %></td>
                         <td><%= appointment.date %></td>
                         <td><%= appointment.phone %></td>
