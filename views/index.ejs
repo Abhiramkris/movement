@@ -438,7 +438,6 @@
     }
   </style>
   <br>
-  <!-- <div class="sectionstart">
     <div class="container">
       <div class="imagetext">
 
@@ -457,7 +456,7 @@
     </div>
     </div> -->
   <br>
-  <div class="container">
+  <!-- <div class="container">
     <div class="header">Physiotherapy you can trust</div>
     <div class="iframe-container">
       <iframe width="800px" height="600px" src="https://www.youtube.com/embed/CtVHByJoGek?list=RDCtVHByJoGek" title="Kamal. - free flow" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
@@ -493,7 +492,7 @@
     });
 });
 
-</script>
+</script> -->
   <br><br>
 
   <div class="testi">
@@ -742,33 +741,7 @@
 
 </body>
 
-<script>
-  window.addEventListener('load', function() {
-    const preloader = document.getElementById('preloader');
-    const overlay = document.getElementById('overlay');
-    const content = document.getElementById('content');
 
-    setTimeout(() => {
-      preloader.style.display = 'none';
-      overlay.style.width = '200%';
-      overlay.style.height = '200%';
-    }, 500); // Change the timeout duration as needed
-
-    overlay.addEventListener('transitionend', () => {
-      setTimeout(() => {
-        overlay.style.opacity = '0';
-      }, 10); // Delay to ensure the overlay is fully expanded before starting to fade out
-    });
-
-    overlay.addEventListener('transitionend', () => {
-      if (overlay.style.opacity === '0') {
-        content.style.display = 'block';
-        document.body.style.overflow = 'auto';
-        overlay.style.display = 'none';
-      }
-    });
-  });
-</script>
 
 <!-- Add this script tag at the end of your HTML body -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
