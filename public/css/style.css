@@ -141,6 +141,7 @@
   border-radius: 8px; /* Optional: for rounded corners */
 }
 
+
 .subhead3 {
   flex: 1;
   text-align: left; /* Center text for all screen sizes */
@@ -164,6 +165,7 @@
   
   .subhead3 {
     text-align: left; /* Align text to the left on larger screens */
+    margin-left: 8vw;
   }
 }
 
@@ -173,7 +175,8 @@
   }
   
   .image, .subhead3 {
-    max-width: 100%;
+    max-width: 90%;
+    margin-left: 8vw;
   }
 }
 
