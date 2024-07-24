@@ -489,39 +489,36 @@
   </div>
   <br><br>
   <script>
-   
-   function showCard(event, cardId) {
+  function showCard(event, cardId) {
   event.preventDefault();
   const cardContainer = document.getElementById('card-container');
+  const backdrop = document.getElementById('backdrop');
   const cards = document.querySelectorAll('.card');
   cards.forEach(card => card.style.display = 'none');
 
   const selectedCard = document.getElementById(`card-${cardId}`);
   selectedCard.style.display = 'block';
   cardContainer.style.display = 'block';
-  
+  backdrop.style.display = 'block';
+
   setTimeout(() => {
     cardContainer.style.opacity = '1';
     cardContainer.style.transform = 'translate(-50%, -50%) scale(1)';
+    backdrop.style.opacity = '1';
   }, 10);
 
   document.body.classList.add('blur');
 
-  function handleClickOutside(event) {
-    if (!cardContainer.contains(event.target)) {
-      cardContainer.style.opacity = '0';
-      cardContainer.style.transform = 'translate(-50%, -50%) scale(0.9)';
-      setTimeout(() => {
-        cardContainer.style.display = 'none';
-        document.body.classList.remove('blur');
-      }, 300);
-      document.removeEventListener('click', handleClickOutside);
-    }
-  }
-
-  setTimeout(() => {
-    document.addEventListener('click', handleClickOutside);
-  }, 100);
+  backdrop.addEventListener('click', () => {
+    cardContainer.style.opacity = '0';
+    cardContainer.style.transform = 'translate(-50%, -50%) scale(0.9)';
+    backdrop.style.opacity = '0';
+    setTimeout(() => {
+      cardContainer.style.display = 'none';
+      backdrop.style.display = 'none';
+      document.body.classList.remove('blur');
+    }, 300);
+  });
 }
 
   </script>
