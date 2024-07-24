@@ -709,6 +709,65 @@ app.get('/error', (req, res) => {
     res.render(path.join(__dirname, 'views/error'));
 });
 
+app.get('/freecall', (req, res) => {
+    res.render('freecall');
+  });
+
+  app.post('/freecall', (req, res) => {
+    const { phone, requested_number } = req.body;
+  
+    const checkCustomerQuery = 'SELECT id FROM customers WHERE phone = ?';
+    db.query(checkCustomerQuery, [phone], (err, results) => {
+      if (err) throw err;
+  
+      let customerId;
+  
+      if (results.length === 0) {
+        const addCustomerQuery = 'INSERT INTO customers (phone) VALUES (?)';
+        db.query(addCustomerQuery, [phone], (err, result) => {
+          if (err) throw err;
+          customerId = result.insertId;
+  
+          const addCallRequestQuery = 'INSERT INTO call_requests (customer_id, requested_number) VALUES (?, ?)';
+          db.query(addCallRequestQuery, [customerId, requested_number], (err) => {
+            if (err) throw err;
+            res.redirect('/admin');
+          });
+        });
+      } else {
+        customerId = results[0].id;
+        const addCallRequestQuery = 'INSERT INTO call_requests (customer_id, requested_number) VALUES (?, ?)';
+        db.query(addCallRequestQuery, [customerId, requested_number], (err) => {
+          if (err) throw err;
+          res.redirect('/admin');
+        });
+      }
+    });
+  });
+  
+  // Admin route to view and manage call requests
+  app.get('/admin/call',requireAdmin, (req, res) => {
+    const getCallRequestsQuery = `
+      SELECT call_requests.id, customers.phone, call_requests.requested_number 
+      FROM call_requests 
+      JOIN customers ON call_requests.customer_id = customers.id
+    `;
+    db.query(getCallRequestsQuery, (err, results) => {
+      if (err) throw err;
+      res.render('admin/caller', { callRequests: results });
+    });
+  });
+  
+  // Route to delete a call request
+  app.post('/admin/delete/:id', (req, res) => {
+    const deleteCallRequestQuery = 'DELETE FROM call_requests WHERE id = ?';
+    db.query(deleteCallRequestQuery, [req.params.id], (err) => {
+      if (err) throw err;
+      res.redirect('/admin');
+    });
+  });
+  
+
 app.use((req, res) => {
     res.redirect('/error');
 });
