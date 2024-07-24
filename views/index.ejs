@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-<meta name="description" content="Get your Physiotherapy Treatment done at your own home. We are open everyday. Book your slot today.">
+  <meta name="description" content="Get your Physiotherapy Treatment done at your own home. We are open everyday. Book your slot today.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Movement Science Physiotherapy at home.</title>
   <link rel="stylesheet" href="css/imagetext.css">
@@ -266,15 +266,17 @@
         <h1 class="typewriter-text" id="typewriter-text"></h1>
       </div>
       <style>
-        h5{
+        h5 {
           margin-top: 8px;
           font-weight: 800;
           font-family: 'Poppins', sans-serif;
         }
+
         .landingctc {
           position: absolute;
           margin-top: 47vh;
         }
+
         .free-consultation1 {
           position: relative;
           background: linear-gradient(45deg, #1d1acb, #008CBA);
@@ -285,7 +287,8 @@
           font-weight: 800;
           z-index: 1000;
         }
-        .navu{
+
+        .navu {
           text-decoration: none;
           color: #fff;
           z-index: 1000;
@@ -389,7 +392,7 @@
 
         startTextAnimation();
       </script>
-      
+
     </div>
     </div>
   </section>
@@ -427,19 +430,54 @@
     <div class="header">WHAT WE DO</div>
   </div>
   <div class="box">
-    <a href="/icon1" class="icon2">
-      <img src="https://via.placeholder.com/100" alt="Icon 1">
+    <a href="#" class="icon2" onclick="showCard(event, 'subjective')">
+      <img src="https://via.placeholder.com/100" alt="Subjective Examination">
     </a>
-    <a href="/icon1" class="icon2">
-      <img src="https://via.placeholder.com/100" alt="Icon 2">
+    <a href="#" class="icon2" onclick="showCard(event, 'objective')">
+      <img src="https://via.placeholder.com/100" alt="Objective Examination">
     </a>
-    <a href="/icon1" class="icon2">
-      <img src="https://via.placeholder.com/100" alt="Icon 3">
+    <a href="#" class="icon2" onclick="showCard(event, 'treatment')">
+      <img src="https://via.placeholder.com/100" alt="Treatment">
     </a>
-    <a href="/icon1" class="icon2">
-      <img src="https://via.placeholder.com/100" alt="Icon 4">
+    <a href="#" class="icon2" onclick="showCard(event, 'restoration')">
+      <img src="https://via.placeholder.com/100" alt="Restoration">
+    </a>
+    <a href="#" class="icon2" onclick="showCard(event, 'perform')">
+      <img src="https://via.placeholder.com/100" alt="Perform">
     </a>
   </div>
+
+  <div id="card-container">
+    <div id="card-subjective" class="card">
+      <h2>Subjective Examination</h2>
+      <p>Gathering detailed information from the patient about their medical history, symptoms, lifestyle, and goals. This includes discussing the onset, nature, and duration of the problem, as well as any previous treatments or interventions.</p>
+    </div>
+    <div id="card-objective" class="card">
+      <h2>Objective Examination</h2>
+      <p>Conducting physical tests and observations to assess the patient's physical abilities and limitations. This may include:</p>
+      <ul>
+        <li>Posture Analysis: Observing the patient's posture to identify any deviations or abnormalities.</li>
+        <li>Range of Motion (ROM) Testing: Measuring the movement in specific joints to determine flexibility and mobility.</li>
+        <li>Strength Testing: Evaluating muscle strength through manual resistance or using equipment.</li>
+        <li>Functional Testing: Assessing the patient's ability to perform specific tasks or activities relevant to their daily life.</li>
+        <li>Palpation: Feeling the tissues and structures to identify any abnormalities, tenderness, or changes in texture.</li>
+        <li>Special Tests: Performing specific tests designed to diagnose certain conditions or injuries.</li>
+      </ul>
+    </div>
+    <div id="card-treatment" class="card">
+      <h2>Treatment</h2>
+      <p>At Movement Science, we believe in providing hands-on treatment when necessary. Our goal is to alleviate your pain, tension, soreness, or stiffness by utilizing a range of techniques. Our team is highly proficient in manipulative physiotherapy and soft tissue techniques. We collaborate closely with our sports massage therapists to deliver the most effective physical therapy for you.</p>
+    </div>
+    <div id="card-restoration" class="card">
+      <h2>Restoration</h2>
+      <p>Our goal is to restore your physical form, functionality, range of motion, muscle strength, mobility, flexibility, core strength, muscle power, agility, gait, and posture, among other factors, in order to achieve the best possible outcome for your symptoms. In addition to hands-on therapy, we will provide tailored exercise plans, offer valuable advice on lifestyle and work adjustments, and customize gym or training programs to ensure optimal recovery for our patients. Our approach is patient-centered, following best practices and always grounded in evidence-based methods, while staying current with the latest research and expert opinions. Our ultimate objective is to achieve a 100% improvement in symptoms.</p>
+    </div>
+    <div id="card-perform" class="card">
+      <h2>Perform</h2>
+      <p>We are dedicated to helping our patients not only recover from their injuries but also to excel beyond their previous level of performance. Our team of physiotherapists is committed to achieving complete recovery and surpassing expectations. Whether it's developing self-management techniques for chronic low back pain, enhancing athletic abilities, or improving balance and stability, we strive for 100% recovery and more. In addition to our skilled physiotherapists, we offer sports massage therapy and personal training services to support our patients in reaching their full potential. We are passionate about meeting our patients' needs and helping them achieve their long-term goals.</p>
+    </div>
+  </div>
+
   <br> <br>
   <div class="container">
     <div class="subhead">
@@ -450,8 +488,70 @@
   </div>
   </div>
   <br><br>
+  <script>
+   
+   function showCard(event, cardId) {
+  event.preventDefault();
+  const cardContainer = document.getElementById('card-container');
+  const cards = document.querySelectorAll('.card');
+  cards.forEach(card => card.style.display = 'none');
 
+  const selectedCard = document.getElementById(`card-${cardId}`);
+  selectedCard.style.display = 'block';
+  cardContainer.style.display = 'block';
+  
+  setTimeout(() => {
+    cardContainer.style.opacity = '1';
+    cardContainer.style.transform = 'translate(-50%, -50%) scale(1)';
+  }, 10);
+
+  document.body.classList.add('blur');
+
+  function handleClickOutside(event) {
+    if (!cardContainer.contains(event.target)) {
+      cardContainer.style.opacity = '0';
+      cardContainer.style.transform = 'translate(-50%, -50%) scale(0.9)';
+      setTimeout(() => {
+        cardContainer.style.display = 'none';
+        document.body.classList.remove('blur');
+      }, 300);
+      document.removeEventListener('click', handleClickOutside);
+    }
+  }
+
+  setTimeout(() => {
+    document.addEventListener('click', handleClickOutside);
+  }, 100);
+}
+
+  </script>
   <style>
+    #card-container {
+      z-index: 1000;
+      display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 600px;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 10px;
+  z-index: 1000;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .card {
+      display: none;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-weight: bold;
+    }
+
     .box {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
