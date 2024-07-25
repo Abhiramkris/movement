@@ -732,7 +732,7 @@ app.post('/freecall', (req, res) => {
     // Example database interaction
     const checkCustomerQuery = 'SELECT id FROM customers WHERE phone = ?';
     db.query(checkCustomerQuery, [phone], (err, results) => {
-      if (err) return res.status(500).json({ error: 'Database error' });
+      if (err) return res.status(500).json({ error: 'Database error1' });
   
       let customerId;
   
@@ -740,12 +740,12 @@ app.post('/freecall', (req, res) => {
         // Insert new customer
         const addCustomerQuery = 'INSERT INTO customers (name, phone) VALUES (?, ?)';
         db.query(addCustomerQuery, [name, phone], (err, result) => {
-          if (err) return res.status(500).json({ error: 'Database error' });
+          if (err) return res.status(500).json({ error: 'Database error2' });
   
           customerId = result.insertId;
           const addCallRequestQuery = 'INSERT INTO call_requests (customer_id, requested_number) VALUES (?, ?)';
           db.query(addCallRequestQuery, [customerId, phone], (err) => {
-            if (err) return res.status(500).json({ error: 'Database error' });
+            if (err) return res.status(500).json({ error: 'Database error3' });
             res.json({ redirect: '/contactedsoon' });
           });
         });
@@ -753,7 +753,7 @@ app.post('/freecall', (req, res) => {
         customerId = results[0].id;
         const addCallRequestQuery = 'INSERT INTO call_requests (customer_id, requested_number) VALUES (?, ?)';
         db.query(addCallRequestQuery, [customerId, phone], (err) => {
-          if (err) return res.status(500).json({ error: 'Database error' });
+          if (err) return res.status(500).json({ error: 'Database error4' });
           res.json({ redirect: '/contactedsoon' });
         });
       }
