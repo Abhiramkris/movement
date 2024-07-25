@@ -253,11 +253,7 @@
 
   <section class="showcase">
     <img src="/images/hero.jpg"></img>
-    <div class="landingctc">
-      <div class="free-consultation1">
-        <a href="/checkslot" class="navu">Book Free Consultation</a>
-      </div>
-    </div>
+
     <div class="overlay"> </div>
     <div class="text1"> <br> <br><br>
       <h2 class="header1">Physiotherapy at <span class="highlight">home.</span></h2>
@@ -269,24 +265,26 @@
         h5 {
           margin-top: 8px;
           font-weight: 800;
-          color: #023974;
+          color: rgb(1, 19, 67);
           font-family: 'Poppins', sans-serif;
         }
 
         .landingctc {
-          position: absolute;
-          margin-top: 100%;
+          position: relative;
         }
 
         .free-consultation1 {
+          margin-top: -20px;
           position: relative;
           background: linear-gradient(45deg, #1d1acb, #008CBA);
           height: 40px;
           border-radius: 5px;
           padding: 5px 5px;
-          margin-left: 13vw;
+          margin-left: 15vw;
           font-weight: 800;
           z-index: 1000;
+          width: 230px;
+          margin-top: 70px;
         }
 
         .navu {
@@ -396,7 +394,10 @@
 
     </div>
     </div>
-  </section>
+    <div class="free-consultation1">
+      <a href="/checkslot" class="navu">Book Free Consultation</a>
+    </div>
+  </section> <br>
   <div class="container">
     <div class="header">Why Movement Science</div> <br>
     <div class="imagetext">
@@ -433,19 +434,19 @@
 
     <div class="box">
     <a href="#" class="icon2" onclick="showCard(event, 'subjective')">
-      <img src="https://via.placeholder.com/100" alt="Subjective Examination">
+      <img src="/images/target.gif" alt="Subjective Examination">
     </a>
     <a href="#" class="icon2" onclick="showCard(event, 'objective')">
-      <img src="https://via.placeholder.com/100" alt="Objective Examination">
+      <img src="/images/efficiency.gif" alt="Objective Examination">
     </a>
     <a href="#" class="icon2" onclick="showCard(event, 'treatment')">
-      <img src="https://via.placeholder.com/100" alt="Treatment">
+      <img src="/images/massage.gif" alt="Treatment">
     </a>
     <a href="#" class="icon2" onclick="showCard(event, 'restoration')">
-      <img src="https://via.placeholder.com/100" alt="Restoration">
+      <img src="/images/chiropractic.gif" alt="Restoration">
     </a>
     <a href="#" class="icon2" onclick="showCard(event, 'perform')">
-      <img src="https://via.placeholder.com/100" alt="Perform">
+      <img src="/images/question.gif" alt="Perform">
     </a>
   </div>
 
@@ -486,7 +487,6 @@
       <p>We are dedicated to helping our patients not only recover from their injuries but also to excel beyond their previous level of performance. Our team of physiotherapists is committed to achieving complete recovery and surpassing expectations. Whether it's developing self-management techniques for chronic low back pain, enhancing athletic abilities, or improving balance and stability, we strive for 100% recovery and more. In addition to our skilled physiotherapists, we offer sports massage therapy and personal training services to support our patients in reaching their full potential. We are passionate about meeting our patients' needs and helping them achieve their long-term goals.</p>
     </div>
   </div>
-  <br><br>
   <script>
    let cardContainer = document.getElementById('card-container');
 let overlay = document.getElementById('overlay');
@@ -627,58 +627,22 @@ document.addEventListener('keydown', function(event) {
       border-radius: 8px;
       text-decoration: none;
       transition: background-color 0.3s;
+     
     }
 
-    .icon2:hover {}
+    .icon2:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
 
     .icon2 img {
       width: 100px;
       height: 100px;
+      border-radius: 10px;
       cursor: pointer;
     }
   </style>
-  <br>
-
-  <br>
-  <!-- <div class="container">
-    <div class="header">Physiotherapy you can trust</div>
-    <div class="iframe-container">
-      <iframe width="800px" height="600px" src="https://www.youtube.com/embed/CtVHByJoGek?list=RDCtVHByJoGek" title="Kamal. - free flow" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-    </div>
-
-  </div>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    let observer = new IntersectionObserver(function (entries, observer) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                let placeholder = entry.target;
-                let videoId = placeholder.getAttribute('data-video-id');
-                let iframe = document.createElement('iframe');
-                iframe.width = "800";
-                iframe.height = "600";
-                iframe.src = `https://www.youtube.com/embed/${videoId}?list=RDCtVHByJoGek&autoplay=1`;
-                iframe.title = "Kamal. - free flow";
-                iframe.frameBorder = "0";
-                iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-                iframe.referrerPolicy = "strict-origin-when-cross-origin";
-                iframe.allowFullscreen = true;
-                
-                placeholder.parentNode.replaceChild(iframe, placeholder);
-                observer.unobserve(placeholder);
-            }
-        });
-    });
-
-    let placeholders = document.querySelectorAll('.youtube-placeholder');
-    placeholders.forEach(placeholder => {
-        observer.observe(placeholder);
-    });
-});
-
-</script> -->
+  
   <div class="testi">
-
     <div class="col-lg-10 offset-lg-1 pt-5 pb-5 bg-#010f49 text-light">
       <div id="client-testimonial-carousel" class="carousel slide" data-ride="carousel" style="height:320px;">
         <div class="carousel-inner" role="listbox">
