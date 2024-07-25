@@ -131,36 +131,36 @@ router.get('/logout', (req, res) => {
 
 app.post('/save-chat-query', (req, res) => {
     const { name, email, phone, question } = req.body;
-    console.log(req.body); 
+    console.log(req.body);
     // Validate incoming data (optional)
     if (!name || !email || !phone || !question) {
-      return res.status(400).json({ message: 'Missing required fields' });
+        return res.status(400).json({ message: 'Missing required fields' });
     }
-  
+
     // Insert into database
     db.query('INSERT INTO chat_queries (name, email, phone, question) VALUES (?, ?, ?, ?)', [name, email, phone, question], (error, results) => {
-      if (error) {
-        console.error('Error inserting chat query:', error);
-        return res.status(500).json({ message: 'Failed to save query', error: error.message });
-      }
-      res.json({ message: 'Query saved successfully' });
+        if (error) {
+            console.error('Error inserting chat query:', error);
+            return res.status(500).json({ message: 'Failed to save query', error: error.message });
+        }
+        res.json({ message: 'Query saved successfully' });
     });
-  });
+});
 
-  app.get('/admin/live-chat-queries',requireAdmin, (req, res) => {
+app.get('/admin/live-chat-queries', requireAdmin, (req, res) => {
     // Example SQL query to retrieve live chat queries
     const sql = 'SELECT * FROM chat_queries ORDER BY id DESC';
-  
+
     db.query(sql, (err, results) => {
-      if (err) {
-        console.error('Error fetching live chat queries:', err);
-        res.status(500).json({ error: 'Internal Server Error' });
-        return;
-      }
-      // Assuming results is an array of chat queries
-      res.json(results);
+        if (err) {
+            console.error('Error fetching live chat queries:', err);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+        // Assuming results is an array of chat queries
+        res.json(results);
     });
-  });
+});
 
 // Admin dashboard route filter here
 router.get('/dashboard', requireAdmin, (req, res) => {
@@ -215,27 +215,27 @@ router.post('/approve-appointment/:id', requireAdmin, (req, res) => {
 
         const appointment = results[0];
 
-        db.query('INSERT INTO approved_appointments (name, address, date, slot, phone, email, city, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
-        [appointment.name, appointment.address, appointment.date, appointment.slot, appointment.phone, appointment.email, appointment.city, remarks], 
-        (insertError, insertResults) => {
-            if (insertError) {
-                console.error('Error inserting approved appointment:', insertError);
-                return res.status(500).json({ message: 'Failed to approve appointment', error: insertError.message });
-            }
-            else{
-                console.log("OOPSY");
-            }
-
-            db.query('DELETE FROM appointments WHERE id = ?', [id], (deleteError, deleteResults) => {
-                if (deleteError) {
-                    console.error('Error deleting appointment:', deleteError);
-                    return res.status(500).json({ message: 'Failed to delete original appointment', error: deleteError.message });
+        db.query('INSERT INTO approved_appointments (name, address, date, slot, phone, email, city, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [appointment.name, appointment.address, appointment.date, appointment.slot, appointment.phone, appointment.email, appointment.city, remarks],
+            (insertError, insertResults) => {
+                if (insertError) {
+                    console.error('Error inserting approved appointment:', insertError);
+                    return res.status(500).json({ message: 'Failed to approve appointment', error: insertError.message });
+                }
+                else {
+                    console.log("OOPSY");
                 }
 
-                res.status(200).json({ message: 'Appointment approved successfully' });
+                db.query('DELETE FROM appointments WHERE id = ?', [id], (deleteError, deleteResults) => {
+                    if (deleteError) {
+                        console.error('Error deleting appointment:', deleteError);
+                        return res.status(500).json({ message: 'Failed to delete original appointment', error: deleteError.message });
+                    }
+
+                    res.status(200).json({ message: 'Appointment approved successfully' });
+                });
+
             });
-            
-        });
     });
 });
 
@@ -348,7 +348,7 @@ function sendAppointmentEmails() {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const dateString = tomorrow.toISOString().split('T')[0];
-    
+
     console.log(`Fetching appointments for date: ${dateString}`);
 
     db.query('SELECT * FROM appointments WHERE date = ?', [dateString], (err, results) => {
@@ -538,7 +538,7 @@ app.post('/verify-otp', [
         });
 });
 
-app.get('/appointmentsall',requireAdmin, (req, res) => {
+app.get('/appointmentsall', requireAdmin, (req, res) => {
     db.query('SELECT * FROM approved_appointments', (error, results) => {
         if (error) {
             console.error('Error fetching appointments:', error);
@@ -711,66 +711,79 @@ app.get('/error', (req, res) => {
 
 app.get('/freecall', (req, res) => {
     res.render('freecall');
-  });
+});
 
-  app.get('/callus', (req, res) => {
+app.get('/callus', (req, res) => {
     res.render('freecall');
-  });
+});
 
-  app.post('/freecall', (req, res) => {
-    const { phone, requested_number } = req.body;
+app.get('/contactedsoon', (req, res) => {
+    res.render('soon');
+});
+
+app.post('/freecall', (req, res) => {
+    const { name, phone } = req.body;
   
+    if (!name || !phone) {
+      // Check if required fields are missing
+      return res.status(400).json({ error: 'Name and phone number are required' });
+    }
+  
+    // Example database interaction
     const checkCustomerQuery = 'SELECT id FROM customers WHERE phone = ?';
     db.query(checkCustomerQuery, [phone], (err, results) => {
-      if (err) throw err;
+      if (err) return res.status(500).json({ error: 'Database error' });
   
       let customerId;
   
       if (results.length === 0) {
-        const addCustomerQuery = 'INSERT INTO customers (phone) VALUES (?)';
-        db.query(addCustomerQuery, [phone], (err, result) => {
-          if (err) throw err;
-          customerId = result.insertId;
+        // Insert new customer
+        const addCustomerQuery = 'INSERT INTO customers (name, phone) VALUES (?, ?)';
+        db.query(addCustomerQuery, [name, phone], (err, result) => {
+          if (err) return res.status(500).json({ error: 'Database error' });
   
+          customerId = result.insertId;
           const addCallRequestQuery = 'INSERT INTO call_requests (customer_id, requested_number) VALUES (?, ?)';
-          db.query(addCallRequestQuery, [customerId, requested_number], (err) => {
-            if (err) throw err;
-            res.redirect('/admin');
+          db.query(addCallRequestQuery, [customerId, phone], (err) => {
+            if (err) return res.status(500).json({ error: 'Database error' });
+            res.json({ redirect: '/contactedsoon' });
           });
         });
       } else {
         customerId = results[0].id;
         const addCallRequestQuery = 'INSERT INTO call_requests (customer_id, requested_number) VALUES (?, ?)';
-        db.query(addCallRequestQuery, [customerId, requested_number], (err) => {
-          if (err) throw err;
-          res.redirect('/admin');
+        db.query(addCallRequestQuery, [customerId, phone], (err) => {
+          if (err) return res.status(500).json({ error: 'Database error' });
+          res.json({ redirect: '/contactedsoon' });
         });
       }
     });
   });
   
-  // Admin route to view and manage call requests
-  app.get('/admin/call',requireAdmin, (req, res) => {
+
+
+// Admin route to view and manage call requests
+app.get('/admin/call', requireAdmin, (req, res) => {
     const getCallRequestsQuery = `
       SELECT call_requests.id, customers.phone, call_requests.requested_number 
       FROM call_requests 
       JOIN customers ON call_requests.customer_id = customers.id
     `;
     db.query(getCallRequestsQuery, (err, results) => {
-      if (err) throw err;
-      res.render('admin/caller', { callRequests: results });
+        if (err) throw err;
+        res.render('admin/caller', { callRequests: results });
     });
-  });
-  
-  // Route to delete a call request
-  app.post('/admin/delete/:id', (req, res) => {
+});
+
+// Route to delete a call request
+app.post('/admin/delete/:id', (req, res) => {
     const deleteCallRequestQuery = 'DELETE FROM call_requests WHERE id = ?';
     db.query(deleteCallRequestQuery, [req.params.id], (err) => {
-      if (err) throw err;
-      res.redirect('/admin');
+        if (err) throw err;
+        res.redirect('/admin');
     });
-  });
-  
+});
+
 
 app.use((req, res) => {
     res.redirect('/error');
