@@ -69,8 +69,8 @@
     <a class="navbar-brand" href="/">
       <img src="/images/logo.png" alt="Logo"> <!-- Replace with your logo URL -->
     </a>
-    <div class="free-consultation">
-      <a href="/checkslot" class="nav-link">Book Free Consultation</a>
+    <div class="name">
+      <h5>MOVEMENT SCIENCE</h5>
     </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -93,8 +93,19 @@
           <a class="nav-link" href="/about">About-us</a>
         </li>
       </ul>
+      <div class="free-consultation">
+        <a href="/checkslot" class="nav-link">Book Free Consultation</a>
+      </div>
     </div>
-  </nav> <br><br><br><br>
+  </nav>
+  <script>
+    $(document).ready(function() {
+      $('.navbar-toggler').click(function() {
+        $('#navbarNav').collapse('toggle');
+      });
+    });
+  </script>
+   <br><br><br><br>
   <div class="center-container">
     <div class="success-container">
       <div class="popper" id="popper">

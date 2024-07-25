@@ -21,7 +21,6 @@
   
   .nav-link {
 	margin-right: 20px;
-	
   }
   
   .nav-link:hover {
@@ -34,6 +33,7 @@
 	color: #fff;
 	border-radius: 5px;
 	padding: 5px 10px;
+  width: 190px;
   }
   
   .free-consultation .nav-link:hover {

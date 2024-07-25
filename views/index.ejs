@@ -340,7 +340,7 @@
           font-size: 40px;
           font-family: "Poppins", sans-serif;
           font-weight: 700;
-          margin-left: 8vw;
+          margin-left: 7vw;
         }
 
         @media (max-width: 801px) {
@@ -431,8 +431,8 @@
   <div class="container">
     <div class="header">WHAT WE DO</div>
   </div>
-<br>
-    <div class="box">
+    <br>
+  <div class="box">
     <a href="#" class="icon2" onclick="showCard(event, 'subjective')">
       <img src="/images/target.gif" alt="Subjective Examination">
     </a>
@@ -489,121 +489,122 @@
     <br>
   </div>
   <script>
-   let cardContainer = document.getElementById('card-container');
-let overlay = document.getElementById('overlay');
-let activeCard = null;
+    let cardContainer = document.getElementById('card-container');
+    let overlay = document.getElementById('overlay');
+    let activeCard = null;
 
-function showCard(event, cardId) {
-  event.preventDefault();
+    function showCard(event, cardId) {
+      event.preventDefault();
 
-  if (activeCard) {
-    activeCard.style.display = 'none';
-  }
+      if (activeCard) {
+        activeCard.style.display = 'none';
+      }
 
-  const selectedCard = document.getElementById(`card-${cardId}`);
-  selectedCard.style.display = 'block';
-  cardContainer.style.display = 'block';
-  overlay.style.display = 'block';
+      const selectedCard = document.getElementById(`card-${cardId}`);
+      selectedCard.style.display = 'block';
+      cardContainer.style.display = 'block';
+      overlay.style.display = 'block';
 
-  setTimeout(() => {
-    cardContainer.style.opacity = '1';
-    cardContainer.style.transform = 'translate(-50%, -50%) scale(1)';
-    overlay.style.opacity = '1';
-  }, 100);
+      setTimeout(() => {
+        cardContainer.style.opacity = '1';
+        cardContainer.style.transform = 'translate(-50%, -50%) scale(1)';
+        overlay.style.opacity = '1';
+      }, 100);
 
-  activeCard = selectedCard;
+      activeCard = selectedCard;
 
-  document.removeEventListener('click', handleClickOutside);
-  setTimeout(() => {
-    document.addEventListener('click', handleClickOutside);
-  }, 100);
-}
-
-function closeCard() {
-  if (activeCard) {
-    activeCard.style.display = 'none';
-  }
-  cardContainer.style.opacity = '0';
-  cardContainer.style.transform = 'translate(-50%, -50%) scale(0.9)';
-  overlay.style.opacity = '0';
-
-  setTimeout(() => {
-    cardContainer.style.display = 'none';
-    overlay.style.display = 'none';
-    activeCard = null;
-  }, 300);
-
-  document.removeEventListener('click', handleClickOutside);
-}
-
-function handleClickOutside(event) {
-  if (!cardContainer.contains(event.target) && activeCard) {
-    closeCard();
-  }
-}
-
-document.addEventListener('keydown', function(event) {
-  if (event.key === 'Escape') {
-    if (cardContainer.style.display === 'block') {
-      closeCard();
+      document.removeEventListener('click', handleClickOutside);
+      setTimeout(() => {
+        document.addEventListener('click', handleClickOutside);
+      }, 100);
     }
-  }
-});
+
+    function closeCard() {
+      if (activeCard) {
+        activeCard.style.display = 'none';
+      }
+      cardContainer.style.opacity = '0';
+      cardContainer.style.transform = 'translate(-50%, -50%) scale(0.9)';
+      overlay.style.opacity = '0';
+
+      setTimeout(() => {
+        cardContainer.style.display = 'none';
+        overlay.style.display = 'none';
+        activeCard = null;
+      }, 300);
+
+      document.removeEventListener('click', handleClickOutside);
+    }
+
+    function handleClickOutside(event) {
+      if (!cardContainer.contains(event.target) && activeCard) {
+        closeCard();
+      }
+    }
+
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        if (cardContainer.style.display === 'block') {
+          closeCard();
+        }
+      }
+    });
   </script>
   <style>
-   .icon2 img {
-  width: 100px;
-  height: 100px;
-  cursor: pointer;
-}
+    .icon2 img {
+      width: 100px;
+      height: 100px;
+      cursor: pointer;
+    }
 
-#overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-  transition: opacity 0.3s ease;
-  backdrop-filter: blur(5px);
-}
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      transition: opacity 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
 
-#card-container {
-  display: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 80%;
-  max-width: 600px;
-  background: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  border-radius: 10px;
-  z-index: 1000;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
+    #card-container {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%;
+      max-width: 600px;
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      z-index: 1000;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
 
-.card {
-  display: none;
-}
+    .card {
+      display: none;
+    }
 
-.card h2 {
-  margin-top: 0;
-  font-weight: bold;
-}
+    .card h2 {
+      margin-top: 0;
+      font-weight: bold;
+    }
 
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-}
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
     .box {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -612,9 +613,9 @@ document.addEventListener('keydown', function(event) {
       background-color: #010f49;
       /* Blue background */
       padding: 50px;
-      width: 100vw;
+      width: 100%;
       /* Responsive width */
-      max-width: 1000px;
+      /* max-width: 1000px; */
       /* Maximum width */
       box-sizing: border-box;
       margin: 0 auto;
@@ -631,10 +632,6 @@ document.addEventListener('keydown', function(event) {
       margin-top: 10px;
     }
 
-    .icon2:hover {
-      box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
-    }
-
     .icon2 img {
       width: 100px;
       height: 100px;
@@ -642,7 +639,7 @@ document.addEventListener('keydown', function(event) {
       cursor: pointer;
     }
   </style>
-  
+
   <div class="testi">
     <div class="col-lg-10 offset-lg-1 pt-5 pb-5 bg-#010f49 text-light">
       <div id="client-testimonial-carousel" class="carousel slide" data-ride="carousel" style="height:320px;">

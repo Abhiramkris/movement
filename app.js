@@ -713,6 +713,10 @@ app.get('/freecall', (req, res) => {
     res.render('freecall');
   });
 
+  app.get('/callus', (req, res) => {
+    res.render('freecall');
+  });
+
   app.post('/freecall', (req, res) => {
     const { phone, requested_number } = req.body;
   
