@@ -269,12 +269,13 @@
         h5 {
           margin-top: 8px;
           font-weight: 800;
+          color: #023974;
           font-family: 'Poppins', sans-serif;
         }
 
         .landingctc {
           position: absolute;
-          margin-top: 40vh;
+          margin-top: 100%;
         }
 
         .free-consultation1 {
@@ -429,7 +430,8 @@
   <div class="container">
     <div class="header">WHAT WE DO</div>
   </div>
-  <div class="box">
+
+    <div class="box">
     <a href="#" class="icon2" onclick="showCard(event, 'subjective')">
       <img src="https://via.placeholder.com/100" alt="Subjective Examination">
     </a>
@@ -447,12 +449,16 @@
     </a>
   </div>
 
+  <div id="overlay"></div>
+
   <div id="card-container">
     <div id="card-subjective" class="card">
+      <button class="close-btn" onclick="closeCard()">×</button>
       <h2>Subjective Examination</h2>
       <p>Gathering detailed information from the patient about their medical history, symptoms, lifestyle, and goals. This includes discussing the onset, nature, and duration of the problem, as well as any previous treatments or interventions.</p>
     </div>
     <div id="card-objective" class="card">
+      <button class="close-btn" onclick="closeCard()">×</button>
       <h2>Objective Examination</h2>
       <p>Conducting physical tests and observations to assess the patient's physical abilities and limitations. This may include:</p>
       <ul>
@@ -465,67 +471,106 @@
       </ul>
     </div>
     <div id="card-treatment" class="card">
+      <button class="close-btn" onclick="closeCard()">×</button>
       <h2>Treatment</h2>
       <p>At Movement Science, we believe in providing hands-on treatment when necessary. Our goal is to alleviate your pain, tension, soreness, or stiffness by utilizing a range of techniques. Our team is highly proficient in manipulative physiotherapy and soft tissue techniques. We collaborate closely with our sports massage therapists to deliver the most effective physical therapy for you.</p>
     </div>
     <div id="card-restoration" class="card">
+      <button class="close-btn" onclick="closeCard()">×</button>
       <h2>Restoration</h2>
       <p>Our goal is to restore your physical form, functionality, range of motion, muscle strength, mobility, flexibility, core strength, muscle power, agility, gait, and posture, among other factors, in order to achieve the best possible outcome for your symptoms. In addition to hands-on therapy, we will provide tailored exercise plans, offer valuable advice on lifestyle and work adjustments, and customize gym or training programs to ensure optimal recovery for our patients. Our approach is patient-centered, following best practices and always grounded in evidence-based methods, while staying current with the latest research and expert opinions. Our ultimate objective is to achieve a 100% improvement in symptoms.</p>
     </div>
     <div id="card-perform" class="card">
+      <button class="close-btn" onclick="closeCard()">×</button>
       <h2>Perform</h2>
       <p>We are dedicated to helping our patients not only recover from their injuries but also to excel beyond their previous level of performance. Our team of physiotherapists is committed to achieving complete recovery and surpassing expectations. Whether it's developing self-management techniques for chronic low back pain, enhancing athletic abilities, or improving balance and stability, we strive for 100% recovery and more. In addition to our skilled physiotherapists, we offer sports massage therapy and personal training services to support our patients in reaching their full potential. We are passionate about meeting our patients' needs and helping them achieve their long-term goals.</p>
     </div>
   </div>
-
-  <br> <br>
-  <div class="container">
-    <div class="subhead">
-      <!-- <div class="subhead"><span style="font-weight: 600;">Dedicated to helping you feel better</span></div> -->
-      To address those minor issues, minimize your risk of falls, and alleviate your aches and pains, schedule your free initial assessment today.<br>
-    </div> <br>
-    <a href="/freecall" class="ctcbtn">Schedule A Free Call</a>
-  </div>
-  </div>
   <br><br>
   <script>
-  function showCard(event, cardId) {
+   let cardContainer = document.getElementById('card-container');
+let overlay = document.getElementById('overlay');
+let activeCard = null;
+
+function showCard(event, cardId) {
   event.preventDefault();
-  const cardContainer = document.getElementById('card-container');
-  const backdrop = document.getElementById('backdrop');
-  const cards = document.querySelectorAll('.card');
-  cards.forEach(card => card.style.display = 'none');
+
+  if (activeCard) {
+    activeCard.style.display = 'none';
+  }
 
   const selectedCard = document.getElementById(`card-${cardId}`);
   selectedCard.style.display = 'block';
   cardContainer.style.display = 'block';
-  backdrop.style.display = 'block';
+  overlay.style.display = 'block';
 
   setTimeout(() => {
     cardContainer.style.opacity = '1';
     cardContainer.style.transform = 'translate(-50%, -50%) scale(1)';
-    backdrop.style.opacity = '1';
-  }, 10);
+    overlay.style.opacity = '1';
+  }, 100);
 
-  document.body.classList.add('blur');
+  activeCard = selectedCard;
 
-  backdrop.addEventListener('click', () => {
-    cardContainer.style.opacity = '0';
-    cardContainer.style.transform = 'translate(-50%, -50%) scale(0.9)';
-    backdrop.style.opacity = '0';
-    setTimeout(() => {
-      cardContainer.style.display = 'none';
-      backdrop.style.display = 'none';
-      document.body.classList.remove('blur');
-    }, 300);
-  });
+  document.removeEventListener('click', handleClickOutside);
+  setTimeout(() => {
+    document.addEventListener('click', handleClickOutside);
+  }, 100);
 }
 
+function closeCard() {
+  if (activeCard) {
+    activeCard.style.display = 'none';
+  }
+  cardContainer.style.opacity = '0';
+  cardContainer.style.transform = 'translate(-50%, -50%) scale(0.9)';
+  overlay.style.opacity = '0';
+
+  setTimeout(() => {
+    cardContainer.style.display = 'none';
+    overlay.style.display = 'none';
+    activeCard = null;
+  }, 300);
+
+  document.removeEventListener('click', handleClickOutside);
+}
+
+function handleClickOutside(event) {
+  if (!cardContainer.contains(event.target) && activeCard) {
+    closeCard();
+  }
+}
+
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    if (cardContainer.style.display === 'block') {
+      closeCard();
+    }
+  }
+});
   </script>
   <style>
-    #card-container {
-      z-index: 1000;
-      display: none;
+   .icon2 img {
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+}
+
+#overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+#card-container {
+  display: none;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -538,17 +583,26 @@
   border-radius: 10px;
   z-index: 1000;
   transition: opacity 0.3s ease, transform 0.3s ease;
-    }
+}
 
-    .card {
-      display: none;
-    }
+.card {
+  display: none;
+}
 
-    .card h2 {
-      margin-top: 0;
-      font-weight: bold;
-    }
+.card h2 {
+  margin-top: 0;
+  font-weight: bold;
+}
 
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
     .box {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -578,9 +632,9 @@
     .icon2:hover {}
 
     .icon2 img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 8px;
+      width: 100px;
+      height: 100px;
+      cursor: pointer;
     }
   </style>
   <br>
@@ -623,12 +677,10 @@
 });
 
 </script> -->
-  <br><br>
-
   <div class="testi">
 
     <div class="col-lg-10 offset-lg-1 pt-5 pb-5 bg-#010f49 text-light">
-      <div id="client-testimonial-carousel" class="carousel slide" data-ride="carousel" style="height:340px;">
+      <div id="client-testimonial-carousel" class="carousel slide" data-ride="carousel" style="height:320px;">
         <div class="carousel-inner" role="listbox">
           <div class="carousel-item active text-center p-4">
             <blockquote class="blockquote text-center">
@@ -707,7 +759,7 @@
         </div>
       </h1>
       <p class="subtitle">Call us <a href="tel:+44 07930167674"></a> or <a href="/checkslot">book appointment</a></p>
-      <br> <br><br>
+      <br> <br>
     </div>
   </div>
 
