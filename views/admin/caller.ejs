@@ -4,26 +4,126 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin - Call Requests</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      background-color: #e0e0e0;
+      color: #333;
+      padding: 20px;
+      text-align: center;
+      margin: 0;
+    }
+    table {
+      width: 100%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background-color: #ffffff;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #f0f0f0;
+      color: #333;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    button {
+      background-color: #007BFF;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    form {
+      margin: 0;
+    }
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      table {
+        font-size: 14px;
+      }
+      th, td {
+        padding: 8px;
+      }
+      button {
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+    }
+    @media (max-width: 480px) {
+      th, td {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px 0;
+        border-bottom: 1px solid #ddd;
+      }
+      tr {
+        display: block;
+        margin-bottom: 10px;
+      }
+      td {
+        text-align: right;
+        position: relative;
+        padding-left: 50%;
+        white-space: nowrap;
+      }
+      td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        font-weight: bold;
+        color: #333;
+      }
+      button {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px;
+        font-size: 16px;
+      }
+    }
+  </style>
 </head>
 <body>
   <h1>Admin - Call Requests</h1>
   <table>
-    <tr>
-      <th>Phone Number</th>
-      <th>Requested Number</th>
-      <th>Actions</th>
-    </tr>
-    <% callRequests.forEach(request => { %>
+    <thead>
       <tr>
-        <td><%= request.phone %></td>
-        <td><%= request.requested_number %></td>
-        <td>
-          <form action="/admin/delete/<%= request.id %>" method="post">
-            <button type="submit">Delete</button>
-          </form>
-        </td>
+        <th>Phone Number</th>
+        <th>Name</th>
+        <th>Actions</th>
       </tr>
-    <% }) %>
+    </thead>
+    <tbody>
+      <% callRequests.forEach(request => { %>
+        <tr>
+          <td data-label="Phone Number"><%= request.phone %></td>
+          <td data-label="Name"><%= request.name %></td>
+          <td data-label="Actions">
+            <form action="/admin/delete/<%= request.id %>" method="post">
+              <button type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
   </table>
 </body>
 </html>
