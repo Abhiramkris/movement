@@ -35,7 +35,8 @@
 	color: #fff;
 	border-radius: 5px;
 	padding: 5px 10px;
-  width: 190px;
+  width: 220px;
+  margin-left: -5px;
   }
   
   .free-consultation .nav-link:hover {

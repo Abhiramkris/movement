@@ -255,149 +255,148 @@
     <img src="/images/hero.jpg"></img>
 
     <div class="overlay"> </div>
-    <div class="text1"> <br> <br><br>
-      <h2 class="header1">Physiotherapy at <span class="highlight">home.</span></h2>
-      <h2 class="header1">Specialist in</h2>
-      <div class="typewriter">
-        <h1 class="typewriter-text" id="typewriter-text"></h1>
+      <div class="text1"> <br> <br><br> <br><br> <br>
+        <h2 class="header1">Physiotherapy at <span class="highlight">home.</span></h2>
+        <h2 class="header1">Specialist in</h2>
+        <div class="typewriter">
+          <h1 class="typewriter-text" id="typewriter-text"></h1>
+        </div>
+        <div class="free-consultation1">
+          <a href="/checkslot" class="navu">Book Free Consultation</a>
+        </div>
       </div>
-      <style>
-        h5 {
-          margin-top: 8px;
-          font-weight: 800;
-          color: rgb(1, 19, 67);
-          font-family: 'Poppins', sans-serif;
-        }
+    
+    <style>
+      h5 {
+        margin-top: 8px;
+        font-weight: 800;
+        color:  #023974;
+        font-family: 'Poppins', sans-serif;
+      }
 
-        .landingctc {
-          position: relative;
-        }
+      .landingctc {
+        position: relative;
+        margin-top: 20px;
+      }
 
+      .free-consultation1 {
+        position: absolute;
+    bottom: 30%; /* Position the button 25% up from the bottom of the container */
+    margin-left: auto; /* Make margin-left auto to move the button to the right */
+    background: linear-gradient(45deg, #1d1acb, #008CBA);
+    height: 40px;
+    border-radius: 5px;
+    padding: 5px 5px;
+    font-weight: 800;
+    z-index: 1000;
+    width: 220px;
+    text-align: center;
+      }
+
+      .navu {
+        text-decoration: none;
+        color: #fff;
+        z-index: 1000;
+        padding: 5px 10px;
+      }
+
+      @media (min-width: 1001px) {
         .free-consultation1 {
-          margin-top: -20px;
-          position: relative;
-          background: linear-gradient(45deg, #1d1acb, #008CBA);
-          height: 40px;
-          border-radius: 5px;
-          padding: 5px 5px;
-          margin-left: 12vw;
-          font-weight: 800;
-          z-index: 1000;
-          width: 220px;
-          margin-top: 70px;
+          display: none;
         }
 
-        .navu {
-          text-decoration: none;
-          color: #fff;
-          z-index: 1000;
-          padding: 5px 10px;
+      }
+
+      .typewriter {
+        display: inline-block;
+        overflow: hidden;
+        border-right: .25em solid white;
+        /* Cursor */
+        margin: 0 auto;
+        letter-spacing: .05em;
+        z-index: 1000;
+      }
+
+      @keyframes typing {
+        from {
+          width: 0
         }
 
-        @media (min-width: 701px) {
-          .free-consultation1 {
-            display: none;
-          }
+        to {
+          width: 100%
+        }
+      }
 
+      @keyframes blink-caret {
+
+        from,
+        to {
+          border-color: transparent
         }
 
-        .typewriter {
-          display: inline-block;
-          overflow: hidden;
-          border-right: .25em solid white;
-          /* Cursor */
-          margin: 0 auto;
-          letter-spacing: .05em;
-          z-index: 1000;
+        50% {
+          border-color: orange;
         }
+      }
 
-        @keyframes typing {
-          from {
-            width: 0
-          }
+      .typewriter-text {
+        animation: blink-caret .25s step-end infinite;
+        position: relative;
+        color: rgb(250, 250, 250);
+        font-size: 40px;
+        font-family: "Poppins", sans-serif;
+        font-weight: 700;
+      }
 
-          to {
-            width: 100%
-          }
-        }
-
-        @keyframes blink-caret {
-
-          from,
-          to {
-            border-color: transparent
-          }
-
-          50% {
-            border-color: orange;
-          }
-        }
-
+      @media (max-width: 801px) {
         .typewriter-text {
-          animation: blink-caret .25s step-end infinite;
-          position: relative;
-          color: rgb(250, 250, 250);
-          font-size: 40px;
-          font-family: "Poppins", sans-serif;
-          font-weight: 700;
-          margin-left: 7vw;
+          font-size: 28px;
+          /* margin-left: 28px; */
         }
+      }
+    </style>
 
-        @media (max-width: 801px) {
-          .typewriter-text {
-            font-size: 28px;
-            /* margin-left: 28px; */
-          }
+    <script>
+      const texts = [
+        "After surgery",
+        "Aches and pain",
+        "Mobility problems",
+        "Musculoskeletal rehabilitation",
+        "Sports injury",
+        "Adults and Children",
+        "Cardio respiratory condition",
+        "Neurological rehabilitation",
+        "Massage and soft tissue mobilisation"
+      ];
+
+      let currentIndex = 0;
+
+      function typeWriter(text, i, fnCallback) {
+        if (i < text.length) {
+          document.getElementById("typewriter-text").innerHTML = text.substring(0, i + 1);
+          setTimeout(function() {
+            typeWriter(text, i + 1, fnCallback);
+          }, 20); // Adjust typing speed
+        } else if (typeof fnCallback === 'function') {
+          setTimeout(fnCallback, 1000);
         }
-      </style>
+      }
 
-      <script>
-        const texts = [
-          "After surgery",
-          "Aches and pain",
-          "Mobility problems",
-          "Musculoskeletal rehabilitation",
-          "Sports injury",
-          "Adults and Children",
-          "Cardio respiratory condition",
-          "Neurological rehabilitation",
-          "Massage and soft tissue mobilisation"
-        ];
-
-        let currentIndex = 0;
-
-        function typeWriter(text, i, fnCallback) {
-          if (i < text.length) {
-            document.getElementById("typewriter-text").innerHTML = text.substring(0, i + 1);
-            setTimeout(function() {
-              typeWriter(text, i + 1, fnCallback);
-            }, 20); // Adjust typing speed
-          } else if (typeof fnCallback === 'function') {
-            setTimeout(fnCallback, 1000);
-          }
-        }
-
-        function startTextAnimation() {
-          if (currentIndex < texts.length) {
-            typeWriter(texts[currentIndex], 0, function() {
-              currentIndex++;
-              startTextAnimation();
-            });
-          } else {
-            currentIndex = 0; // Reset the index to loop
+      function startTextAnimation() {
+        if (currentIndex < texts.length) {
+          typeWriter(texts[currentIndex], 0, function() {
+            currentIndex++;
             startTextAnimation();
-          }
+          });
+        } else {
+          currentIndex = 0; // Reset the index to loop
+          startTextAnimation();
         }
+      }
 
-        startTextAnimation();
-      </script>
-
-    </div>
-    </div>
-    <div class="free-consultation1">
-      <a href="/checkslot" class="navu">Book Free Consultation</a>
-    </div>
-  </section> <br>
+      startTextAnimation();
+    </script>
+  </section>
   <div class="container">
     <div class="header">Why Movement Science</div> <br>
     <div class="imagetext">
@@ -409,7 +408,7 @@
         <!-- <div class="subhead"><span style="font-weight: 600;">Dedicated to helping you feel better</span></div> -->
       </div>
     </div>
-  </div>
+  </div> <br>
 
   <div class="container">
     <div class="subhead"> <b>We provide</b></div> <br>
@@ -419,32 +418,44 @@
       <li class="subhead">Receive care in the comfort of your home, care home, or workplace</li>
       <li class="subhead">Services available seven days a week</li>
       <li class="subhead">Flexible scheduling with weekday, evening, and weekend appointments</li>
-      <li class="subhead">Avoid the hassle of traveling to a clinic or hospital</li>
+      <li class="subhead">Avoid the hassle of traveling to a clinic or hospital</li> <br>
       <!-- <img src="images/image2.jpg" alt="services at home" class="hidingimgclass"> -->
     </ul>
   </div>
   <div class="container">
-    <div class="subhead" style="color: #023974;"><b>"PRIORITISE YOUR WELLBEING" <br>SCHEDULE YOUR PHYSIOTHERAPY APPOINTMENT TODAY</b></div> <br>
-    <a href="/freecall" class="ctcbtn">Schedule A Free Call</a>
+    <div class="subhead" style="color: #023974;">
+      <b>
+          <span style="background-color: #023974; color: white; padding: 5px; border-radius: 3px;">"PRIORITISE YOUR WELLBEING"</span> 
+          <br>
+          SCHEDULE YOUR PHYSIOTHERAPY APPOINTMENT TODAY
+      </b>
+  </div> 
+  <br>
+  <a href="/freecall" class="ctcbtn">Schedule A Free Call</a>
+  
   </div>
   <br><br> <br>
   <div class="container">
-    <div class="header">WHAT WE DO</div>
-<div class="subhead">We specialize in providing personalized, high-quality physiotherapy services in the comfort of your own home. Our goal is to ensure convenience and comfort for our clients by tailoring our services to meet their individual needs. We take pride in creating customized assessment and treatment plans that are designed with you in mind. Whether you prefer to receive treatment in the comfort of your own home or at our gym, we are dedicated to providing top-notch care to help you achieve your health and wellness goals. </div> <br>
+    <div class="header">WHAT WE DO</div> <br>
+    <div class="subhead3">We specialize in providing personalized, high-quality physiotherapy services in the comfort of your own home. Our goal is to ensure convenience and comfort for our clients by tailoring our services to meet their individual needs. We take pride in creating customized assessment and treatment plans that are designed with you in mind. Whether you prefer to receive treatment in the comfort of your own home or at our gym, we are dedicated to providing top-notch care to help you achieve your health and wellness goals. </div> <br>
   </div>
-    <br>
+  <br> <br>
   <div class="box">
     <a href="#" class="icon2" onclick="showCard(event, 'subjective')">
-      <img src="/images/target.gif" alt="Subjective Examination"> <br> <p>Assessment</p>
+      <img src="/images/target.gif" alt="Subjective Examination"> <br>
+      <p>Assessment</p>
     </a>
     <a href="#" class="icon2" onclick="showCard(event, 'objective')">
-      <img src="/images/chiropractic.gif" alt="Objective Examination"> <p>Treatment</p>
+      <img src="/images/chiropractic.gif" alt="Objective Examination"> <br>
+      <p>Treatment</p>
     </a>
-    <a href="#" class="icon2" onclick="showCard(event, 'treatment')"> 
-      <img src="/images/massage.gif" alt="Treatment"><br><p>Restoration</p>
+    <a href="#" class="icon2" onclick="showCard(event, 'treatment')">
+      <img src="/images/massage.gif" alt="Treatment"><br>
+      <p>Restoration</p>
     </a>
     <a href="#" class="icon2" onclick="showCard(event, 'restoration')">
-      <img src="/images/treadmill.gif" alt="Restoration"> <br> <p>Perform</p>
+      <img src="/images/treadmill.gif" alt="Restoration"> <br>
+      <p>Perform</p>
     </a>
   </div>
 
@@ -454,9 +465,9 @@
     <div id="card-subjective" class="card">
       <button class="close-btn" onclick="closeCard()">×</button>
       <h2>Assessment</h2>
-      <p>Our movement science team evaluate a patient's physical condition and identify specific impairments, functional limitations, and disabilities. The assessment aims to develop a comprehensive understanding of the patient's health status and to inform the development of an individualized treatment plan. Key components of  our  physiotherapy assessment include:
-      <br>1.Subjective Examination: Gathering detailed information from the patient about their medical history, symptoms, lifestyle, and goals. This includes discussing the onset, nature, and duration of the problem, as well as any previous treatments or interventions. <br>
-      2.Objective Examination: Conducting physical tests and observations to assess the patient's physical abilities and limitations. This may include:
+      <p>Our movement science team evaluate a patient's physical condition and identify specific impairments, functional limitations, and disabilities. The assessment aims to develop a comprehensive understanding of the patient's health status and to inform the development of an individualized treatment plan. Key components of our physiotherapy assessment include:
+        <br>1.Subjective Examination: Gathering detailed information from the patient about their medical history, symptoms, lifestyle, and goals. This includes discussing the onset, nature, and duration of the problem, as well as any previous treatments or interventions. <br>
+        2.Objective Examination: Conducting physical tests and observations to assess the patient's physical abilities and limitations. This may include:
         <br>•Posture Analysis
         <br>•Range of Motion (ROM) Testing
         <br>•Strength Testing
@@ -467,13 +478,13 @@
     <div id="card-objective" class="card">
       <button class="close-btn" onclick="closeCard()">×</button>
       <h2>Treatment</h2>
-      <p >At Movement Science, we believe in providing hands-on treatment when necessary. Our goal is to alleviate your pain, tension, soreness, or stiffness by utilizing a range of techniques. Our team is highly proficient in manipulative physiotherapy and soft tissue techniques. We collaborate closely with our sports massage therapists to deliver the most effective physical therapy for you.</p>
+      <p>At Movement Science, we believe in providing hands-on treatment when necessary. Our goal is to alleviate your pain, tension, soreness, or stiffness by utilizing a range of techniques. Our team is highly proficient in manipulative physiotherapy and soft tissue techniques. We collaborate closely with our sports massage therapists to deliver the most effective physical therapy for you.</p>
     </div>
 
     <div id="card-treatment" class="card">
       <button class="close-btn" onclick="closeCard()">×</button>
       <h2>Restoration</h2>
-      <p>Our goal is to restore your physical form, functionality, range of motion, muscle strength, mobility, flexibility, core strength, muscle power, agility, gait, and posture, among other factors, in order to achieve the best possible outcome for your symptoms. In addition to hands-on therapy, we will provide tailored exercise plans, offer valuable advice on lifestyle and work adjustments, and customize gym or training programs to ensure optimal recovery for our patients. Our approach is patient-centered, following best practices and always 
+      <p>Our goal is to restore your physical form, functionality, range of motion, muscle strength, mobility, flexibility, core strength, muscle power, agility, gait, and posture, among other factors, in order to achieve the best possible outcome for your symptoms. In addition to hands-on therapy, we will provide tailored exercise plans, offer valuable advice on lifestyle and work adjustments, and customize gym or training programs to ensure optimal recovery for our patients. Our approach is patient-centered, following best practices and always
         grounded in evidence-based methods, while staying current with the latest research and expert opinions. Our ultimate objective is to achieve a 100% improvement in symptoms
       </p>
     </div>
@@ -588,7 +599,7 @@
     }
 
     .card p {
-      font-weight:400;
+      font-weight: 400;
       color: #010f49;
     }
 
@@ -626,8 +637,8 @@
 
     .icon2 {
       flex-grow: 1;
-  display: flex;
-  flex-direction: column;
+      display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       border-radius: 8px;
@@ -642,8 +653,9 @@
       border-radius: 10px;
       cursor: pointer;
     }
+
     .icon2 p {
-      font-weight:400;
+      font-weight: 400;
       color: #f5f7ff;
       margin-left: 3px;
     }

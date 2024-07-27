@@ -721,6 +721,9 @@ app.get('/contactedsoon', (req, res) => {
     res.render('soon');
 });
 
+app.get('/about', (req, res) => {
+    res.render('about');
+});
 app.post('/freecall', (req, res) => {
     const { name, phone } = req.body;
   
@@ -774,6 +777,7 @@ app.get('/admin/call', requireAdmin, (req, res) => {
         res.render('admin/caller', { callRequests: results });
     });
 });
+
 
 // Route to delete a call request
 app.post('/admin/delete/:id', (req, res) => {
