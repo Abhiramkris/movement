@@ -177,7 +177,7 @@
   </script>
 
   <div class="live-chat" onclick="toggleLiveChat()">
-    <span class="icon"><i class="fas fa-comments"></i></span>Live Chat
+    <span class="icon"><i class="fas fa-comments"></i></span>Chat
   </div>
   <div class="live-chat-modal" id="live-chat-modal">
     <button class="close-btn" onclick="toggleLiveChat()">&times;</button>
@@ -280,10 +280,10 @@
           height: 40px;
           border-radius: 5px;
           padding: 5px 5px;
-          margin-left: 9vw;
+          margin-left: 12vw;
           font-weight: 800;
           z-index: 1000;
-          width: 230px;
+          width: 220px;
           margin-top: 70px;
         }
 
@@ -435,19 +435,16 @@
     <br>
   <div class="box">
     <a href="#" class="icon2" onclick="showCard(event, 'subjective')">
-      <img src="/images/target.gif" alt="Subjective Examination">
+      <img src="/images/target.gif" alt="Subjective Examination"> <br> <p>Assessment</p>
     </a>
     <a href="#" class="icon2" onclick="showCard(event, 'objective')">
-      <img src="/images/efficiency.gif" alt="Objective Examination">
+      <img src="/images/chiropractic.gif" alt="Objective Examination"> <p>Treatment</p>
     </a>
-    <a href="#" class="icon2" onclick="showCard(event, 'treatment')">
-      <img src="/images/massage.gif" alt="Treatment">
+    <a href="#" class="icon2" onclick="showCard(event, 'treatment')"> 
+      <img src="/images/massage.gif" alt="Treatment"><br><p>Restoration</p>
     </a>
     <a href="#" class="icon2" onclick="showCard(event, 'restoration')">
-      <img src="/images/chiropractic.gif" alt="Restoration">
-    </a>
-    <a href="#" class="icon2" onclick="showCard(event, 'perform')">
-      <img src="/images/question.gif" alt="Perform">
+      <img src="/images/treadmill.gif" alt="Restoration"> <br> <p>Perform</p>
     </a>
   </div>
 
@@ -463,36 +460,28 @@
         <br>•Posture Analysis
         <br>•Range of Motion (ROM) Testing
         <br>•Strength Testing
-        <br>•Functional Testing
+        <br>•Functional Testing <br>
+        3. Analysis and Interpretation: Integrating the findings from both the subjective and objective examinations
       </p>
     </div>
     <div id="card-objective" class="card">
       <button class="close-btn" onclick="closeCard()">×</button>
-      <h2>Objective Examination</h2>
-      <p>Conducting physical tests and observations to assess the patient's physical abilities and limitations. This may include:</p>
-      <ul>
-        <li>Posture Analysis: Observing the patient's posture to identify any deviations or abnormalities.</li>
-        <li>Range of Motion (ROM) Testing: Measuring the movement in specific joints to determine flexibility and mobility.</li>
-        <li>Strength Testing: Evaluating muscle strength through manual resistance or using equipment.</li>
-        <li>Functional Testing: Assessing the patient's ability to perform specific tasks or activities relevant to their daily life.</li>
-        <li>Palpation: Feeling the tissues and structures to identify any abnormalities, tenderness, or changes in texture.</li>
-        <li>Special Tests: Performing specific tests designed to diagnose certain conditions or injuries.</li>
-      </ul>
+      <h2>Treatment</h2>
+      <p >At Movement Science, we believe in providing hands-on treatment when necessary. Our goal is to alleviate your pain, tension, soreness, or stiffness by utilizing a range of techniques. Our team is highly proficient in manipulative physiotherapy and soft tissue techniques. We collaborate closely with our sports massage therapists to deliver the most effective physical therapy for you.</p>
     </div>
+
     <div id="card-treatment" class="card">
       <button class="close-btn" onclick="closeCard()">×</button>
-      <h2>Treatment</h2>
-      <p>At Movement Science, we believe in providing hands-on treatment when necessary. Our goal is to alleviate your pain, tension, soreness, or stiffness by utilizing a range of techniques. Our team is highly proficient in manipulative physiotherapy and soft tissue techniques. We collaborate closely with our sports massage therapists to deliver the most effective physical therapy for you.</p>
+      <h2>Restoration</h2>
+      <p>Our goal is to restore your physical form, functionality, range of motion, muscle strength, mobility, flexibility, core strength, muscle power, agility, gait, and posture, among other factors, in order to achieve the best possible outcome for your symptoms. In addition to hands-on therapy, we will provide tailored exercise plans, offer valuable advice on lifestyle and work adjustments, and customize gym or training programs to ensure optimal recovery for our patients. Our approach is patient-centered, following best practices and always 
+        grounded in evidence-based methods, while staying current with the latest research and expert opinions. Our ultimate objective is to achieve a 100% improvement in symptoms
+      </p>
     </div>
     <div id="card-restoration" class="card">
       <button class="close-btn" onclick="closeCard()">×</button>
-      <h2>Restoration</h2>
-      <p>Our goal is to restore your physical form, functionality, range of motion, muscle strength, mobility, flexibility, core strength, muscle power, agility, gait, and posture, among other factors, in order to achieve the best possible outcome for your symptoms. In addition to hands-on therapy, we will provide tailored exercise plans, offer valuable advice on lifestyle and work adjustments, and customize gym or training programs to ensure optimal recovery for our patients. Our approach is patient-centered, following best practices and always grounded in evidence-based methods, while staying current with the latest research and expert opinions. Our ultimate objective is to achieve a 100% improvement in symptoms.</p>
-    </div>
-    <div id="card-perform" class="card">
-      <button class="close-btn" onclick="closeCard()">×</button>
       <h2>Perform</h2>
-      <p>We are dedicated to helping our patients not only recover from their injuries but also to excel beyond their previous level of performance. Our team of physiotherapists is committed to achieving complete recovery and surpassing expectations. Whether it's developing self-management techniques for chronic low back pain, enhancing athletic abilities, or improving balance and stability, we strive for 100% recovery and more. In addition to our skilled physiotherapists, we offer sports massage therapy and personal training services to support our patients in reaching their full potential. We are passionate about meeting our patients' needs and helping them achieve their long-term goals.</p>
+      <p>We are dedicated to helping our patients not only recover from their injuries but also to excel beyond their previous level of performance. Our team of physiotherapists is committed to achieving complete recovery and surpassing expectations. Whether it's developing self-management techniques for chronic low back pain, enhancing athletic abilities, or improving balance and stability, we strive for 100% recovery and more.
+        In addition to our skilled physiotherapists, we offer sports massage therapy and personal training services to support our patients in reaching their full potential. We are passionate about meeting our patients' needs and helping them achieve their long-term goals.</p>
     </div>
     <br>
   </div>
@@ -599,7 +588,8 @@
     }
 
     .card p {
-      font-weight:600;
+      font-weight:400;
+      color: #010f49;
     }
 
     .card h2 {
@@ -635,7 +625,9 @@
     }
 
     .icon2 {
-      display: flex;
+      flex-grow: 1;
+  display: flex;
+  flex-direction: column;
       justify-content: center;
       align-items: center;
       border-radius: 8px;
@@ -650,6 +642,11 @@
       border-radius: 10px;
       cursor: pointer;
     }
+    .icon2 p {
+      font-weight:400;
+      color: #f5f7ff;
+      margin-left: 3px;
+    }
   </style>
 
   <div class="testi">
@@ -660,7 +657,7 @@
             <blockquote class="blockquote text-center">
               <p class="mb-0"><i class="fa fa-quote-left"></i> Movement Science has been a game-changer for me. As someone who struggles with chronic back pain, the convenience of having professional physiotherapy services come to my home has been invaluable. The physiotherapist was not only knowledgeable but also incredibly compassionate and patient.
               </p> <br><br>
-              <footer class="blockquote-footer">Albert Einstein <cite title="Source Title">genius</cite></footer>
+              <footer class="blockquote-footer">Ajith<cite title="Source Title"></cite></footer>
               <!-- Client review stars -->
               <!-- "fas fa-star" for a full star, "far fa-star" for an empty star, "far fa-star-half-alt" for a half star. -->
               <p class="client-review-stars">
@@ -676,7 +673,7 @@
             <blockquote class="blockquote text-center">
               <p class="mb-0"><i class="fa fa-quote-left"></i> After my sports injury, I thought my recovery would take forever. But thanks to Movement Science's home physiotherapy services, I was back on my feet in no time. The therapist was thorough in their assessment and provided effective, targeted exercises that made a noticeable difference.
               </p> <br>
-              <footer class="blockquote-footer">Albert Einstein <cite title="Source Title">genius</cite></footer>
+              <footer class="blockquote-footer">Akshitha<cite title="Source Title"></cite></footer>
               <!-- Client review stars -->
               <!-- "fas fa-star" for a full star, "far fa-star" for an empty star, "far fa-star-half-alt" for a half star. -->
               <p class="client-review-stars">
@@ -692,7 +689,55 @@
             <blockquote class="blockquote text-center">
               <p class="mb-0"><i class="fa fa-quote-left"></i> Movement Science has been an essential part of my recovery process after knee surgery. The home service is incredibly convenient, especially when mobility is an issue. The physiotherapist was professional, friendly, and highly skilled.
               </p><br>
-              <footer class="blockquote-footer">Albert Einstein <cite title="Source Title">genius</cite></footer>
+              <footer class="blockquote-footer">Ashin<cite title="Source Title"></cite></footer>
+              <!-- Client review stars -->
+              <!-- "fas fa-star" for a full star, "far fa-star" for an empty star, "far fa-star-half-alt" for a half star. -->
+              <p class="client-review-stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </p> <br><br>
+            </blockquote>
+          </div>
+          <div class="carousel-item text-center p-4">
+            <blockquote class="blockquote text-center">
+              <p class="mb-0"><i class="fa fa-quote-left"></i> Affordable, professional, and highly effective. My physiotherapy sessions here have significantly improved my mobility and pain levels.
+              </p><br>
+              <footer class="blockquote-footer">Jesvin<cite title="Source Title"></cite></footer>
+              <!-- Client review stars -->
+              <!-- "fas fa-star" for a full star, "far fa-star" for an empty star, "far fa-star-half-alt" for a half star. -->
+              <p class="client-review-stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </p> <br><br>
+            </blockquote>
+          </div>
+          <div class="carousel-item text-center p-4">
+            <blockquote class="blockquote text-center">
+              <p class="mb-0"><i class="fa fa-quote-left"></i>Highly recommend their services! Not only are they budget-friendly, but the treatment I received was outstanding and effective.
+              </p><br>
+              <footer class="blockquote-footer">jisvin<cite title="Source Title"></cite></footer>
+              <!-- Client review stars -->
+              <!-- "fas fa-star" for a full star, "far fa-star" for an empty star, "far fa-star-half-alt" for a half star. -->
+              <p class="client-review-stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </p> <br><br>
+            </blockquote>
+          </div>
+          <div class="carousel-item text-center p-4">
+            <blockquote class="blockquote text-center">
+              <p class="mb-0"><i class="fa fa-quote-left"></i> I found their services to be very affordable, and personally, I experienced one of my best physiotherapy sessions with them.
+              </p><br>
+              <footer class="blockquote-footer">Midhun<cite title="Source Title"></cite></footer>
               <!-- Client review stars -->
               <!-- "fas fa-star" for a full star, "far fa-star" for an empty star, "far fa-star-half-alt" for a half star. -->
               <p class="client-review-stars">
