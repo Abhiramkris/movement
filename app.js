@@ -728,27 +728,33 @@ app.post('/freecall', (req, res) => {
     const { name, phone } = req.body;
   
     if (!name || !phone) {
-      // Check if required fields are missing
       return res.status(400).json({ error: 'Name and phone number are required' });
     }
   
-    // Example database interaction
     const checkCustomerQuery = 'SELECT id FROM customers WHERE phone = ?';
     db.query(checkCustomerQuery, [phone], (err, results) => {
-      if (err) return res.status(500).json({ error: 'Database error1' });
+      if (err) {
+        console.error('Database error1:', err); // Log the error
+        return res.status(500).json({ error: 'Database error1' });
+      }
   
       let customerId;
   
       if (results.length === 0) {
-        // Insert new customer
         const addCustomerQuery = 'INSERT INTO customers (name, phone) VALUES (?, ?)';
         db.query(addCustomerQuery, [name, phone], (err, result) => {
-          if (err) return res.status(500).json({ error: 'Database error2' });
+          if (err) {
+            console.error('Database error2:', err); // Log the error
+            return res.status(500).json({ error: 'Database error2' });
+          }
   
           customerId = result.insertId;
           const addCallRequestQuery = 'INSERT INTO call_requests (customer_id, requested_number) VALUES (?, ?)';
           db.query(addCallRequestQuery, [customerId, phone], (err) => {
-            if (err) return res.status(500).json({ error: 'Database error3' });
+            if (err) {
+              console.error('Database error3:', err); // Log the error
+              return res.status(500).json({ error: 'Database error3' });
+            }
             res.json({ redirect: '/contactedsoon' });
           });
         });
@@ -756,13 +762,16 @@ app.post('/freecall', (req, res) => {
         customerId = results[0].id;
         const addCallRequestQuery = 'INSERT INTO call_requests (customer_id, requested_number) VALUES (?, ?)';
         db.query(addCallRequestQuery, [customerId, phone], (err) => {
-          if (err) return res.status(500).json({ error: 'Database error4' });
+          if (err) {
+            console.error('Database error4:', err); // Log the error
+            return res.status(500).json({ error: 'Database error4' });
+          }
           res.json({ redirect: '/contactedsoon' });
         });
       }
     });
   });
-  
+
 
 
 // Admin route to view and manage call requests
