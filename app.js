@@ -369,6 +369,18 @@ function sendAppointmentEmails() {
     });
 }
 
+// Schedule the task to run once a day at 8:00 AM
+cron.schedule('0 8 * * *', () => {
+    console.log('Running the daily appointment email task');
+    sendAppointmentEmails();
+}, {
+    scheduled: true,
+    timezone: "America/New_York" // Replace with your actual timezone, e.g., "America/New_York"
+});
+
+// Start the cron job
+console.log('Appointment email scheduler started.');
+
 function sendEmail(appointment) {
     const mailOptions = {
         from: process.env.EMAIL_USER,

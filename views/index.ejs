@@ -413,15 +413,73 @@
   <div class="container">
     <div class="subhead"> <b>We provide</b></div> <br>
     <ul class="custom-list">
-      <li class="subhead">Highly skilled and compassionate physiotherapist Registered with Health care professional council (HCPC) and Active member of chartered society of physiotherapy (MCSP)</li>
-      <li class="subhead">Convenient treatment options available on demand</li>
-      <li class="subhead">Receive care in the comfort of your home, care home, or workplace</li>
-      <li class="subhead">Services available seven days a week</li>
-      <li class="subhead">Flexible scheduling with weekday, evening, and weekend appointments</li>
-      <li class="subhead">Avoid the hassle of traveling to a clinic or hospital</li> <br>
-      <!-- <img src="images/image2.jpg" alt="services at home" class="hidingimgclass"> -->
+      <li class="item">
+        <img src="/images/image22.png" alt="Image 1">
+        <span class="subhead">Highly skilled and compassionate physiotherapist Registered with Health care professional council (HCPC) and Active member of chartered society of physiotherapy (MCSP)</span>
+      </li>
+      <li class="item">
+        <img src="path/to/image2.png" alt="Image 2">
+        <span class="subhead">Convenient treatment options available on demand</span>
+      </li>
+      <li class="item">
+        <img src="/images/image44.png" alt="Image 3">
+        <span class="subhead">Receive care in the comfort of your home, care home, or workplace</span>
+      </li>
+      <li class="item">
+        <img src="/images/image11.png" alt="Image 4">
+        <span class="subhead">Services available seven days a week</span>
+      </li>
+      <li class="item">
+        <img src="/images/image33.png" alt="Image 5">
+        <span class="subhead">Flexible scheduling with weekday, evening, and weekend appointments</span>
+      </li>
+      <li class="item">
+        <img src="path/to/image6.png" alt="Image 6">
+        <span class="subhead">Avoid the hassle of traveling to a clinic or hospital</span>
+      </li>
     </ul>
   </div>
+  <style>
+
+.custom-list {
+  list-style: none; /* Remove default bullets */
+  padding: 0;
+  margin: 0;
+}
+
+.custom-list .item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px; /* Spacing between list items */
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.custom-list .item img {
+  width: 40px; /* Adjust the width of the image */
+  height: 40px; /* Adjust the height of the image */
+  margin-right: 15px; /* Space between image and text */
+}
+
+.subhead {
+  font-size: 20px; /* Adjust font size if needed */
+  color: #333; /* Text color */
+}
+
+@media (max-width: 600px) {
+  .custom-list .item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .custom-list .item img {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+}
+
+  </style>
   <div class="container">
     <div class="subhead" style="color: #023974;">
       <b>

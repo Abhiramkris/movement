@@ -196,38 +196,10 @@
   /* display: block;  */
 }
 
-.custom-list {
-  list-style-type: none;
-  /* Remove default bullet points */
-  margin-left: -25px;
 
-}
 
-.custom-list li {
-  position: relative;
-  /* Required for pseudo-element positioning */
-  padding-left: 15px;
-  /* Space for the tick icon */
-  margin-bottom: 17px;
-  /* Adjust spacing between list items */
-  line-height: 1.5;
-  /* Adjust line height for better readability */
-}
 
-.custom-list li::before {
-  content: "\2714";
-  /* Unicode character for tick (✔) */
-  font-size: 18px;
-  /* Adjust size of the tick icon */
-  position: absolute;
-  /* Position relative to the list item */
-  left: -10px;
-  /* Align tick to the left */
-  top: 3px;
-  /* Adjust vertical alignment */
-  color: #007bff;
-  /* Color of the tick */
-}
+
 
 @media (max-width: 801px) {
   .showcase {
