@@ -134,6 +134,7 @@
   font-size: 25px;
   font-weight: 400;
   color: rgb(51, 56, 68);
+  margin-left: 10px;
 
 }
 
@@ -145,7 +146,7 @@
   
   .image, .subhead3 {
     flex: 1;
-    max-width: 50%;
+    max-width: 100%;
   }
   
   .subhead3 {

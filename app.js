@@ -70,17 +70,7 @@ db.connect(err => {
 });
 
 
-// Example function using async/await with mysql2
-// async function fetchAppointments() {
-//     try {
-//         const [rows, fields] = await db.query('SELECT * FROM appointments');
-//         console.log('Appointments:', rows);
-//     } catch (err) {
-//         console.error('Error fetching appointments:', err);
-//     }
-// }
 
-//fetchAppointments();
 
 const router = express.Router();
 
@@ -309,11 +299,6 @@ router.post('/patient-history', requireAdmin, (req, res) => {
 
 module.exports = router;
 
-
-
-
-
-
 // Mount the admin routes under /admin
 app.use('/admin', router);
 
@@ -323,26 +308,10 @@ const transporter = nodemailer.createTransport({
     port: 465,
     secure: true,
     auth: {
-        user: process.env.EMAIL_USER, // Your email username
-        pass: process.env.EMAIL_PASS // Your email password
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS 
     }
 });
-
-// make function of here const mailOptions = {
-//     from: process.env.EMAIL_USER,
-//     to: 'akshay@movement-science.com',
-//     subject: 'Test Email',
-//     text: 'This is a test email from Node.js using nodemailer.'
-// };
-
-// transporter.sendMail(mailOptions, (error, info) => {
-//     if (error) {
-//         console.error('Error sending email:', error);
-//     } else {
-//         console.log('Email sent:', info.response);
-//     }
-// });
-
 
 function sendAppointmentEmails() {
     const tomorrow = new Date();
@@ -370,7 +339,7 @@ function sendAppointmentEmails() {
 }
 
 // Schedule the task to run once a day at 8:00 AM
-cron.schedule('0 8 * * *', () => {
+cron.schedule('0-35 8 * * *', () => {
     console.log('Running the daily appointment email task');
     sendAppointmentEmails();
 }, {
@@ -417,11 +386,11 @@ function generateEmailHtml(appointment) {
     return emailHtml;
 }
 
-// Schedule the task to run every hour
-setInterval(sendAppointmentEmails, 60 * 60 * 1000); // 60 * 60 * 1000 ms = 1 hour
+
+
 
 // Run the task immediately on startup
-sendAppointmentEmails();
+
 
 
 app.get('/', (req, res) => {
@@ -462,9 +431,20 @@ app.post('/checkslot', [
     body('date').isISO8601().withMessage('Invalid date format').custom((value) => {
         const inputDate = new Date(value);
         const currentDate = new Date();
-        if (inputDate < currentDate.setHours(0, 0, 0, 0)) {
+        
+        // Set the time for current date comparison to 11:00 AM
+        currentDate.setHours(11, 0, 0, 0);
+
+        // Check if the input date is in the past
+        if (inputDate < new Date().setHours(0, 0, 0, 0)) {
             throw new Error('Date cannot be in the past');
         }
+
+        // Check if the input date is today and the time is past 11:00 AM
+        if (inputDate.toDateString() === currentDate.toDateString() && new Date() >= currentDate) {
+            throw new Error('Cannot register for today after 11 AM');
+        }
+
         return true;
     }),
     body('slot').notEmpty().withMessage('Slot is required'),
@@ -476,34 +456,22 @@ app.post('/checkslot', [
     }
 
     const { date, slot, phone, city } = req.body;
-    console.log(date);
+
     db.query('SELECT * FROM slots WHERE date = ? AND slot = ?', [date, slot], (err, results) => {
         if (err) {
             return res.status(500).json({ error: 'Database query error' });
         }
-        if (results.length == 0) {
-            console.log(results.length);
-            req.session.date = date;
-            req.session.slot = slot;
-            req.session.phone = phone;
-            req.session.city = city;
-            req.session.otp_requested = true;
-            // res.json({ redirect: '/add-appointment' }); 
-
-        }
-        else {
-            return res.status(400).json({ error: 'Slot already occupied' });
-        }
 
         if (results.length === 0) {
             // Slot is available, send OTP
-            client.verify.v2.services('VAf387b0730e86f98fd3b5f33afee65aa9')
+            client.verify.v2.services(process.env.TWILIO_SERVICE_SID)
                 .verifications
                 .create({ to: phone, channel: 'sms' })
                 .then(verification => {
                     req.session.date = date;
                     req.session.slot = slot;
                     req.session.phone = phone;
+                    req.session.city = city;
                     req.session.otp_requested = true;
                     res.json({ redirect: '/verify-otp' });
                 })
@@ -532,7 +500,7 @@ app.post('/verify-otp', [
         return res.status(400).json({ error: 'OTP not requested' });
     }
 
-    client.verify.v2.services('VAf387b0730e86f98fd3b5f33afee65aa9')
+    client.verify.v2.services(process.env.TWILIO_SERVICE_SID)
         .verificationChecks
         .create({ to: phone, code: otp })
         .then(verification_check => {
