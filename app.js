@@ -21,7 +21,7 @@ const port = process.env.PORT || 3000;
 const server = http.createServer(app); // Create HTTP server
 const io = socketIo(server); // Initialize Socket.IO
 const WebSocket = require('ws');
-const wss = new WebSocket.Server({ port: 8080 });
+const wss = new WebSocket.Server({ port: 8000 });
 
 let clients = [];
 
@@ -433,7 +433,7 @@ app.post('/checkslot', [
         const currentDate = new Date();
         
         // Set the time for current date comparison to 11:00 AM
-        currentDate.setHours(11, 0, 0, 0);
+        currentDate.setHours(3, 0, 0, 0);
 
         // Check if the input date is in the past
         if (inputDate < new Date().setHours(0, 0, 0, 0)) {
