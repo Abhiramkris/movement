@@ -57,30 +57,43 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
   <!-- JavaScript Bundle with Popper -->
-   <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-PP7TJXZ7');</script>
+  <!-- Google Tag Manager -->
+  <script>
+    (function(w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event: 'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s),
+        dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-PP7TJXZ7');
+  </script>
   <!-- End Google Tag Manager -->
 </head>
 
 <body>
   <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PP7TJXZ7"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PP7TJXZ7" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
 
   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-N7N71TCVW8"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-N7N71TCVW8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'G-N7N71TCVW8');
-</script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'G-N7N71TCVW8');
+  </script>
 
   <!-- <div id="preloader">
     <img src="/images/logo.png" alt="Loading..."> <br>
@@ -307,22 +320,22 @@
     <img src="/images/hero.jpg"></img>
 
     <div class="overlay"> </div>
-      <div class="text1"> <br> <br><br> <br><br> <br>
-        <h2 class="header1">Physiotherapy at <span class="highlight">home.</span></h2>
-        <h2 class="header1">Specialist in</h2>
-        <div class="typewriter">
-          <h1 class="typewriter-text" id="typewriter-text"></h1>
-        </div>
-        <div class="free-consultation1">
-          <a href="/checkslot" class="navu">Book Free Consultation</a>
-        </div>
+    <div class="text1"> <br> <br><br> <br><br> <br>
+      <h2 class="header1">Physiotherapy at <span class="highlight">home.</span></h2>
+      <h2 class="header1">Specialist in</h2>
+      <div class="typewriter">
+        <h1 class="typewriter-text" id="typewriter-text"></h1>
       </div>
-    
+      <div class="free-consultation1">
+        <a href="/checkslot" class="navu">Book Free Consultation</a>
+      </div>
+    </div>
+
     <style>
       h5 {
         margin-top: 8px;
         font-weight: 800;
-        color:  #023974;
+        color: #023974;
         font-family: 'Poppins', sans-serif;
       }
 
@@ -333,16 +346,18 @@
 
       .free-consultation1 {
         position: absolute;
-    bottom: 32%; /* Position the button 25% up from the bottom of the container */
-    margin-left: auto; /* Make margin-left auto to move the button to the right */
-    background: linear-gradient(45deg, #1d1acb, #008CBA);
-    height: 40px;
-    border-radius: 5px;
-    padding: 5px 5px;
-    font-weight: 800;
-    z-index: 1000;
-    width: 220px;
-    text-align: center;
+        bottom: 32%;
+        /* Position the button 25% up from the bottom of the container */
+        margin-left: auto;
+        /* Make margin-left auto to move the button to the right */
+        background: linear-gradient(45deg, #1d1acb, #008CBA);
+        height: 40px;
+        border-radius: 5px;
+        padding: 5px 5px;
+        font-weight: 800;
+        z-index: 1000;
+        width: 220px;
+        text-align: center;
       }
 
       .navu {
@@ -491,58 +506,63 @@
       </li>
     </ul>
   </div>
-  <style> 
+  <style>
+    .custom-list {
+      list-style: none;
+      /* Remove default bullets */
+      padding: 0;
+      margin: 0;
+    }
 
-.custom-list {
-  list-style: none; /* Remove default bullets */
-  padding: 0;
-  margin: 0;
-}
+    .custom-list .item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      /* Spacing between list items */
+      background-color: #ffffff;
+      border-radius: 8px;
+      padding: 10px;
+    }
 
-.custom-list .item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px; /* Spacing between list items */
-  background-color: #ffffff;
-  border-radius: 8px;
-  padding: 10px;
-}
+    .custom-list .item img {
+      width: 40px;
+      /* Adjust the width of the image */
+      height: 40px;
+      /* Adjust the height of the image */
+      margin-right: 15px;
+      /* Space between image and text */
+    }
 
-.custom-list .item img {
-  width: 40px; /* Adjust the width of the image */
-  height: 40px; /* Adjust the height of the image */
-  margin-right: 15px; /* Space between image and text */
-}
+    .subhead {
+      font-size: 20px;
+      /* Adjust font size if needed */
+      color: #333;
+      /* Text color */
+    }
 
-.subhead {
-  font-size: 20px; /* Adjust font size if needed */
-  color: #333; /* Text color */
-}
+    @media (max-width: 600px) {
+      .custom-list .item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
 
-@media (max-width: 600px) {
-  .custom-list .item {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .custom-list .item img {
-    margin-right: 0;
-    margin-bottom: 10px;
-  }
-}
-
+      .custom-list .item img {
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+    }
   </style>
   <div class="container">
     <div class="subhead" style="color: #023974;">
       <b>
-          <span style="background-color: #023974; color: white; padding: 5px; border-radius: 3px;">"PRIORITISE YOUR WELLBEING"</span> 
-          <br>
-          SCHEDULE YOUR PHYSIOTHERAPY APPOINTMENT TODAY
+        <span style="background-color: #023974; color: white; padding: 5px; border-radius: 3px;">"PRIORITISE YOUR WELLBEING"</span>
+        <br>
+        SCHEDULE YOUR PHYSIOTHERAPY APPOINTMENT TODAY
       </b>
-  </div> 
-  <br>
-  <a href="/freecall" class="ctcbtn">Schedule A Free Call</a>
-  
+    </div>
+    <br>
+    <a href="/freecall" class="ctcbtn">Schedule A Free Call</a>
+
   </div>
   <br><br> <br>
   <div class="container">
@@ -772,7 +792,30 @@
       margin-left: 3px;
     }
   </style>
+  <div class="video-container">
+    <iframe src="https://www.youtube.com/embed/HX8PdpN8oAk" title="Movement Science Corporate Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+  </div>
+  <style>
+    /* styles.css */
 
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      /* 16:9 aspect ratio */
+      height: 0;
+      overflow: hidden;
+      max-width: 100%;
+      background: #000;
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
   <div class="testi">
     <div class="col-lg-10 offset-lg-1 pt-5 pb-5 bg-#010f49 text-light">
       <div id="client-testimonial-carousel" class="carousel slide" data-ride="carousel" style="height:320px;">
