@@ -792,29 +792,37 @@
       margin-left: 3px;
     }
   </style>
-  <div class="video-container">
+  <div class="video-container"> <br><br>
     <iframe src="https://www.youtube.com/embed/HX8PdpN8oAk" title="Movement Science Corporate Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+  <br><br>
   </div>
   <style>
-    /* styles.css */
+.video-container {
+    position: relative;
+    width: 100%;
+    max-width: 871px; /* Set the max width for desktop */
+    margin: 0 auto; /* Center align with equal margins */
+    padding: 0 15px; /* Add padding for mobile responsiveness */
+    background-color: #ffffff;
+}
 
+.video-container iframe {
+    width: 100%;
+    height: 600px;
+    display: block;
+}
+
+@media (max-width: 767px) {
     .video-container {
-      position: relative;
-      padding-bottom: 56.25%;
-      /* 16:9 aspect ratio */
-      height: 0;
-      overflow: hidden;
-      max-width: 100%;
-      background: #000;
+        max-width: 100%; /* Full width on mobile view */
+        padding: 0; /* Remove padding on mobile view */
     }
 
     .video-container iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+        height: 220px; /* Maintain aspect ratio */
     }
+}
+
   </style>
   <div class="testi">
     <div class="col-lg-10 offset-lg-1 pt-5 pb-5 bg-#010f49 text-light">
