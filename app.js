@@ -100,7 +100,7 @@ router.post('/login', async (req, res) => {
             // Redirect to admin dashboard on success
             res.json({ redirect: '/admin/dashboard' });
         } else {
-            // res.status(401).json({ error: 'Invalid credentials' }); // Send error response for invalid credentials
+             res.status(401).json({ error: 'Invalid credentials' }); // Send error response for invalid credentials
 
         }
     } catch (error) {
@@ -304,7 +304,7 @@ app.use('/admin', router);
 
 // Create a Nodemailer transporter using your email service
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com', // Update with your SMTP server
+    host: 'smtp.gmail.com',
     port: 465,
     secure: true,
     auth: {
@@ -313,47 +313,46 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+// Schedule the cron job to run at 8:00 AM daily
+cron.schedule('0 8 * * *', () => {
+    console.log('Running the daily appointment email task');
+    sendAppointmentEmails();
+}, {
+    scheduled: true,
+    timezone: "America/New_York"
+});
+
+console.log('Appointment email scheduler started.');
+
 function sendAppointmentEmails() {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const dateString = tomorrow.toISOString().split('T')[0];
 
-    console.log(`Fetching appointments for date: ${dateString}`);
+    console.log(`Fetching unsent appointment reminders for date: ${dateString}`);
 
-    db.query('SELECT * FROM appointments WHERE date = ?', [dateString], (err, results) => {
+    db.query('SELECT * FROM appointments WHERE date = ? AND reminder_sent = FALSE', [dateString], (err, results) => {
         if (err) {
             console.error('Database query error:', err);
             return;
         }
 
         if (results.length === 0) {
-            console.log('No appointments for tomorrow.');
+            console.log('No unsent appointment reminders for tomorrow.');
             return;
         }
 
-        console.log(`Found ${results.length} appointments for tomorrow.`);
+        console.log(`Found ${results.length} unsent appointment reminders.`);
         results.forEach(appointment => {
             sendEmail(appointment);
         });
     });
 }
 
-// Schedule the task to run once a day at 8:00 AM
-cron.schedule('0-35 8 * * *', () => {
-    console.log('Running the daily appointment email task');
-    sendAppointmentEmails();
-}, {
-    scheduled: true,
-    timezone: "America/New_York" // Replace with your actual timezone, e.g., "America/New_York"
-});
-
-// Start the cron job
-console.log('Appointment email scheduler started.');
-
 function sendEmail(appointment) {
     const mailOptions = {
         from: process.env.EMAIL_USER,
-        to: appointment.email, // Assuming email is a field in your appointments table
+        to: appointment.email, 
         subject: 'Your Appointment Reminder',
         html: generateEmailHtml(appointment)
     };
@@ -362,7 +361,16 @@ function sendEmail(appointment) {
         if (error) {
             return console.error('Error sending email:', error);
         }
-        console.log('Email sent:', info.response);
+        console.log(`Email sent to ${appointment.email}: ${info.response}`);
+
+        // **Mark the email as sent in the database**
+        db.query('UPDATE appointments SET reminder_sent = TRUE WHERE id = ?', [appointment.id], (updateErr) => {
+            if (updateErr) {
+                console.error('Error updating reminder_sent flag:', updateErr);
+            } else {
+                console.log(`Marked appointment ID ${appointment.id} as reminder sent.`);
+            }
+        });
     });
 }
 
@@ -374,22 +382,18 @@ function generateEmailHtml(appointment) {
         slot: appointment.slot
     };
 
-    let emailHtml;
-    ejs.renderFile(emailTemplate, data, (err, str) => {
-        if (err) {
-            console.error('Error rendering email template:', err);
-            return;
-        }
-        emailHtml = str;
+    return new Promise((resolve, reject) => {
+        ejs.renderFile(emailTemplate, data, (err, str) => {
+            if (err) {
+                console.error('Error rendering email template:', err);
+                reject(err);
+            } else {
+                resolve(str);
+            }
+        });
     });
-
-    return emailHtml;
 }
 
-
-
-
-// Run the task immediately on startup
 
 
 
@@ -767,7 +771,7 @@ app.get('/admin/call', requireAdmin, (req, res) => {
     `;
     db.query(getCallRequestsQuery, (err, results) => {
         if (err) {
-            console.error('Database error:', err); // Improved error handling
+            console.error('Database error:', err); 
             return res.status(500).send('Internal Server Error');
         }
         res.render('admin/caller', { callRequests: results });
