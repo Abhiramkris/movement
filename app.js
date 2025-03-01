@@ -64,7 +64,7 @@ const client = twilio(accountSid, authToken);
 //     database: process.env.DB_NAME,
 // });
 
-// Create a MySQL connection pool
+
 const db = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -74,8 +74,6 @@ const db = mysql.createPool({
     connectionLimit: 10, // Limits concurrent connections
     queueLimit: 0
 });
-
-
 
 const router = express.Router();
 
@@ -189,9 +187,6 @@ router.get('/dashboard', requireAdmin, (req, res) => {
 });
 
 module.exports = router;
-
-
-
 
 // POST request to approve an appointment
 router.post('/approve-appointment/:id', requireAdmin, (req, res) => {
@@ -704,6 +699,7 @@ app.get('/contactedsoon', (req, res) => {
 app.get('/about', (req, res) => {
     res.render('about');
 });
+
 app.post('/freecall', (req, res) => {
     const { name, phone } = req.body;
 
