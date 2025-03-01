@@ -304,7 +304,7 @@ app.use('/admin', router);
 
 // Create a Nodemailer transporter using your email service
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
+    host: 'smtp.gmail.com', // Update with your SMTP server
     port: 465,
     secure: true,
     auth: {
@@ -313,8 +313,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// Schedule the cron job to run at 8:00 AM daily
-cron.schedule('0 8 * * *', () => {
+cron.schedule('0-35 8 * * *', () => {
     console.log('Running the daily appointment email task');
     sendAppointmentEmails();
 }, {
@@ -322,6 +321,7 @@ cron.schedule('0 8 * * *', () => {
     timezone: "America/New_York"
 });
 
+// Start the cron job
 console.log('Appointment email scheduler started.');
 
 function sendAppointmentEmails() {
@@ -329,20 +329,20 @@ function sendAppointmentEmails() {
     tomorrow.setDate(tomorrow.getDate() + 1);
     const dateString = tomorrow.toISOString().split('T')[0];
 
-    console.log(`Fetching unsent appointment reminders for date: ${dateString}`);
+    console.log(`Fetching appointments for date: ${dateString}`);
 
-    db.query('SELECT * FROM appointments WHERE date = ? AND reminder_sent = FALSE', [dateString], (err, results) => {
+    db.query('SELECT * FROM appointments WHERE date = ?', [dateString], (err, results) => {
         if (err) {
             console.error('Database query error:', err);
             return;
         }
 
         if (results.length === 0) {
-            console.log('No unsent appointment reminders for tomorrow.');
+            console.log('No appointments for tomorrow.');
             return;
         }
 
-        console.log(`Found ${results.length} unsent appointment reminders.`);
+        console.log(`Found ${results.length} appointments for tomorrow.`);
         results.forEach(appointment => {
             sendEmail(appointment);
         });
@@ -361,16 +361,7 @@ function sendEmail(appointment) {
         if (error) {
             return console.error('Error sending email:', error);
         }
-        console.log(`Email sent to ${appointment.email}: ${info.response}`);
-
-        // **Mark the email as sent in the database**
-        db.query('UPDATE appointments SET reminder_sent = TRUE WHERE id = ?', [appointment.id], (updateErr) => {
-            if (updateErr) {
-                console.error('Error updating reminder_sent flag:', updateErr);
-            } else {
-                console.log(`Marked appointment ID ${appointment.id} as reminder sent.`);
-            }
-        });
+        console.log('Email sent:', info.response);
     });
 }
 
@@ -382,17 +373,18 @@ function generateEmailHtml(appointment) {
         slot: appointment.slot
     };
 
-    return new Promise((resolve, reject) => {
-        ejs.renderFile(emailTemplate, data, (err, str) => {
-            if (err) {
-                console.error('Error rendering email template:', err);
-                reject(err);
-            } else {
-                resolve(str);
-            }
-        });
+    let emailHtml;
+    ejs.renderFile(emailTemplate, data, (err, str) => {
+        if (err) {
+            console.error('Error rendering email template:', err);
+            return;
+        }
+        emailHtml = str;
     });
+
+    return emailHtml;
 }
+
 
 
 
@@ -771,7 +763,7 @@ app.get('/admin/call', requireAdmin, (req, res) => {
     `;
     db.query(getCallRequestsQuery, (err, results) => {
         if (err) {
-            console.error('Database error:', err); 
+            console.error('Database error:', err); // Improved error handling
             return res.status(500).send('Internal Server Error');
         }
         res.render('admin/caller', { callRequests: results });
