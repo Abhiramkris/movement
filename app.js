@@ -56,19 +56,24 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = twilio(accountSid, authToken);
 
 
-const db = mysql.createConnection({
+// const db = mysql.createConnection({
+//     host: process.env.DB_HOST,
+//     port: process.env.DB_PORT,
+//     user: process.env.DB_USER,
+//     password: process.env.DB_PASSWORD,
+//     database: process.env.DB_NAME,
+// });
+
+// Create a MySQL connection pool
+const db = mysql.createPool({
     host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
     user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
+    password: process.env.DB_PASS,
     database: process.env.DB_NAME,
+    waitForConnections: true,
+    connectionLimit: 10, // Limits concurrent connections
+    queueLimit: 0
 });
-
-db.connect(err => {
-    if (err) throw err;
-    console.log('Connected to database.');
-});
-
 
 
 
@@ -100,7 +105,7 @@ router.post('/login', async (req, res) => {
             // Redirect to admin dashboard on success
             res.json({ redirect: '/admin/dashboard' });
         } else {
-             res.status(401).json({ error: 'Invalid credentials' }); // Send error response for invalid credentials
+            // res.status(401).json({ error: 'Invalid credentials' }); // Send error response for invalid credentials
 
         }
     } catch (error) {
@@ -302,9 +307,10 @@ module.exports = router;
 // Mount the admin routes under /admin
 app.use('/admin', router);
 
-// Create a Nodemailer transporter using your email service
+
+// Create a Nodemailer transporter
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com', // Update with your SMTP server
+    host: 'smtp.gmail.com',
     port: 465,
     secure: true,
     auth: {
@@ -313,18 +319,30 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-function sendAppointmentEmails() {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const dateString = tomorrow.toISOString().split('T')[0];
+// Schedule the cron job (runs once at 8:00 AM)
+cron.schedule('0 8 * * *', async () => {
+    console.log('Running the daily appointment email task');
+    await sendAppointmentEmails();
+}, {
+    scheduled: true,
+    timezone: "America/New_York"
+});
 
-    console.log(`Fetching appointments for date: ${dateString}`);
+console.log('Appointment email scheduler started.');
 
-    db.query('SELECT * FROM appointments WHERE date = ?', [dateString], (err, results) => {
-        if (err) {
-            console.error('Database query error:', err);
-            return;
-        }
+// Function to fetch and send appointment reminders
+async function sendAppointmentEmails() {
+    try {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const dateString = tomorrow.toISOString().split('T')[0];
+
+        console.log(`Fetching appointments for date: ${dateString}`);
+
+        const [results] = await db.query(
+            'SELECT * FROM appointments WHERE date = ? AND reminder_sent = FALSE', 
+            [dateString]
+        );
 
         if (results.length === 0) {
             console.log('No appointments for tomorrow.');
@@ -332,66 +350,48 @@ function sendAppointmentEmails() {
         }
 
         console.log(`Found ${results.length} appointments for tomorrow.`);
-        results.forEach(appointment => {
-            sendEmail(appointment);
-        });
-    });
-}
 
-// Schedule the task to run once a day at 8:00 AM
-cron.schedule('0-35 8 * * *', () => {
-    console.log('Running the daily appointment email task');
-    sendAppointmentEmails();
-}, {
-    scheduled: true,
-    timezone: "America/New_York" // Replace with your actual timezone, e.g., "America/New_York"
-});
-
-// Start the cron job
-console.log('Appointment email scheduler started.');
-
-function sendEmail(appointment) {
-    const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: appointment.email, // Assuming email is a field in your appointments table
-        subject: 'Your Appointment Reminder',
-        html: generateEmailHtml(appointment)
-    };
-
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            return console.error('Error sending email:', error);
+        // Send emails one by one using a loop (avoiding async issues)
+        for (const appointment of results) {
+            await sendEmail(appointment);
         }
-        console.log('Email sent:', info.response);
-    });
+    } catch (err) {
+        console.error('Database query error:', err);
+    }
 }
 
-function generateEmailHtml(appointment) {
+// Function to send email
+async function sendEmail(appointment) {
+    try {
+        const emailHtml = await generateEmailHtml(appointment);
+
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: appointment.email, 
+            subject: 'Your Appointment Reminder',
+            html: emailHtml
+        };
+
+        const info = await transporter.sendMail(mailOptions);
+        console.log(`Email sent to ${appointment.email}: ${info.response}`);
+
+        // Mark email as sent in the database
+        await db.query('UPDATE appointments SET reminder_sent = TRUE WHERE id = ?', [appointment.id]);
+        console.log(`Marked appointment ID ${appointment.id} as reminder sent.`);
+    } catch (error) {
+        console.error('Error sending email:', error);
+    }
+}
+
+// Function to generate email HTML
+async function generateEmailHtml(appointment) {
     const emailTemplate = path.join(__dirname, 'emailTemplate.ejs');
-    const data = {
+    return ejs.renderFile(emailTemplate, {
         name: appointment.name,
         date: appointment.date,
         slot: appointment.slot
-    };
-
-    let emailHtml;
-    ejs.renderFile(emailTemplate, data, (err, str) => {
-        if (err) {
-            console.error('Error rendering email template:', err);
-            return;
-        }
-        emailHtml = str;
     });
-
-    return emailHtml;
 }
-
-
-
-
-// Run the task immediately on startup
-
-
 
 app.get('/', (req, res) => {
     res.render(path.join(__dirname, 'views/index'));
