@@ -48,7 +48,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 app.set('views', path.join(__dirname, 'views'));
 app.set('public', path.join(__dirname, 'public'));
-app.use(express.static(path.join(__dirname, 'public')));   
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ secret: 'secret', resave: true, saveUninitialized: true }));
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
@@ -66,23 +66,32 @@ const client = twilio(accountSid, authToken);
 
 
 const db = mysql.createPool({
+    //   host: 'mysql-3a638ecb-movementscience.k.aivencloud.com',
+    //   user: 'your_user',
+    //   password: 'your_password',
+    //   database: 'your_database',
     host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
     user: process.env.DB_USER,
-    password: process.env.DB_PASS,
+    password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     waitForConnections: true,
-    connectionLimit: 10, // Limits concurrent connections
-    queueLimit: 0
+    connectionLimit: 10,
+    queueLimit: 0,
+    connectTimeout: 10000, 
+    acquireTimeout: 20000, 
+    multipleStatements: true,
 });
+
 
 db.getConnection((err, connection) => {
     if (err) {
-      console.error("Database connection failed: " + err.message);
+        console.error("Database connection failed: " + err.message);
     } else {
-      console.log("Connected to database");
-      connection.release();
+        console.log("Connected to database");
+        connection.release();
     }
-  });
+});
 
 const router = express.Router();
 
@@ -319,7 +328,7 @@ const transporter = nodemailer.createTransport({
     secure: true,
     auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS 
+        pass: process.env.EMAIL_PASS
     }
 });
 
@@ -344,7 +353,7 @@ async function sendAppointmentEmails() {
         console.log(`Fetching appointments for date: ${dateString}`);
 
         const [results] = await db.query(
-            'SELECT * FROM appointments WHERE date = ? AND reminder_sent = FALSE', 
+            'SELECT * FROM appointments WHERE date = ? AND reminder_sent = FALSE',
             [dateString]
         );
 
@@ -371,7 +380,7 @@ async function sendEmail(appointment) {
 
         const mailOptions = {
             from: process.env.EMAIL_USER,
-            to: appointment.email, 
+            to: appointment.email,
             subject: 'Your Appointment Reminder',
             html: emailHtml
         };
@@ -435,7 +444,7 @@ app.post('/checkslot', [
     body('date').isISO8601().withMessage('Invalid date format').custom((value) => {
         const inputDate = new Date(value);
         const currentDate = new Date();
-        
+
         // Set the time for current date comparison to 11:00 AM
         currentDate.setHours(3, 0, 0, 0);
 
