@@ -56,42 +56,26 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = twilio(accountSid, authToken);
 
 
-// const db = mysql.createConnection({
-//     host: process.env.DB_HOST,
-//     port: process.env.DB_PORT,
-//     user: process.env.DB_USER,
-//     password: process.env.DB_PASSWORD,
-//     database: process.env.DB_NAME,
-// });
-
-
-const db = mysql.createPool({
-    //   host: 'mysql-3a638ecb-movementscience.k.aivencloud.com',
-    //   user: 'your_user',
-    //   password: 'your_password',
-    //   database: 'your_database',
+const db = mysql.createConnection({
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
-    connectTimeout: 10000, 
-    acquireTimeout: 20000, 
-    multipleStatements: true,
 });
 
 
-db.getConnection((err, connection) => {
-    if (err) {
-        console.error("Database connection failed: " + err.message);
-    } else {
-        console.log("Connected to database");
-        connection.release();
-    }
-});
+
+
+
+// db.getConnection((err, connection) => {
+//     if (err) {
+//         console.error("Database connection failed: " + err.message);
+//     } else {
+//         console.log("Connected to database");
+//         connection.release();
+//     }
+// });
 
 const router = express.Router();
 
