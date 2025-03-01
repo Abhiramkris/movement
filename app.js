@@ -75,6 +75,15 @@ const db = mysql.createPool({
     queueLimit: 0
 });
 
+db.getConnection((err, connection) => {
+    if (err) {
+      console.error("Database connection failed: " + err.message);
+    } else {
+      console.log("Connected to database");
+      connection.release();
+    }
+  });
+
 const router = express.Router();
 
 
