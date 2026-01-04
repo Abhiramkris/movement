@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tabbed Content</title>
+  <title>Condition We treat</title>
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -28,9 +28,27 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
   <!-- JavaScript Bundle with Popper -->
   <style>
+      h5 {
+        margin-top: 8px;
+        font-weight: 800;
+        color:  #023974;
+        font-family: 'Poppins', sans-serif;
+      }
+      
     .container {
       margin-top: 50px;
     }
+    .container1 {
+      width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;margin-top: 50px;
+    }
+    @media (max-width: 800px) {
+  .container1 {
+
+    width: 90%;
+  }
+}
     .tab-content {
       display: none;
     }
@@ -44,6 +62,12 @@
       flex-wrap: wrap;
       margin-bottom: 20px;
     }
+    h5 {
+    margin-top: 8px;
+    font-weight: 800;
+    color: rgb(1, 19, 67);
+    font-family: 'Poppins', sans-serif;
+  }
     .tab-buttons button {
       padding: 10px 20px;
       border: none;
@@ -87,36 +111,47 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light">
-  <a class="navbar-brand" href="/">
-    <img src="/images/logo.png" alt="Logo">
-  </a>
-  <div class="free-consultation">
-    <a href="/checkslot" class="nav-link">Free Consultation</a>
-  </div>
-  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-    <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="/howhelp/index">How we help <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/services">Services</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/conditions">Conditions</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/faq">FAQ</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/about">About-us</a>
-      </li>
-    </ul>
-  </div>
-</nav>
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <a class="navbar-brand" href="/">
+      <img src="/images/logo.png" alt="Logo"> <!-- Replace with your logo URL -->
+    </a>
+    <div class="name">
+      <h5>MOVEMENT SCIENCE</h5>
+    </div>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="/howhelp/index">How we help <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/services">Services</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/conditions">Conditions</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/faq">FAQ</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About-us</a>
+        </li>
+      </ul>
+      <div class="free-consultation">
+        <a href="/checkslot" class="nav-link">Book Free Consultation</a>
+      </div>
+    </div>
+  </nav>
+
+<script>
+    $(document).ready(function() {
+      $('.navbar-toggler').click(function() {
+        $('#navbarNav').collapse('toggle');
+      });
+    });
+  </script>
 <style>
 @media (min-width: 1000px) {
   .heroheroo {
@@ -126,9 +161,11 @@
 }
 
 </style> <br><br><br> <br><br>
-<div class="heroheroo"> <div class="header">We offer support and solutions for numerous problems</div> <br>
+<div class="container1">
+<div class="herohero"> <div class="header">We offer support and solutions for numerous problems</div> <br>
 <div class="subhead">Do you need specialist advice?</div>
 <div class="subhead">Our highly-skilled and professional team design personalised treatment plans to help you to manage your condition, achieve your goals, and live a pain-free life. Please call our specialist case managers to discuss your needs.</div> <br><br>
+</div>
 </div>
   
 <br><br><br>
@@ -335,9 +372,9 @@
                       color: #ddd;
                     }
                   </style>
-                  <a href="https://www.facebook.com" target="_blank" class="fab fa-facebook-f"></a>
-                  <a href="https://www.twitter.com" target="_blank" class="fab fa-twitter"></a>
-                  <a href="https://www.instagram.com" target="_blank" class="fab fa-instagram"></a>
+                  <a href="https://www.facebook.com/movement.science.2024?mibextid=ZbWKwL" target="_blank" class="fab fa-facebook-f"></a>
+                  <a href="https://x.com/movesscience" target="_blank" class="fab fa-twitter"></a>
+                  <a href="https://www.instagram.com/movementsscience?igsh=MXJ5cXRzazNiYXNhYQ==" target="_blank" class="fab fa-instagram"></a>
                 </div>
               </ul>
             </div>
@@ -361,7 +398,7 @@
           <div class="copyright-text">
             <p>© 2024
               <a href="/">Movemnet science</a>. All rights reserved. Created by
-              <a href="https://www.instagram.com/crem.create?igsh=ZjFscW1kZjhtNTBw">crem.create</a>
+              <a href="https://www.instagram.com/movementsscience?igsh=MXJ5cXRzazNiYXNhYQ==/crem.create?igsh=ZjFscW1kZjhtNTBw">crem.create</a>
             </p>
           </div>
 

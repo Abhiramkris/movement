@@ -97,7 +97,12 @@
     .slot label {
       font-weight: 400;
     }
-
+    h5 {
+    margin-top: 8px;
+    font-weight: 800;
+    color: rgb(1, 19, 67);
+    font-family: 'Poppins', sans-serif;
+  }
     @media (min-width: 768px) {
       .container {
         max-width: 600px;
@@ -126,8 +131,8 @@
     <a class="navbar-brand" href="/">
       <img src="/images/logo.png" alt="Logo"> <!-- Replace with your logo URL -->
     </a>
-    <div class="free-consultation">
-      <a href="/checkslot" class="nav-link">Free Consultation</a>
+    <div class="name">
+      <h5>MOVEMENT SCIENCE</h5>
     </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -150,8 +155,18 @@
           <a class="nav-link" href="/about">About-us</a>
         </li>
       </ul>
+      <div class="free-consultation">
+        <a href="/checkslot" class="nav-link">Book Free Consultation</a>
+      </div>
     </div>
-  </nav> 
+  </nav>
+  <script>
+    $(document).ready(function() {
+      $('.navbar-toggler').click(function() {
+        $('#navbarNav').collapse('toggle');
+      });
+    });
+  </script>
   <br><br><br>
   <div class="container">
     <h1>Check Slots</h1>

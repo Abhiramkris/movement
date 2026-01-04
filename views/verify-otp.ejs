@@ -31,6 +31,12 @@
       height: 100vh;
       background-color: #f0f0f0;
     }
+    h5 {
+        margin-top: 8px;
+        font-weight: 800;
+        color:  #023974;
+        font-family: 'Poppins', sans-serif;
+      }
 
     .container {
       background-color: #fff;
@@ -60,6 +66,12 @@
       border: 1px solid #ccc;
       border-radius: 4px;
     }
+    h5 {
+    margin-top: 8px;
+    font-weight: 800;
+    color: rgb(1, 19, 67);
+    font-family: 'Poppins', sans-serif;
+  }
 
     .container button {
       width: 100%;
@@ -89,8 +101,8 @@
     <a class="navbar-brand" href="/">
       <img src="/images/logo.png" alt="Logo"> <!-- Replace with your logo URL -->
     </a>
-    <div class="free-consultation">
-      <a href="/checkslot" class="nav-link">Free Consultation</a>
+    <div class="name">
+      <h5>MOVEMENT SCIENCE</h5>
     </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -113,10 +125,21 @@
           <a class="nav-link" href="/about">About-us</a>
         </li>
       </ul>
+      <div class="free-consultation">
+        <a href="/checkslot" class="nav-link">Book Free Consultation</a>
+      </div>
     </div>
-     </nav>
+  </nav>
+  
+  <script>
+    $(document).ready(function() {
+      $('.navbar-toggler').click(function() {
+        $('#navbarNav').collapse('toggle');
+      });
+    });
+  </script>
 
-
+<br><br><br>
   <div class="container">
     <h1>Verify OTP</h1>
     <p>Slot: <span id="slot"></span></p>
@@ -287,9 +310,9 @@
                         color: #ddd;
                       }
                     </style>
-                    <a href="https://www.facebook.com" target="_blank" class="fab fa-facebook-f"></a>
-                    <a href="https://www.twitter.com" target="_blank" class="fab fa-twitter"></a>
-                    <a href="https://www.instagram.com" target="_blank" class="fab fa-instagram"></a>
+                    <a href="https://www.facebook.com/movement.science.2024?mibextid=ZbWKwL" target="_blank" class="fab fa-facebook-f"></a>
+                    <a href="https://x.com/movesscience" target="_blank" class="fab fa-twitter"></a>
+                    <a href="https://www.instagram.com/movementsscience?igsh=MXJ5cXRzazNiYXNhYQ==" target="_blank" class="fab fa-instagram"></a>
                   </div>
                 </ul>
               </div>
@@ -313,7 +336,7 @@
             <div class="copyright-text">
               <p>© 2024
                 <a href="/">Movemnet science</a>. All rights reserved. Created by
-                <a href="https://www.instagram.com/crem.create?igsh=ZjFscW1kZjhtNTBw">crem.create</a>
+                <a href="https://www.instagram.com/movementsscience?igsh=MXJ5cXRzazNiYXNhYQ==/crem.create?igsh=ZjFscW1kZjhtNTBw">crem.create</a>
               </p>
             </div>
 

@@ -6,275 +6,285 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Appointments Dashboard</title>
+
+  <link rel="stylesheet" href="css/imagetext.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/aura.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/footer.css">
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
   <style>
-    /* CSS styles for appointments table */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
+    body {
+      background: #f4f6f9;
+      font-family: Poppins, sans-serif
     }
 
-    th,
-    td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: left;
+    .dashboard-header {
+      font-size: 26px;
+      font-weight: 600;
+      margin: 20px 0
     }
 
-    th {
-      background-color: #f2f2f2;
+    .admin-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px
     }
 
-    .appointment-box {
-      border: 1px solid #ccc;
-      padding: 10px;
-      margin-bottom: 10px;
-      background-color: #f9f9f9;
-    }
-
-    .actions {
+    .admin-toolbar button {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 14px;
       display: flex;
       align-items: center;
+      gap: 6px
     }
 
-    .remarks-input {
-      margin-right: 10px;
-      padding: 5px;
+    .admin-toolbar button.secondary {
+      background: #6b7280
+    }
+
+    .filter-bar {
+      background: #fff;
+      padding: 12px;
+      border-radius: 10px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, .06)
+    }
+
+    .filter-bar input,
+    .filter-bar button {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #ddd
+    }
+
+    .search-box {
+      flex: 1
+    }
+
+    .appointments-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 18px;
+      margin-top: 20px
+    }
+
+    .appointment-card {
+      background: #fff;
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, .07)
+    }
+
+    .appointment-card h6 {
+      font-weight: 600;
+      margin-bottom: 6px
+    }
+
+    .appointment-card p {
+      font-size: 14px;
+      margin: 0;
+      color: #4b5563
+    }
+
+    .appointment-actions {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px
+    }
+
+    .appointment-actions input {
+      flex: 1;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid #ddd
+    }
+
+    .appointment-actions button {
+      border: none;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 13px;
+      color: #fff
     }
 
     .approve-btn {
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      cursor: pointer;
-      border-radius: 4px;
+      background: #16a34a
     }
 
-    .approve-btn:hover {
-      background-color: #45a049;
+    .delete-btn {
+      background: #dc2626
+    }
+
+    .whatsapp-btn {
+      background: #22c55e
+    }
+
+    .pagination-bar {
+      text-align: center;
+      margin: 25px 0
+    }
+
+    .pagination-bar button {
+      margin: 0 4px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: none;
+      background: #e5e7eb
+    }
+
+    .pagination-bar button.active {
+      background: #2563eb;
+      color: #fff
+    }
+
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999
     }
   </style>
 </head>
 
 <body>
-  <h1>Appointments Dashboard</h1>
 
-  <form action="/admin/dashboard" method="GET">
-    <label for="date">Filter by Date:</label>
-    <input type="date" id="date" name="date" value="<%= filterDate %>">
-    <button type="submit">Filter</button>
-    <button type="button" id="clear-filter">Clear Filter</button>
-  </form>
-  <button id="logout-btn">Logout</button> <br>
-  <!-- Add this button to your dashboard page -->
-  <button type="button" id="see-history-btn">See History</button>
-<a href="/appointmentsall"><button>aproved appointments</button></a>
-<a href="/admin/live-chat-queries"><button>live chat</button></a>
-  <% if (appointments && appointments.length > 0) { %>
-  <% appointments.forEach(appointment => { %>
-  <div class="appointment-box">
-    <p><strong>Name:</strong> <%= appointment.name %></p>
-    <p><strong>Address:</strong> <%= appointment.address %></p>
-    <p><strong>Date:</strong> <%= appointment.date %></p>
-    <p><strong>Slot:</strong> <%= appointment.slot %></p>
-    <p><strong>Phone:</strong> <%= appointment.phone %></p>
-    <p><strong>Email:</strong> <%= appointment.email %></p>
-    <p><strong>City:</strong> <%= appointment.city %></p>
-    <div class="actions">
-      <input type="text" class="remarks-input" id="remarks-<%= appointment.id %>" placeholder="Add remarks" required>
-      <button class="approve-btn" data-appointment-id="<%= appointment.id %>">Done</button>
-      <button class="delete-btn" data-appointment-id="<%= appointment.id %>">Delete</button>
-      <button class="whatsapp-btn" data-phone-number="<%= appointment.phone %>">WhatsApp</button>
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="name">
+      <h5>MOVEMENT SCIENCE</h5>
     </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="dashboard-header">Admin Dashboard</div>
+
+    <!-- ADMIN TOOLBAR -->
+    <div class="admin-toolbar">
+      <button id="logout-btn" class="secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      <a href="/admin/call"><button><i class="fas fa-phone"></i> Calls</button></a>
+      <button id="see-history-btn"><i class="fas fa-history"></i> History</button>
+      <a href="/appointmentsall"><button><i class="fas fa-check-circle"></i> Approved</button></a>
+      <a href="/admin/live-chat-queries"><button><i class="fas fa-comments"></i> Live Chat</button></a>
+    </div>
+
+    <!-- FILTER + SEARCH -->
+    <div class="filter-bar">
+      <form action="/admin/dashboard" method="GET" style="display:flex;gap:10px">
+        <input type="date" name="date" value="<%= filterDate %>">
+        <button type="submit">Filter</button>
+        <button type="button" id="clear-filter">Clear</button>
+      </form>
+      <input type="text" id="searchInput" class="search-box" placeholder="Search name / phone / email">
+    </div>
+
+    <!-- APPOINTMENTS -->
+    <div class="appointments-grid" id="appointmentsGrid">
+      <% appointments.forEach(appointment=>{ %>
+        <div class="appointment-card searchable">
+          <h6>
+            <%= appointment.name %>
+          </h6>
+          <p><strong>Date:</strong>
+            <%= appointment.date %>
+          </p>
+          <p><strong>Slot:</strong>
+            <%= appointment.slot %>
+          </p>
+          <p><strong>Phone:</strong>
+            <%= appointment.phone %>
+          </p>
+          <p><strong>Email:</strong>
+            <%= appointment.email %>
+          </p>
+          <p><strong>City:</strong>
+            <%= appointment.city %>
+          </p>
+          <p><strong>Address:</strong>
+            <%= appointment.address %>
+          </p>
+
+          <div class="appointment-actions">
+            <input type="text" id="remarks-<%= appointment.id %>" placeholder="Remarks">
+            <button class="approve-btn" data-appointment-id="<%= appointment.id %>">Approve</button>
+            <button class="delete-btn" data-appointment-id="<%= appointment.id %>">Delete</button>
+            <button class="whatsapp-btn" data-phone-number="<%= appointment.phone %>">WhatsApp</button>
+          </div>
+        </div>
+        <% }) %>
+    </div>
+
+    <div class="pagination-bar" id="pagination"></div>
   </div>
-  <% }) %>
-  <% } else { %>
-  <p>No appointments found.</p>
-  <% } %>
+
+  <!-- TOAST -->
+  <div class="toast-container"></div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-    document.getElementById('clear-filter').addEventListener('click', function() {
-        // Clear filter logic here
-        console.log('Clear Filter button clicked');
-        // Example: Reset input fields
-        document.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
-        // Example: Reset select elements
-        document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
-        window.location.href = '/admin/dashboard';
-    });
-});
+    function showToast(msg, type = "info") {
+      const toast = $(`
+  <div class="toast" data-delay="3000">
+    <div class="toast-body bg-${type} text-white">${msg}</div>
+  </div>`);
+      $(".toast-container").append(toast);
+      toast.toast("show").on("hidden.bs.toast", () => toast.remove());
+    }
 
-    document.querySelectorAll('.whatsapp-btn').forEach(button => {
-      button.addEventListener('click', function() {
-        const phoneNumber = this.dataset.phoneNumber;
-        const message = encodeURIComponent('we hope that you like our service review us at '); // Customize your default message here
-
-        const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
-
-        window.open(whatsappUrl, '_blank');
+    /* SEARCH */
+    $("#searchInput").on("keyup", function () {
+      const v = $(this).val().toLowerCase();
+      $(".searchable").each(function () {
+        $(this).toggle($(this).text().toLowerCase().includes(v));
       });
     });
 
-    document.getElementById('see-history-btn').addEventListener('click', function() {
-      const patientName = prompt('Please enter the patient name:');
-      if (patientName) {
-        fetch('/admin/patient-history', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              name: patientName
-            })
-          })
-          .then(response => response.text())
-          .then(html => {
-            document.open();
-            document.write(html);
-            document.close();
-          })
-          .catch(error => {
-            console.error('Error fetching patient history:', error);
-            alert('Failed to fetch patient history. Please try again.');
-          });
-      }
-    });
+    /* PAGINATION */
+    const cards = $(".searchable"); let perPage = 6; let page = 1;
+    function render() {
+      cards.hide();
+      cards.slice((page - 1) * perPage, page * perPage).show();
+    }
+    function pager() {
+      let pages = Math.ceil(cards.length / perPage); let html = "";
+      for (let i = 1; i <= pages; i++) html += `<button class="${i == page ? 'active' : ''}" onclick="page=${i};render()">${i}</button>`;
+      $("#pagination").html(html);
+    }
+    pager(); render();
 
+    /* CLEAR FILTER */
+    $("#clear-filter").click(() => location.href = "/admin/dashboard");
 
-    document.getElementById('logout-btn').addEventListener('click', function() {
-      window.location.href = '/admin/logout';
-    });
+    /* LOGOUT */
+    $("#logout-btn").click(() => location.href = "/admin/logout");
 
-    document.querySelectorAll('.approve-btn').forEach(button => {
-      button.addEventListener('click', async function() {
-        const appointmentId = this.dataset.appointmentId;
-        const remarksInput = document.getElementById(`remarks-${appointmentId}`);
-        const remarks = remarksInput.value;
-
-        try {
-          const response = await fetch(`/admin/approve-appointment/${appointmentId}`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              remarks
-            })
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            alert(data.message); // Show success message or handle response
-            window.location.href = '/admin/dashboard';
-            // Optionally update UI or redirect
-          } else {
-            const errorText = await response.text();
-            throw new Error(errorText);
-          }
-        } catch (error) {
-          console.error('Error approving appointment:', error);
-          alert('Failed to approve appointment. Please try again.');
-        }
-      });
-    });
-    // Event listener for delete buttons
-    document.querySelectorAll('.delete-btn').forEach(button => {
-      button.addEventListener('click', async function() {
-        const appointmentId = this.dataset.appointmentId;
-
-        try {
-          const response = await fetch(`/admin/delete-appointment/${appointmentId}`, {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            alert(data.message); // Show success message or handle response
-            // Optionally update UI or redirect
-          } else {
-            const errorText = await response.text();
-            throw new Error(errorText);
-          }
-        } catch (error) {
-          console.error('Error deleting appointment:', error);
-          alert('Failed to delete appointment. Please try again.');
-        }
-      });
-    });
-
-    // Request notification permission on page load
-    document.addEventListener('DOMContentLoaded', () => {
-                if (Notification.permission !== 'granted') {
-                    Notification.requestPermission().then(permission => {
-                        if (permission === 'granted') {
-                            console.log('Notification permission granted.');
-                        } else {
-                            console.log('Notification permission denied.');
-                        }
-                    });
-                }
-            });
-
-            // Establish WebSocket connection
-            const socket = new WebSocket('wss://localhost:8080'); // Change to your production URL
-
-            socket.onopen = () => {
-                console.log('WebSocket connection established');
-            };
-            socket.onmessage = (event) => {
-                const message = JSON.parse(event.data);
-                console.log(message);
-
-                // Show browser notification
-
-                if (Notification.permission === 'granted') {
-                    new Notification(message.title, {
-                        body: message.body,
-                    });
-                } else {
-                    alert(`${message.title}: ${message.body}`);
-                }
-            };
-
-            socket.onclose = () => {
-                console.log('WebSocket connection closed');
-            };
-
-            socket.onerror = (error) => {
-                console.error('WebSocket error:', error);
-            };
-    
+    /* WEBSOCKET (SINGLE + MOBILE SAFE) */
+    let ws;
+    function connectWS() {
+      ws = new WebSocket("wss://localhost:8080");
+      ws.onmessage = e => {
+        const m = JSON.parse(e.data);
+        showToast(m.title + ": " + m.body, "primary");
+      };
+      ws.onclose = () => setTimeout(connectWS, 3000);
+    }
+    connectWS();
   </script>
 
-<script>
-  const socket = new WebSocket('ws://localhost:8080');
-
-socket.onopen = () => {
- console.log('WebSocket connection established');
-};
-
-socket.onmessage = (event) => {
- const message = JSON.parse(event.data);
- alert(`${message.title}: ${message.body}`);
-};
-
-socket.onclose = () => {
- console.log('WebSocket connection closed');
-};
-
-socket.onerror = (error) => {
- console.error('WebSocket error:', error);
-};
-</script>
-
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>

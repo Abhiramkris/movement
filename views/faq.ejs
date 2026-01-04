@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modern UI</title>
+  <title>Faq and pricing</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/aura.css">
@@ -35,7 +35,12 @@
       --main-font-color: #5f6368;
       --main-font-weight: 300;
     }
-
+    h5 {
+        margin-top: 8px;
+        font-weight: 800;
+        color:  #023974;
+        font-family: 'Poppins', sans-serif;
+      }
     /* Basic */
     body {
       background-color: var(--light-gray);
@@ -180,7 +185,12 @@
       background: linear-gradient(135deg, #4285f4 0%, #1a73e8 100%);
       transform: translateY(-2px);
     }
-
+    h5 {
+    margin-top: 8px;
+    font-weight: 800;
+    color: rgb(1, 19, 67);
+    font-family: 'Poppins', sans-serif;
+  }
     /* Highlight Middle Card */
     .card-highlight {
       box-shadow: 0 0 10px rgba(26, 115, 232, 0.6);
@@ -223,10 +233,10 @@
 
   <nav class="navbar navbar-expand-lg navbar-light">
     <a class="navbar-brand" href="/">
-      <img src="your-logo-url.png" alt="Logo"> <!-- Replace with your logo URL -->
+      <img src="/images/logo.png" alt="Logo"> <!-- Replace with your logo URL -->
     </a>
-    <div class="free-consultation">
-      <a href="/checkslot" class="nav-link">Free Consultation</a>
+    <div class="name">
+      <h5>MOVEMENT SCIENCE</h5>
     </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -249,8 +259,18 @@
           <a class="nav-link" href="/about">About-us</a>
         </li>
       </ul>
+      <div class="free-consultation">
+        <a href="/checkslot" class="nav-link">Book Free Consultation</a>
+      </div>
     </div>
   </nav>
+<script>
+    $(document).ready(function() {
+      $('.navbar-toggler').click(function() {
+        $('#navbarNav').collapse('toggle');
+      });
+    });
+  </script>
   <br><br>
   <!-- <div class="herohero">
     <div class="header">We offer support and solutions for numerous problems</div> <br>
@@ -330,7 +350,7 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Basic Plan</h5>
-            <p class="card-text">49 Pounds For <b>One</b> Hour Session</p>
+            <p class="card-text">49 Pounds For <b>One</b> Session</p>
             <p class="card-text">Free intial consultation</p>
             <p class="card-text">Asses your conditions</p>
             <p class="card-text">Treatment Sessions</p>
@@ -343,7 +363,7 @@
           <!-- Added card-highlight class for middle card -->
           <div class="card-body">
             <h5 class="card-title">Premium Plan</h5>
-            <p class="card-text">239 Pounds For <b>Five</b> Hour Session</p>
+            <p class="card-text">239 Pounds For <b>Five</b> Session</p>
             <p class="card-text">Free intial consultation</p>
             <p class="card-text">Asses your conditions</p>
             <p class="card-text">Treatment Sessions</p>
@@ -355,7 +375,7 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Ultimate Plan</h5>
-            <p class="card-text">459 Pounds For <b>Ten</b> Hour Session</p>
+            <p class="card-text">459 Pounds For <b>Ten</b> Session</p>
             <p class="card-text">Free intial consultation</p>
             <p class="card-text">Asses your conditions</p>
             <p class="card-text">Treatment Sessions</p>

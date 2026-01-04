@@ -13,15 +13,15 @@ const cron = require('node-cron');
 const ejs = require('ejs');
 // const db = require('./models/db'); // Your database connection module
 // const adminRoutes = require('./routes/adminRoutes');
-const http = require('http'); // Import HTTP module
+const http = require('http'); 
 const socketIo = require('socket.io'); // Import Socket.IO module
 dotenv.config(); // Load environment variables
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3200;
 const server = http.createServer(app); // Create HTTP server
 const io = socketIo(server); // Initialize Socket.IO
 const WebSocket = require('ws');
-const wss = new WebSocket.Server({ port: 8080 });
+const wss = new WebSocket.Server({ port: 8000 });
 
 let clients = [];
 
@@ -64,23 +64,15 @@ const db = mysql.createConnection({
     database: process.env.DB_NAME,
 });
 
-db.connect(err => {
-    if (err) throw err;
-    console.log('Connected to database.');
-});
 
-
-// Example function using async/await with mysql2
-// async function fetchAppointments() {
-//     try {
-//         const [rows, fields] = await db.query('SELECT * FROM appointments');
-//         console.log('Appointments:', rows);
-//     } catch (err) {
-//         console.error('Error fetching appointments:', err);
+// db.getConnection((err, connection) => {
+//     if (err) {
+//         console.error("Database connection failed: " + err.message);
+//     } else {
+//         console.log("Connected to database");
+//         connection.release();
 //     }
-// }
-
-//fetchAppointments();
+// });
 
 const router = express.Router();
 
@@ -131,36 +123,36 @@ router.get('/logout', (req, res) => {
 
 app.post('/save-chat-query', (req, res) => {
     const { name, email, phone, question } = req.body;
-    console.log(req.body); 
+    console.log(req.body);
     // Validate incoming data (optional)
     if (!name || !email || !phone || !question) {
-      return res.status(400).json({ message: 'Missing required fields' });
+        return res.status(400).json({ message: 'Missing required fields' });
     }
-  
+
     // Insert into database
     db.query('INSERT INTO chat_queries (name, email, phone, question) VALUES (?, ?, ?, ?)', [name, email, phone, question], (error, results) => {
-      if (error) {
-        console.error('Error inserting chat query:', error);
-        return res.status(500).json({ message: 'Failed to save query', error: error.message });
-      }
-      res.json({ message: 'Query saved successfully' });
+        if (error) {
+            console.error('Error inserting chat query:', error);
+            return res.status(500).json({ message: 'Failed to save query', error: error.message });
+        }
+        res.json({ message: 'Query saved successfully' });
     });
-  });
+});
 
-  app.get('/admin/live-chat-queries',requireAdmin, (req, res) => {
+app.get('/admin/live-chat-queries', requireAdmin, (req, res) => {
     // Example SQL query to retrieve live chat queries
     const sql = 'SELECT * FROM chat_queries ORDER BY id DESC';
-  
+
     db.query(sql, (err, results) => {
-      if (err) {
-        console.error('Error fetching live chat queries:', err);
-        res.status(500).json({ error: 'Internal Server Error' });
-        return;
-      }
-      // Assuming results is an array of chat queries
-      res.json(results);
+        if (err) {
+            console.error('Error fetching live chat queries:', err);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+        // Assuming results is an array of chat queries
+        res.json(results);
     });
-  });
+});
 
 // Admin dashboard route filter here
 router.get('/dashboard', requireAdmin, (req, res) => {
@@ -195,9 +187,6 @@ router.get('/dashboard', requireAdmin, (req, res) => {
 
 module.exports = router;
 
-
-
-
 // POST request to approve an appointment
 router.post('/approve-appointment/:id', requireAdmin, (req, res) => {
     const { id } = req.params;
@@ -215,27 +204,27 @@ router.post('/approve-appointment/:id', requireAdmin, (req, res) => {
 
         const appointment = results[0];
 
-        db.query('INSERT INTO approved_appointments (name, address, date, slot, phone, email, city, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
-        [appointment.name, appointment.address, appointment.date, appointment.slot, appointment.phone, appointment.email, appointment.city, remarks], 
-        (insertError, insertResults) => {
-            if (insertError) {
-                console.error('Error inserting approved appointment:', insertError);
-                return res.status(500).json({ message: 'Failed to approve appointment', error: insertError.message });
-            }
-            else{
-                console.log("OOPSY");
-            }
-
-            db.query('DELETE FROM appointments WHERE id = ?', [id], (deleteError, deleteResults) => {
-                if (deleteError) {
-                    console.error('Error deleting appointment:', deleteError);
-                    return res.status(500).json({ message: 'Failed to delete original appointment', error: deleteError.message });
+        db.query('INSERT INTO approved_appointments (name, address, date, slot, phone, email, city, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [appointment.name, appointment.address, appointment.date, appointment.slot, appointment.phone, appointment.email, appointment.city, remarks],
+            (insertError, insertResults) => {
+                if (insertError) {
+                    console.error('Error inserting approved appointment:', insertError);
+                    return res.status(500).json({ message: 'Failed to approve appointment', error: insertError.message });
+                }
+                else {
+                    console.log("OOPSY");
                 }
 
-                res.status(200).json({ message: 'Appointment approved successfully' });
+                db.query('DELETE FROM appointments WHERE id = ?', [id], (deleteError, deleteResults) => {
+                    if (deleteError) {
+                        console.error('Error deleting appointment:', deleteError);
+                        return res.status(500).json({ message: 'Failed to delete original appointment', error: deleteError.message });
+                    }
+
+                    res.status(200).json({ message: 'Appointment approved successfully' });
+                });
+
             });
-            
-        });
     });
 });
 
@@ -309,53 +298,45 @@ router.post('/patient-history', requireAdmin, (req, res) => {
 
 module.exports = router;
 
-
-
-
-
-
 // Mount the admin routes under /admin
 app.use('/admin', router);
 
-// Create a Nodemailer transporter using your email service
+
+// Create a Nodemailer transporter
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com', // Update with your SMTP server
+    host: 'smtp.gmail.com',
     port: 465,
     secure: true,
     auth: {
-        user: process.env.EMAIL_USER, // Your email username
-        pass: process.env.EMAIL_PASS // Your email password
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
     }
 });
 
-// make function of here const mailOptions = {
-//     from: process.env.EMAIL_USER,
-//     to: 'akshay@movement-science.com',
-//     subject: 'Test Email',
-//     text: 'This is a test email from Node.js using nodemailer.'
-// };
+// Schedule the cron job (runs once at 8:00 AM)
+cron.schedule('0 8 * * *', async () => {
+    console.log('Running the daily appointment email task');
+    await sendAppointmentEmails();
+}, {
+    scheduled: true,
+    timezone: "America/New_York"
+});
 
-// transporter.sendMail(mailOptions, (error, info) => {
-//     if (error) {
-//         console.error('Error sending email:', error);
-//     } else {
-//         console.log('Email sent:', info.response);
-//     }
-// });
+console.log('Appointment email scheduler started.');
 
+// Function to fetch and send appointment reminders
+async function sendAppointmentEmails() {
+    try {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const dateString = tomorrow.toISOString().split('T')[0];
 
-function sendAppointmentEmails() {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const dateString = tomorrow.toISOString().split('T')[0];
-    
-    console.log(`Fetching appointments for date: ${dateString}`);
+        console.log(`Fetching appointments for date: ${dateString}`);
 
-    db.query('SELECT * FROM appointments WHERE date = ?', [dateString], (err, results) => {
-        if (err) {
-            console.error('Database query error:', err);
-            return;
-        }
+        const [results] = await db.query(
+            'SELECT * FROM appointments WHERE date = ? AND reminder_sent = FALSE',
+            [dateString]
+        );
 
         if (results.length === 0) {
             console.log('No appointments for tomorrow.');
@@ -363,54 +344,48 @@ function sendAppointmentEmails() {
         }
 
         console.log(`Found ${results.length} appointments for tomorrow.`);
-        results.forEach(appointment => {
-            sendEmail(appointment);
-        });
-    });
-}
 
-function sendEmail(appointment) {
-    const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: appointment.email, // Assuming email is a field in your appointments table
-        subject: 'Your Appointment Reminder',
-        html: generateEmailHtml(appointment)
-    };
-
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            return console.error('Error sending email:', error);
+        // Send emails one by one using a loop (avoiding async issues)
+        for (const appointment of results) {
+            await sendEmail(appointment);
         }
-        console.log('Email sent:', info.response);
-    });
+    } catch (err) {
+        console.error('Database query error:', err);
+    }
 }
 
-function generateEmailHtml(appointment) {
+// Function to send email
+async function sendEmail(appointment) {
+    try {
+        const emailHtml = await generateEmailHtml(appointment);
+
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: appointment.email,
+            subject: 'Your Appointment Reminder',
+            html: emailHtml
+        };
+
+        const info = await transporter.sendMail(mailOptions);
+        console.log(`Email sent to ${appointment.email}: ${info.response}`);
+
+        // Mark email as sent in the database
+        await db.query('UPDATE appointments SET reminder_sent = TRUE WHERE id = ?', [appointment.id]);
+        console.log(`Marked appointment ID ${appointment.id} as reminder sent.`);
+    } catch (error) {
+        console.error('Error sending email:', error);
+    }
+}
+
+// Function to generate email HTML
+async function generateEmailHtml(appointment) {
     const emailTemplate = path.join(__dirname, 'emailTemplate.ejs');
-    const data = {
+    return ejs.renderFile(emailTemplate, {
         name: appointment.name,
         date: appointment.date,
         slot: appointment.slot
-    };
-
-    let emailHtml;
-    ejs.renderFile(emailTemplate, data, (err, str) => {
-        if (err) {
-            console.error('Error rendering email template:', err);
-            return;
-        }
-        emailHtml = str;
     });
-
-    return emailHtml;
 }
-
-// Schedule the task to run every hour
-setInterval(sendAppointmentEmails, 60 * 60 * 1000); // 60 * 60 * 1000 ms = 1 hour
-
-// Run the task immediately on startup
-sendAppointmentEmails();
-
 
 app.get('/', (req, res) => {
     res.render(path.join(__dirname, 'views/index'));
@@ -450,9 +425,20 @@ app.post('/checkslot', [
     body('date').isISO8601().withMessage('Invalid date format').custom((value) => {
         const inputDate = new Date(value);
         const currentDate = new Date();
-        if (inputDate < currentDate.setHours(0, 0, 0, 0)) {
+
+        // Set the time for current date comparison to 11:00 AM
+        currentDate.setHours(3, 0, 0, 0);
+
+        // Check if the input date is in the past
+        if (inputDate < new Date().setHours(0, 0, 0, 0)) {
             throw new Error('Date cannot be in the past');
         }
+
+        // Check if the input date is today and the time is past 11:00 AM
+        if (inputDate.toDateString() === currentDate.toDateString() && new Date() >= currentDate) {
+            throw new Error('Cannot register for today after 11 AM');
+        }
+
         return true;
     }),
     body('slot').notEmpty().withMessage('Slot is required'),
@@ -464,34 +450,22 @@ app.post('/checkslot', [
     }
 
     const { date, slot, phone, city } = req.body;
-    console.log(date);
+
     db.query('SELECT * FROM slots WHERE date = ? AND slot = ?', [date, slot], (err, results) => {
         if (err) {
             return res.status(500).json({ error: 'Database query error' });
         }
-        if (results.length == 0) {
-            console.log(results.length);
-            req.session.date = date;
-            req.session.slot = slot;
-            req.session.phone = phone;
-            req.session.city = city;
-            req.session.otp_requested = true;
-            // res.json({ redirect: '/add-appointment' }); 
-
-        }
-        else {
-            return res.status(400).json({ error: 'Slot already occupied' });
-        }
 
         if (results.length === 0) {
             // Slot is available, send OTP
-            client.verify.v2.services('VAf387b0730e86f98fd3b5f33afee65aa9')
+            client.verify.v2.services(process.env.TWILIO_SERVICE_SID)
                 .verifications
                 .create({ to: phone, channel: 'sms' })
                 .then(verification => {
                     req.session.date = date;
                     req.session.slot = slot;
                     req.session.phone = phone;
+                    req.session.city = city;
                     req.session.otp_requested = true;
                     res.json({ redirect: '/verify-otp' });
                 })
@@ -520,7 +494,7 @@ app.post('/verify-otp', [
         return res.status(400).json({ error: 'OTP not requested' });
     }
 
-    client.verify.v2.services('VAf387b0730e86f98fd3b5f33afee65aa9')
+    client.verify.v2.services(process.env.TWILIO_SERVICE_SID)
         .verificationChecks
         .create({ to: phone, code: otp })
         .then(verification_check => {
@@ -538,7 +512,7 @@ app.post('/verify-otp', [
         });
 });
 
-app.get('/appointmentsall',requireAdmin, (req, res) => {
+app.get('/appointmentsall', requireAdmin, (req, res) => {
     db.query('SELECT * FROM approved_appointments', (error, results) => {
         if (error) {
             console.error('Error fetching appointments:', error);
@@ -708,6 +682,108 @@ app.get('/faq', (req, res) => {
 app.get('/error', (req, res) => {
     res.render(path.join(__dirname, 'views/error'));
 });
+
+app.get('/freecall', (req, res) => {
+    res.render('freecall');
+});
+
+app.get('/callus', (req, res) => {
+    res.render('freecall');
+});
+
+app.get('/contactedsoon', (req, res) => {
+    res.render('soon');
+});
+
+app.get('/about', (req, res) => {
+    res.render('about');
+});
+
+app.post('/freecall', (req, res) => {
+    const { name, phone } = req.body;
+
+    if (!name || !phone) {
+        // Check if required fields are missing
+        return res.status(400).json({ error: 'Name and phone number are required' });
+    }
+
+    // Example database interaction
+    const checkCustomerQuery = 'SELECT id FROM customers WHERE phone = ?';
+    db.query(checkCustomerQuery, [phone], (err, results) => {
+        if (err) {
+            console.error('Database error1:', err); // Log the error
+            return res.status(500).json({ error: 'Database error1' });
+        }
+
+        let customerId;
+
+        if (results.length === 0) {
+            // Insert new customer
+            const addCustomerQuery = 'INSERT INTO customers (name, phone) VALUES (?, ?)';
+            db.query(addCustomerQuery, [name, phone], (err, result) => {
+                if (err) {
+                    console.error('Database error2:', err); // Log the error
+                    return res.status(500).json({ error: 'Database error2' });
+                }
+
+                customerId = result.insertId;
+                const addCallRequestQuery = 'INSERT INTO call_requests (customer_id, name) VALUES (?, ?)';
+                db.query(addCallRequestQuery, [customerId, name], (err) => {
+                    if (err) {
+                        console.error('Database error3:', err); // Log the error
+                        return res.status(500).json({ error: 'Database error3' });
+                    }
+                    res.json({ redirect: '/contactedsoon' });
+                });
+            });
+        } else {
+            customerId = results[0].id;
+            const addCallRequestQuery = 'INSERT INTO call_requests (customer_id, name) VALUES (?, ?)';
+            db.query(addCallRequestQuery, [customerId, name], (err) => {
+                if (err) {
+                    console.error('Database error4:', err); // Log the error
+                    return res.status(500).json({ error: 'Database error4' });
+                }
+                res.json({ redirect: '/contactedsoon' });
+            });
+        }
+    });
+});
+
+
+
+
+// Admin route to view and manage call requests
+app.get('/admin/call', requireAdmin, (req, res) => {
+    const getCallRequestsQuery = `
+      SELECT call_requests.id, customers.phone, call_requests.name
+      FROM call_requests
+      JOIN customers ON call_requests.customer_id = customers.id
+    `;
+    db.query(getCallRequestsQuery, (err, results) => {
+        if (err) {
+            console.error('Database error:', err); // Improved error handling
+            return res.status(500).send('Internal Server Error');
+        }
+        res.render('admin/caller', { callRequests: results });
+    });
+});
+
+
+
+// Route to delete a call request
+app.post('/admin/delete/:id', (req, res) => {
+    console.log('Deleting call request with ID:', req.params.id); // Debugging line
+    const deleteCallRequestQuery = 'DELETE FROM call_requests WHERE id = ?';
+    db.query(deleteCallRequestQuery, [req.params.id], (err) => {
+        if (err) {
+            console.error('Error deleting call request:', err); // Improved error handling
+            return res.status(500).send('Internal Server Error');
+        }
+        res.redirect('/admin/call');
+    });
+});
+
 
 app.use((req, res) => {
     res.redirect('/error');

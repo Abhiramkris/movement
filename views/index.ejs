@@ -2,9 +2,40 @@
 <html lang="en">
 
 <head>
+
   <meta charset="UTF-8">
+  <meta name="description" content="Get your Physiotherapy Treatment done at your own home. We are open everyday. Book your slot today.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Movement Science</title>
+  <meta name="description" content="Movement Science offers professional physiotherapy services at home, ensuring personalized care and convenience. Book your session today and start your journey to recovery.">
+
+  <!-- Meta Keywords -->
+  <meta name="keywords" content="Physiotherapy at Home, Movement Science, Physiotherapy Services, Home Care, Physical Therapy, Personalized Care, Injury Rehabilitation, Pain Management, In-home Physiotherapy,physiotherapy near me">
+
+  <!-- Author -->
+  <meta name="author" content="Movement Science">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:title" content="Movement Science - Physiotherapy at Home">
+  <meta property="og:description" content="Receive professional physiotherapy services in the comfort of your home with Movement Science. Personalized treatment plans tailored to your needs.">
+  <meta property="og:image" content="https://yourwebsite.com/og-image.jpg">
+  <meta property="og:url" content="https://yourwebsite.com">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Movement Science - Physiotherapy at Home">
+  <meta name="twitter:description" content="Get expert physiotherapy treatment at home with Movement Science. Book your appointment today for personalized care and faster recovery.">
+  <meta name="twitter:image" content="https://yourwebsite.com/twitter-image.jpg">
+
+  <!-- Favicon -->
+  <link rel="icon" href="/images/logo.png" type="image/x-icon">
+
+  <!-- Additional Meta Tags -->
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#ffffff">
+
+
   <link rel="stylesheet" href="css/imagetext.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/aura.css">
@@ -26,9 +57,44 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
   <!-- JavaScript Bundle with Popper -->
+  <!-- Google Tag Manager -->
+  <script>
+    (function(w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event: 'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s),
+        dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-PP7TJXZ7');
+  </script>
+  <!-- End Google Tag Manager -->
 </head>
 
 <body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PP7TJXZ7" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-N7N71TCVW8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'G-N7N71TCVW8');
+  </script>
+
   <!-- <div id="preloader">
     <img src="/images/logo.png" alt="Loading..."> <br>
  </div>
@@ -138,8 +204,8 @@
     <a class="navbar-brand" href="/">
       <img src="/images/logo.png" alt="Logo"> <!-- Replace with your logo URL -->
     </a>
-    <div class="free-consultation">
-      <a href="/checkslot" class="nav-link">Book Free Consultation</a>
+    <div class="name">
+      <h5>MOVEMENT SCIENCE</h5>
     </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -162,6 +228,9 @@
           <a class="nav-link" href="/about">About-us</a>
         </li>
       </ul>
+      <div class="free-consultation">
+        <a href="/checkslot" class="nav-link">Book Free Consultation</a>
+      </div>
     </div>
   </nav>
   <script>
@@ -173,7 +242,7 @@
   </script>
 
   <div class="live-chat" onclick="toggleLiveChat()">
-    <span class="icon"><i class="fas fa-comments"></i></span>Live Chat
+    <span class="icon"><i class="fas fa-comments"></i></span>Chat
   </div>
   <div class="live-chat-modal" id="live-chat-modal">
     <button class="close-btn" onclick="toggleLiveChat()">&times;</button>
@@ -236,7 +305,7 @@
           .then(data => {
             console.log('Form submission successful:', data);
             toggleLiveChat(); // Close the modal after successful submission
-            alert("we will get to ypu soon");
+            alert("We will get to you soon");
           })
           .catch(error => {
             console.error('Error submitting form:', error);
@@ -249,194 +318,447 @@
 
   <section class="showcase">
     <img src="/images/hero.jpg"></img>
-    <div class="overlay"></div>
-    <div class="text1"> <br> <br><br>
-      <h2 class="header1">Physiotherapy at <span class="highlight"><br>home.</span></h2>
-      <h2 class="header1">Specialising in</h2>
+
+    <div class="overlay"> </div>
+    <div class="text1"> <br> <br><br> <br><br> <br>
+      <h2 class="header1">Physiotherapy at <span class="highlight">home.</span></h2>
+      <h2 class="header1">Specialist in</h2>
       <div class="typewriter">
         <h1 class="typewriter-text" id="typewriter-text"></h1>
       </div>
-      <style>
-        .typewriter {
-          display: inline-block;
-          overflow: hidden;
-          border-right: .25em solid white;
-          /* Cursor */
-          margin: 0 auto;
-          letter-spacing: .05em;
-          z-index: 1000;
-        }
-
-        @keyframes typing {
-          from {
-            width: 0
-          }
-
-          to {
-            width: 100%
-          }
-        }
-
-        @keyframes blink-caret {
-
-          from,
-          to {
-            border-color: transparent
-          }
-
-          50% {
-            border-color: orange;
-          }
-        }
-
-        .typewriter-text {
-          animation: blink-caret .25s step-end infinite;
-          position: relative;
-          color: rgb(250, 250, 250);
-          font-size: 40px;
-          font-family: "Poppins", sans-serif;
-          font-weight: 700;
-          margin-left: 3px;
-        }
-
-        @media (max-width: 801px) {
-          .typewriter-text {
-            font-size: 28px;
-          }
-        }
-      </style>
-
-      <script>
-        const texts = [
-          "After surgery",
-          "Aches and pain",
-          "Mobility problems",
-          "Musculoskeletal rehabilitation",
-          "Sports injury",
-          "Adults and Children",
-          "Cardio respiratory condition",
-          "Neurological rehabilitation",
-          "Massage and soft tissue mobilisation"
-        ];
-
-        let currentIndex = 0;
-
-        function typeWriter(text, i, fnCallback) {
-          if (i < text.length) {
-            document.getElementById("typewriter-text").innerHTML = text.substring(0, i + 1);
-            setTimeout(function() {
-              typeWriter(text, i + 1, fnCallback);
-            }, 20); // Adjust typing speed
-          } else if (typeof fnCallback === 'function') {
-            setTimeout(fnCallback, 1000);
-          }
-        }
-
-        function startTextAnimation() {
-          if (currentIndex < texts.length) {
-            typeWriter(texts[currentIndex], 0, function() {
-              currentIndex++;
-              startTextAnimation();
-            });
-          } else {
-            currentIndex = 0; // Reset the index to loop
-            startTextAnimation();
-          }
-        }
-
-        startTextAnimation();
-      </script>
-      <!-- <section class="animation">
-        <div class="text-wrapper">
-          <div class="first">
-            <h2 class="header1">After surgery</h2>
-          </div>
-          <div class="second">
-            <h2 class="header1">Aches and pain</h2>
-          </div>
-          <div class="third">
-            <h2 class="header1">Mobility problems</h2>
-          </div>
-          <div class="third">
-            <h2 class="header1">Sports injury</h2>
-          </div>
-          <div class="third">
-            <h2 class="header1">Adults and Children</h2>
-          </div>
-          <div class="third">
-            <h2 class="header1">neurological</h2>
-          </div>
-          <div class="third">
-            <h2 class="header1">Muscular Skeletal</h2>
-          </div>
-        </div>
-      </section> <br> -->
-      <!-- <a href="#" class="ctcbtn">Book free Consultancy</a> -->
+      <div class="free-consultation1">
+        <a href="/checkslot" class="navu">Book Free Consultation</a>
+      </div>
     </div>
+
+    <style>
+      h5 {
+        margin-top: 8px;
+        font-weight: 800;
+        color: #023974;
+        font-family: 'Poppins', sans-serif;
+      }
+
+      .landingctc {
+        position: relative;
+        margin-top: 20px;
+      }
+
+      .free-consultation1 {
+        position: absolute;
+        bottom: 32%;
+        /* Position the button 25% up from the bottom of the container */
+        margin-left: auto;
+        /* Make margin-left auto to move the button to the right */
+        background: linear-gradient(45deg, #1d1acb, #008CBA);
+        height: 40px;
+        border-radius: 5px;
+        padding: 5px 5px;
+        font-weight: 800;
+        z-index: 1000;
+        width: 220px;
+        text-align: center;
+      }
+
+      .navu {
+        text-decoration: none;
+        color: #fff;
+        z-index: 1000;
+        padding: 5px 10px;
+      }
+
+      @media (min-width: 1001px) {
+        .free-consultation1 {
+          display: none;
+        }
+
+      }
+
+      .typewriter {
+        display: inline-block;
+        overflow: hidden;
+        border-right: .25em solid white;
+        /* Cursor */
+        margin: 0 auto;
+        letter-spacing: .05em;
+        z-index: 1000;
+      }
+
+      @keyframes typing {
+        from {
+          width: 0
+        }
+
+        to {
+          width: 100%
+        }
+      }
+
+      @keyframes blink-caret {
+
+        from,
+        to {
+          border-color: transparent
+        }
+
+        50% {
+          border-color: orange;
+        }
+      }
+
+      .typewriter-text {
+        animation: blink-caret .25s step-end infinite;
+        position: relative;
+        color: rgb(250, 250, 250);
+        font-size: 40px;
+        font-family: "Poppins", sans-serif;
+        font-weight: 700;
+      }
+
+      @media (max-width: 801px) {
+        .typewriter-text {
+          font-size: 28px;
+          /* margin-left: 28px; */
+        }
+      }
+    </style>
+
+    <script>
+      const texts = [
+        "After surgery",
+        "Aches and pain",
+        "Mobility problems",
+        "Musculoskeletal rehabilitation",
+        "Sports injury",
+        "Adults and Children",
+        "Cardio respiratory condition",
+        "Neurological rehabilitation",
+        "Massage and soft tissue mobilisation"
+      ];
+
+      let currentIndex = 0;
+
+      function typeWriter(text, i, fnCallback) {
+        if (i < text.length) {
+          document.getElementById("typewriter-text").innerHTML = text.substring(0, i + 1);
+          setTimeout(function() {
+            typeWriter(text, i + 1, fnCallback);
+          }, 20); // Adjust typing speed
+        } else if (typeof fnCallback === 'function') {
+          setTimeout(fnCallback, 1000);
+        }
+      }
+
+      function startTextAnimation() {
+        if (currentIndex < texts.length) {
+          typeWriter(texts[currentIndex], 0, function() {
+            currentIndex++;
+            startTextAnimation();
+          });
+        } else {
+          currentIndex = 0; // Reset the index to loop
+          startTextAnimation();
+        }
+      }
+
+      startTextAnimation();
+    </script>
   </section>
   <div class="container">
     <div class="header">Why Movement Science</div> <br>
     <div class="imagetext">
       <div class="image">
-        <img src="https://blog.rehabselect.net/hubfs/orthopedic%20rehab%20physical%20therapy.jpeg" alt="doc">
+        <img src="https://www.thephysioco.com.au/wp-content/uploads/2018/06/bigstock-Portrait-Of-Physiotherapist-Do-238971859-1024x684.jpg" alt="doc">
       </div>
-      <div class="subhead">
+      <div class="subhead3"> <br>
         Movement science has an excellent team of highly qualified physiotherapists working close to you, provide expert physical and rehabilitation treatments with the aim to restore pain, movement, and strength, enabling our patients not only to achieve their goals and perform better, but also to prevent future injury<br> <br>
         <!-- <div class="subhead"><span style="font-weight: 600;">Dedicated to helping you feel better</span></div> -->
       </div>
     </div>
-  </div>
+  </div> <br>
+
   <div class="container">
     <div class="subhead"> <b>We provide</b></div> <br>
     <ul class="custom-list">
-      <li class="subhead">Highly skilled and compassionate physiotherapist Registered with Health care professional council (HCPC) and Active member of chartered society of physiotherapy (MCSP)</li>
-      <li class="subhead">Convenient treatment options available on demand</li>
-      <li class="subhead">Receive care in the comfort of your home, care home, or workplace</li>
-      <li class="subhead">Services available seven days a week</li>
-      <li class="subhead">Flexible scheduling with weekday, evening, and weekend appointments</li>
-      <li class="subhead">Avoid the hassle of traveling to a clinic or hospital</li>
-      <!-- <img src="images/image2.jpg" alt="services at home" class="hidingimgclass"> -->
+      <li class="item">
+        <img src="/images/image66.png" alt="Image 1">
+        <span class="subhead">Highly skilled and compassionate physiotherapist Registered with Health care professional council (HCPC) and Active member of chartered society of physiotherapy (MCSP)</span>
+      </li>
+      <li class="item">
+        <img src="/images/image22.png" alt="Image 2">
+        <span class="subhead">Convenient treatment options available on demand</span>
+      </li>
+      <li class="item">
+        <img src="/images/image55.png" alt="Image 3">
+        <span class="subhead">Receive care in the comfort of your home, care home, or workplace</span>
+      </li>
+      <li class="item">
+        <img src="/images/image44.png" alt="Image 4">
+        <span class="subhead">Services available seven days a week</span>
+      </li>
+      <li class="item">
+        <img src="/images/image11.png" alt="Image 5">
+        <span class="subhead">Flexible scheduling with weekday, evening, and weekend appointments</span>
+      </li>
+      <li class="item">
+        <img src="/images/image33.png" alt="Image 6">
+        <span class="subhead">Avoid the hassle of traveling to a clinic or hospital</span>
+      </li>
     </ul>
   </div>
+  <style>
+    .custom-list {
+      list-style: none;
+      /* Remove default bullets */
+      padding: 0;
+      margin: 0;
+    }
+
+    .custom-list .item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      /* Spacing between list items */
+      background-color: #ffffff;
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    .custom-list .item img {
+      width: 40px;
+      /* Adjust the width of the image */
+      height: 40px;
+      /* Adjust the height of the image */
+      margin-right: 15px;
+      /* Space between image and text */
+    }
+
+    .subhead {
+      font-size: 20px;
+      /* Adjust font size if needed */
+      color: #333;
+      /* Text color */
+    }
+
+    @media (max-width: 600px) {
+      .custom-list .item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .custom-list .item img {
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+    }
+  </style>
   <div class="container">
-    <div class="subhead" style="color: #023974;"><b>PRIORITISE YOUR WELLBEING SCHEDULE YOUR PHYSIOTHERAPY APPOINTMENT TODAY</b></div> <br>
-    <a href="/contactus" class="ctcbtn">Schedule A Free Call</a>
+    <div class="subhead" style="color: #023974;">
+      <b>
+        <span style="background-color: #023974; color: white; padding: 5px; border-radius: 3px;">"PRIORITISE YOUR WELLBEING"</span>
+        <br>
+        SCHEDULE YOUR PHYSIOTHERAPY APPOINTMENT TODAY
+      </b>
+    </div>
+    <br>
+    <a href="/freecall" class="ctcbtn">Schedule A Free Call</a>
+
   </div>
-<br><br> <br>
-    <div class="header">WHAT WE DO</div>
-    <div class="box">
-      <a href="/icon1" class="icon2">
-        <img src="https://via.placeholder.com/100" alt="Icon 1">
-      </a>
-      <a href="/icon1" class="icon2">
-        <img src="https://via.placeholder.com/100" alt="Icon 2">
-      </a>
-      <a href="/icon1" class="icon2">
-        <img src="https://via.placeholder.com/100" alt="Icon 3">
-      </a>
-      <a href="/icon1" class="icon2">
-        <img src="https://via.placeholder.com/100" alt="Icon 4">
-      </a>
-      </div> <br> <br>
-    <div class="subhead">
-      <!-- <div class="subhead"><span style="font-weight: 600;">Dedicated to helping you feel better</span></div> -->
-      To address those minor issues, minimize your risk of falls, and alleviate your aches and pains, schedule your free initial assessment today.<br>
-    </div> <br>
-    <a href="/contactus" class="ctcbtn">Schedule A Free Call</a>
+  <br><br> <br>
+  <div class="container">
+    <div class="header">WHAT WE DO</div> <br>
+    <div class="subhead3">We specialize in providing personalized, high-quality physiotherapy services in the comfort of your own home. Our goal is to ensure convenience and comfort for our clients by tailoring our services to meet their individual needs. We take pride in creating customized assessment and treatment plans that are designed with you in mind. Whether you prefer to receive treatment in the comfort of your own home or at our gym, we are dedicated to providing top-notch care to help you achieve your health and wellness goals. </div> <br>
+  </div>
+  <br> <br>
+  <div class="box">
+    <a href="#" class="icon2" onclick="showCard(event, 'subjective')">
+      <img src="/images/asses.png" alt="Subjective Examination"> <br>
+      <p>Assessment</p>
+    </a>
+    <a href="#" class="icon2" onclick="showCard(event, 'objective')">
+      <img src="/images/dumbell.png" alt="Objective Examination"> <br>
+      <p>Treatment</p>
+    </a>
+    <a href="#" class="icon2" onclick="showCard(event, 'treatment')">
+      <img src="/images/physical-therapy.png" alt="Treatment"><br>
+      <p>Restoration</p>
+    </a>
+    <a href="#" class="icon2" onclick="showCard(event, 'restoration')">
+      <img src="/images/gym.png" alt="Restoration"> <br>
+      <p>Perform</p>
+    </a>
   </div>
 
+  <div id="overlay"></div>
+
+  <div id="card-container">
+    <div id="card-subjective" class="card">
+      <button class="close-btn" onclick="closeCard()">×</button>
+      <h2>Assessment</h2>
+      <p>Our movement science team evaluate a patient's physical condition and identify specific impairments, functional limitations, and disabilities. The assessment aims to develop a comprehensive understanding of the patient's health status and to inform the development of an individualized treatment plan. Key components of our physiotherapy assessment include:
+        <br>1.Subjective Examination: Gathering detailed information from the patient about their medical history, symptoms, lifestyle, and goals. This includes discussing the onset, nature, and duration of the problem, as well as any previous treatments or interventions. <br>
+        2.Objective Examination: Conducting physical tests and observations to assess the patient's physical abilities and limitations. This may include:
+        <br>•Posture Analysis
+        <br>•Range of Motion (ROM) Testing
+        <br>•Strength Testing
+        <br>•Functional Testing <br>
+        3. Analysis and Interpretation: Integrating the findings from both the subjective and objective examinations
+      </p>
+    </div>
+    <div id="card-objective" class="card">
+      <button class="close-btn" onclick="closeCard()">×</button>
+      <h2>Treatment</h2>
+      <p>At Movement Science, we believe in providing hands-on treatment when necessary. Our goal is to alleviate your pain, tension, soreness, or stiffness by utilizing a range of techniques. Our team is highly proficient in manipulative physiotherapy and soft tissue techniques. We collaborate closely with our sports massage therapists to deliver the most effective physical therapy for you.</p>
+    </div>
+
+    <div id="card-treatment" class="card">
+      <button class="close-btn" onclick="closeCard()">×</button>
+      <h2>Restoration</h2>
+      <p>Our goal is to restore your physical form, functionality, range of motion, muscle strength, mobility, flexibility, core strength, muscle power, agility, gait, and posture, among other factors, in order to achieve the best possible outcome for your symptoms. In addition to hands-on therapy, we will provide tailored exercise plans, offer valuable advice on lifestyle and work adjustments, and customize gym or training programs to ensure optimal recovery for our patients. Our approach is patient-centered, following best practices and always
+        grounded in evidence-based methods, while staying current with the latest research and expert opinions. Our ultimate objective is to achieve a 100% improvement in symptoms
+      </p>
+    </div>
+    <div id="card-restoration" class="card">
+      <button class="close-btn" onclick="closeCard()">×</button>
+      <h2>Perform</h2>
+      <p>We are dedicated to helping our patients not only recover from their injuries but also to excel beyond their previous level of performance. Our team of physiotherapists is committed to achieving complete recovery and surpassing expectations. Whether it's developing self-management techniques for chronic low back pain, enhancing athletic abilities, or improving balance and stability, we strive for 100% recovery and more.
+        In addition to our skilled physiotherapists, we offer sports massage therapy and personal training services to support our patients in reaching their full potential. We are passionate about meeting our patients' needs and helping them achieve their long-term goals.</p>
+    </div>
+    <br>
+  </div>
+  <script>
+    let cardContainer = document.getElementById('card-container');
+    let overlay = document.getElementById('overlay');
+    let activeCard = null;
+
+    function showCard(event, cardId) {
+      event.preventDefault();
+
+      if (activeCard) {
+        activeCard.style.display = 'none';
+      }
+
+      const selectedCard = document.getElementById(`card-${cardId}`);
+      selectedCard.style.display = 'block';
+      cardContainer.style.display = 'block';
+      overlay.style.display = 'block';
+
+      setTimeout(() => {
+        cardContainer.style.opacity = '1';
+        cardContainer.style.transform = 'translate(-50%, -50%) scale(1)';
+        overlay.style.opacity = '1';
+      }, 100);
+
+      activeCard = selectedCard;
+
+      document.removeEventListener('click', handleClickOutside);
+      setTimeout(() => {
+        document.addEventListener('click', handleClickOutside);
+      }, 100);
+    }
+
+    function closeCard() {
+      if (activeCard) {
+        activeCard.style.display = 'none';
+      }
+      cardContainer.style.opacity = '0';
+      cardContainer.style.transform = 'translate(-50%, -50%) scale(0.9)';
+      overlay.style.opacity = '0';
+
+      setTimeout(() => {
+        cardContainer.style.display = 'none';
+        overlay.style.display = 'none';
+        activeCard = null;
+      }, 300);
+
+      document.removeEventListener('click', handleClickOutside);
+    }
+
+    function handleClickOutside(event) {
+      if (!cardContainer.contains(event.target) && activeCard) {
+        closeCard();
+      }
+    }
+
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        if (cardContainer.style.display === 'block') {
+          closeCard();
+        }
+      }
+    });
+  </script>
   <style>
+    .icon2 img {
+      width: 100px;
+      height: 100px;
+      cursor: pointer;
+    }
+
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      transition: opacity 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    #card-container {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%;
+      max-width: 600px;
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      z-index: 1000;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .card {
+      display: none;
+    }
+
+    .card p {
+      font-weight: 400;
+      color: #010f49;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-weight: bold;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
     .box {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       grid-template-rows: repeat(2, 1fr);
-      gap: 20px;
-      background-color: #007bff;
+      gap: 30px;
+      background-color: #010f49;
       /* Blue background */
-      padding: 30px;
-      width: 100vw;
+      padding: 50px;
+      width: 100%;
       /* Responsive width */
-      max-width: 1000px;
+      /* max-width: 1000px; */
       /* Maximum width */
       box-sizing: border-box;
       margin: 0 auto;
@@ -444,62 +766,73 @@
     }
 
     .icon2 {
+      flex-grow: 1;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       border-radius: 8px;
       text-decoration: none;
       transition: background-color 0.3s;
+      margin-top: 10px;
     }
-
-    .icon2:hover {}
 
     .icon2 img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 8px;
+      width: 100px;
+      height: 100px;
+      border-radius: 10px;
+      cursor: pointer;
+      background-color: #ddd;
+      padding: 10px;
+    }
+
+    .icon2 p {
+      font-weight: 400;
+      color: #f5f7ff;
+      margin-left: 3px;
     }
   </style>
-<br>
-  <!-- <div class="sectionstart">
-    <div class="container">
-      <div class="imagetext">
-
-        <div class="text">
-          <div class="subhead"><span style="font-weight: 600;">Dedicated to helping you feel better</span></div>
-          <div class="subhead">
-            Home Physio Group offers an extensive selection of services for adults, children, and the elderly across the UK. We can arrange one-off appointments and long-term bookings with one of our highly-skilled physiotherapists at a time to suit you.
-            Our expert and experienced physiotherapists design customised treatment plans to help you to manage your condition, achieve your goals, and live a pain-free life.<br> <br>
-            <a href="#" class="ctcbtn">Sechedule a Free Call</a>
-          </div>
-        </div> <br>
-        <div class="image">
-          <img src="/images/image4.jpg" alt="doc">
-        </div>
-      </div>
-    </div>
-    </div> -->
-  <br>
-  <div class="container">
-    <div class="header">Physiotherapy you can trust</div>
-    <div class="iframe-container">
-      <iframe width="800px" height="600px" src="https://www.youtube.com/embed/CtVHByJoGek?list=RDCtVHByJoGek" title="Kamal. - free flow" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-    </div>
-
-  </div>
-
+  <div class="video-container"> <br><br>
+    <iframe src="https://www.youtube.com/embed/HX8PdpN8oAk" title="Movement Science Corporate Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
   <br><br>
+  </div>
+  <style>
+.video-container {
+    position: relative;
+    width: 100%;
+    max-width: 871px; /* Set the max width for desktop */
+    margin: 0 auto; /* Center align with equal margins */
+    padding: 0 15px; /* Add padding for mobile responsiveness */
+    background-color: #ffffff;
+}
 
+.video-container iframe {
+    width: 100%;
+    height: 600px;
+    display: block;
+}
+
+@media (max-width: 767px) {
+    .video-container {
+        max-width: 100%; /* Full width on mobile view */
+        padding: 0; /* Remove padding on mobile view */
+    }
+
+    .video-container iframe {
+        height: 220px; /* Maintain aspect ratio */
+    }
+}
+
+  </style>
   <div class="testi">
-
     <div class="col-lg-10 offset-lg-1 pt-5 pb-5 bg-#010f49 text-light">
-      <div id="client-testimonial-carousel" class="carousel slide" data-ride="carousel" style="height:200px;">
+      <div id="client-testimonial-carousel" class="carousel slide" data-ride="carousel" style="height:320px;">
         <div class="carousel-inner" role="listbox">
           <div class="carousel-item active text-center p-4">
             <blockquote class="blockquote text-center">
-              <p class="mb-0"><i class="fa fa-quote-left"></i> Everybody is a genius. But if you judge a fish by its ability to climb a tree, it will live its whole life believing that it is stupid.
-              </p> <br>
-              <footer class="blockquote-footer">Albert Einstein <cite title="Source Title">genius</cite></footer>
+              <p class="mb-0"><i class="fa fa-quote-left"></i> Movement Science has been a game-changer for me. As someone who struggles with chronic back pain, the convenience of having professional physiotherapy services come to my home has been invaluable. The physiotherapist was not only knowledgeable but also incredibly compassionate and patient.
+              </p> <br><br>
+              <footer class="blockquote-footer">Ajith<cite title="Source Title"></cite></footer>
               <!-- Client review stars -->
               <!-- "fas fa-star" for a full star, "far fa-star" for an empty star, "far fa-star-half-alt" for a half star. -->
               <p class="client-review-stars">
@@ -513,9 +846,9 @@
           </div>
           <div class="carousel-item text-center p-4">
             <blockquote class="blockquote text-center">
-              <p class="mb-0"><i class="fa fa-quote-left"></i> Imagination is more important than knowledge. Knowledge is limited. Imagination encircles the world.
+              <p class="mb-0"><i class="fa fa-quote-left"></i> After my sports injury, I thought my recovery would take forever. But thanks to Movement Science's home physiotherapy services, I was back on my feet in no time. The therapist was thorough in their assessment and provided effective, targeted exercises that made a noticeable difference.
               </p> <br>
-              <footer class="blockquote-footer">Albert Einstein <cite title="Source Title">genius</cite></footer>
+              <footer class="blockquote-footer">Akshitha<cite title="Source Title"></cite></footer>
               <!-- Client review stars -->
               <!-- "fas fa-star" for a full star, "far fa-star" for an empty star, "far fa-star-half-alt" for a half star. -->
               <p class="client-review-stars">
@@ -529,9 +862,9 @@
           </div>
           <div class="carousel-item text-center p-4">
             <blockquote class="blockquote text-center">
-              <p class="mb-0"><i class="fa fa-quote-left"></i> A person who never made a mistake never tried anything new.
+              <p class="mb-0"><i class="fa fa-quote-left"></i> Movement Science has been an essential part of my recovery process after knee surgery. The home service is incredibly convenient, especially when mobility is an issue. The physiotherapist was professional, friendly, and highly skilled.
               </p><br>
-              <footer class="blockquote-footer">Albert Einstein <cite title="Source Title">genius</cite></footer>
+              <footer class="blockquote-footer">Ashin<cite title="Source Title"></cite></footer>
               <!-- Client review stars -->
               <!-- "fas fa-star" for a full star, "far fa-star" for an empty star, "far fa-star-half-alt" for a half star. -->
               <p class="client-review-stars">
@@ -540,15 +873,63 @@
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
-              </p>
+              </p> <br><br>
+            </blockquote>
+          </div>
+          <div class="carousel-item text-center p-4">
+            <blockquote class="blockquote text-center">
+              <p class="mb-0"><i class="fa fa-quote-left"></i> Affordable, professional, and highly effective. My physiotherapy sessions here have significantly improved my mobility and pain levels.
+              </p><br>
+              <footer class="blockquote-footer">Jesvin<cite title="Source Title"></cite></footer>
+              <!-- Client review stars -->
+              <!-- "fas fa-star" for a full star, "far fa-star" for an empty star, "far fa-star-half-alt" for a half star. -->
+              <p class="client-review-stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </p> <br><br>
+            </blockquote>
+          </div>
+          <div class="carousel-item text-center p-4">
+            <blockquote class="blockquote text-center">
+              <p class="mb-0"><i class="fa fa-quote-left"></i>Highly recommend their services! Not only are they budget-friendly, but the treatment I received was outstanding and effective.
+              </p><br>
+              <footer class="blockquote-footer">jisvin<cite title="Source Title"></cite></footer>
+              <!-- Client review stars -->
+              <!-- "fas fa-star" for a full star, "far fa-star" for an empty star, "far fa-star-half-alt" for a half star. -->
+              <p class="client-review-stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </p> <br><br>
+            </blockquote>
+          </div>
+          <div class="carousel-item text-center p-4">
+            <blockquote class="blockquote text-center">
+              <p class="mb-0"><i class="fa fa-quote-left"></i> I found their services to be very affordable, and personally, I experienced one of my best physiotherapy sessions with them.
+              </p><br>
+              <footer class="blockquote-footer">Midhun<cite title="Source Title"></cite></footer>
+              <!-- Client review stars -->
+              <!-- "fas fa-star" for a full star, "far fa-star" for an empty star, "far fa-star-half-alt" for a half star. -->
+              <p class="client-review-stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </p> <br><br>
             </blockquote>
           </div>
         </div>
-        <ol class="carousel-indicators">
+        <!-- <ol class="carousel-indicators"> <br><br><br><br>
           <li data-target="#client-testimonial-carousel" data-slide-to="0" class="active"></li>
           <li data-target="#client-testimonial-carousel" data-slide-to="1"></li>
           <li data-target="#client-testimonial-carousel" data-slide-to="2"></li>
-        </ol>
+        </ol> -->
       </div>
     </div>
   </div>
@@ -572,7 +953,7 @@
         </div>
       </h1>
       <p class="subtitle">Call us <a href="tel:+44 07930167674"></a> or <a href="/checkslot">book appointment</a></p>
-      <br> <br><br>
+      <br> <br>
     </div>
   </div>
 
@@ -693,9 +1074,9 @@
                         color: #ddd;
                       }
                     </style>
-                    <a href="https://www.facebook.com" target="_blank" class="fab fa-facebook-f"></a>
-                    <a href="https://www.twitter.com" target="_blank" class="fab fa-twitter"></a>
-                    <a href="https://www.instagram.com" target="_blank" class="fab fa-instagram"></a>
+                    <a href="https://www.facebook.com/movement.science.2024?mibextid=ZbWKwL" target="_blank" class="fab fa-facebook-f"></a>
+                    <a href="https://x.com/movesscience" target="_blank" class="fab fa-twitter"></a>
+                    <a href="https://www.instagram.com/movementsscience?igsh=MXJ5cXRzazNiYXNhYQ==" target="_blank" class="fab fa-instagram"></a>
                   </div>
                 </ul>
               </div>
@@ -718,8 +1099,8 @@
           <div class="col-md-12">
             <div class="copyright-text">
               <p>© 2024
-                <a href="/">Movemnet science</a>. All rights reserved. Created by
-                <a href="https://www.instagram.com/crem.create?igsh=ZjFscW1kZjhtNTBw">crem.create</a>
+                <a href="/">Movement science</a>. All rights reserved. Created by
+                <a href="https://www.instagram.com/movementsscience?igsh=MXJ5cXRzazNiYXNhYQ==/crem.create?igsh=ZjFscW1kZjhtNTBw">crem.create</a>
               </p>
             </div>
 
@@ -736,33 +1117,7 @@
 
 </body>
 
-<script>
-  window.addEventListener('load', function() {
-    const preloader = document.getElementById('preloader');
-    const overlay = document.getElementById('overlay');
-    const content = document.getElementById('content');
 
-    setTimeout(() => {
-      preloader.style.display = 'none';
-      overlay.style.width = '200%';
-      overlay.style.height = '200%';
-    }, 500); // Change the timeout duration as needed
-
-    overlay.addEventListener('transitionend', () => {
-      setTimeout(() => {
-        overlay.style.opacity = '0';
-      }, 10); // Delay to ensure the overlay is fully expanded before starting to fade out
-    });
-
-    overlay.addEventListener('transitionend', () => {
-      if (overlay.style.opacity === '0') {
-        content.style.display = 'block';
-        document.body.style.overflow = 'auto';
-        overlay.style.display = 'none';
-      }
-    });
-  });
-</script>
 
 <!-- Add this script tag at the end of your HTML body -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

@@ -150,3 +150,33 @@ add for call listing
 /admin/live-chat-queries
 /save-chat-query
 /appointmentsall
+DB_NAME=movement
+DB_PASSWORD=
+DB_USER=root
+DB_HOST=localhost
+DB_PORT=
+TWILIO_SERVICE_SID=
+TWILIO_AUTH_TOKEN=
+TWILIO_ACCOUNT_SID=
+EMAIL_USER=noreply.movementscience@gmail.com
+EMAIL_PASS=
+ADMIN_USERNAME=user
+ADMIN_PASSWORD=pass
+
+const db = mysql.createPool({
+    //   host: 'mysql-3a638ecb-movementscience.k.aivencloud.com',
+    //   user: 'your_user',
+    //   password: 'your_password',
+    //   database: 'your_database',
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
+    connectTimeout: 10000, 
+    acquireTimeout: 20000, 
+    multipleStatements: true,
+});
