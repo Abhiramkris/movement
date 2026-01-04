@@ -65,6 +65,12 @@ const db = mysql.createConnection({
 });
 
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> a1f8a1accbd4cb06d540096a61606050fc50f28a
 // db.getConnection((err, connection) => {
 //     if (err) {
 //         console.error("Database connection failed: " + err.message);
