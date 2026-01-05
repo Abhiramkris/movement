@@ -13,7 +13,7 @@ const cron = require('node-cron');
 const ejs = require('ejs');
 // const db = require('./models/db'); // Your database connection module
 // const adminRoutes = require('./routes/adminRoutes');
-const http = require('http'); 
+const http = require('http');
 const socketIo = require('socket.io'); // Import Socket.IO module
 dotenv.config(); // Load environment variables
 const app = express();
@@ -104,11 +104,12 @@ router.post('/login', async (req, res) => {
         // Replace with your actual username and password retrieval logic
         if (username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
             req.session.isAdmin = true; // Set admin session flag
-            // Redirect to admin dashboard on success
+            console.log('Admin logged in1:', username);
             res.json({ redirect: '/admin/dashboard' });
+            console.log('Admiinn logged in:', username);
         } else {
-            // res.status(401).json({ error: 'Invalid credentials' }); // Send error response for invalid credentials
-
+            console.log('Admin logged in2:', username);
+            res.status(401).json({ error: 'Invalid credentials 123' }); // Send error response for invalid credentials
         }
     } catch (error) {
         console.error('Login error:', error);
@@ -270,36 +271,130 @@ router.delete('/delete-appointment/:id', requireAdmin, (req, res) => {
 });
 module.exports = router;
 
+
+function normalizePhone(phone) {
+    if (!phone) return null;
+    phone = phone.toString().replace(/[^\d+]/g, '');
+
+    if (phone.startsWith('+91')) return phone;
+    if (phone.startsWith('91') && phone.length === 12) return '+' + phone;
+    if (phone.length === 10) return '+91' + phone;
+
+    return phone;
+}
+
 router.post('/patient-history', requireAdmin, (req, res) => {
     const { name } = req.body;
 
-    db.query('SELECT * FROM approved_appointments WHERE LOWER(name) = LOWER(?)', [name], (error, results) => {
-        if (error) {
-            console.error('Error fetching patient history:', error);
-            return res.status(500).json({ message: 'Failed to fetch patient history', error: error.message });
-        }
+    if (!name || name.trim().length < 2) {
+        return res.status(400).send('Invalid patient name');
+    }
 
-        const groupedAppointments = results.reduce((acc, appointment) => {
-            const key = `${appointment.name}-${appointment.phone}`;
-            if (!acc[key]) {
-                acc[key] = {
-                    name: appointment.name,
-                    phone: appointment.phone,
-                    address: appointment.address,
-                    visits: []
-                };
+    // 1️⃣ Fetch ALL visits by name
+    db.query(
+        `SELECT date, slot, remarks, phone 
+         FROM approved_appointments 
+         WHERE LOWER(name) = LOWER(?) 
+         ORDER BY date DESC`,
+        [name.trim()],
+        (err, visits) => {
+            if (err || visits.length === 0) {
+                return res.render('patient-history', {
+                    name,
+                    visits: [],
+                    customer: {},
+                    csrfToken: req.session.csrfToken
+                });
             }
-            acc[key].visits.push({
-                date: appointment.date,
-                slot: appointment.slot,
-                remarks: appointment.remarks
-            });
-            return acc;
-        }, {});
 
-        res.render('patient-history', { groupedAppointments, name });
-    });
+            // 2️⃣ Normalize phone from first visit
+            const phone = normalizePhone(visits[0].phone);
+
+            if (!phone) {
+                return res.render('patient-history', {
+                    name,
+                    visits,
+                    customer: {},
+                    csrfToken: req.session.csrfToken
+                });
+            }
+
+            // 3️⃣ Fetch customer profile (notes + photo)
+            db.query(
+                'SELECT * FROM customers WHERE phone = ? LIMIT 1',
+                [phone],
+                (custErr, customers) => {
+                    const customer = customers?.[0] || {};
+
+                    res.render('patient-history', {
+                        name: customer.name || name,
+                        visits,
+                        customer,
+                        csrfToken: req.session.csrfToken
+                    });
+                }
+            );
+        }
+    );
 });
+
+
+
+router.post('/admin/update-photo', requireAdmin, (req, res) => {
+    db.query(
+        'UPDATE customers SET photo_url=? WHERE phone=?',
+        [req.body.photo, req.body.phone],
+        () => res.json({ ok: true })
+    );
+});
+
+router.post('/admin/update-notes', requireAdmin, (req, res) => {
+    const { name, notes } = req.body;
+
+    if (!name || typeof name !== 'string') {
+        return res.status(400).json({ error: 'Invalid name' });
+    }
+    console.log(name, notes);
+
+    db.query(
+        'UPDATE customers SET admin_notes = ? WHERE LOWER(name) = LOWER(?)',
+        [notes || 'null', name.trim()],
+        (err, result) => {
+            if (err) {
+                console.error('Update notes error:', err);
+                return res.status(500).json({ error: 'Database error' });
+            }
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ error: 'Customer not found' });
+            }
+
+            res.json({ ok: true });
+        }
+    );
+});
+
+
+
+
+router.get('/patient-search', requireAdmin, (req, res) => {
+    const q = `%${req.query.q}%`;
+
+    db.query(
+        `
+    SELECT DISTINCT name, phone
+    FROM approved_appointments
+    WHERE name LIKE ? OR phone LIKE ?
+    LIMIT 10
+    `,
+        [q, q],
+        (err, rows) => {
+            if (err) return res.status(500).json([]);
+            res.json(rows);
+        }
+    );
+});
+
 
 module.exports = router;
 
@@ -567,9 +662,6 @@ app.post('/add-appointment', [
                             return res.status(500).json({ error: 'Error inserting into customers table' });
                         }
 
-                        console.log('Successfully inserted into customers table:', customerResults);
-
-                        // Insert into slots table
                         db.query('INSERT INTO slots (date, slot) VALUES (?, ?)', [date, slot], (slotErr, slotResults) => {
                             if (slotErr) {
                                 console.log('Error inserting into slots table:', slotErr);
@@ -578,7 +670,6 @@ app.post('/add-appointment', [
 
                             console.log('Successfully inserted into slots table:', slotResults);
 
-                            // Assuming clients is defined elsewhere and represents a list of WebSocket clients
                             clients.forEach(client => {
                                 client.send(JSON.stringify({
                                     title: 'New Appointment Added',
