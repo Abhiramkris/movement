@@ -1,70 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Patient History</title>
-    <link rel="stylesheet" href="/path/to/bootstrap.css">
-    <script src="/path/to/bootstrap.js"></script>
+
+    <meta name="csrf-token" content="<%= csrfToken %>">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
         body {
-            background-color: #f8f9fa;
-            padding-top: 20px;
+            background: #f4f6f9;
         }
-        .card {
-            margin-bottom: 20px;
+
+        .patient-header {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, .08);
         }
-        .card-title {
-            color: #007bff;
+
+        .patient-photo {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #2563eb;
         }
-        .card-text {
+
+        .visit-timeline li {
+            background: white;
+            border-left: 4px solid #2563eb;
+            padding: 12px 16px;
             margin-bottom: 10px;
+            border-radius: 6px;
         }
-        .visits-list {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        .visits-list li {
-            background-color: #e9ecef;
-            border: 1px solid #dee2e6;
-            border-radius: 5px;
-            margin-bottom: 5px;
-            padding: 10px;
+
+        .notes-box textarea {
+            resize: none;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1 class="text-center">Patient History for <%= name %></h1>
-        <div class="row">
-            <% if (Object.keys(groupedAppointments).length > 0) { %>
-                <% Object.values(groupedAppointments).forEach(group => { %>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title"><%= group.name %></h5>
-                                <p class="card-text">
-                                    <strong>Phone:</strong> <%= group.phone %><br>
-                                    <strong>Address:</strong> <%= group.address %><br>
-                                    <strong>Number of Visits:</strong> <%= group.visits.length %>
-                                </p>
-                                <h6>Visits:</h6>
-                                <ul class="visits-list">
-                                    <% group.visits.forEach(visit => { %>
-                                        <li>
-                                            <strong>Date:</strong> <%= visit.date %>, 
-                                            <strong>Slot:</strong> <%= visit.slot %>, 
-                                            <strong>Remarks:</strong> <%= visit.remarks %>
-                                        </li>
-                                    <% }); %>
-                                </ul>
-                            </div>
-                        </div>
-                    </div> <hr><hr>
-                <% }); %>
-            <% } else { %>
-                <p class="text-center">No history found for this patient.</p>
-            <% } %>
+
+<body class="container py-4">
+
+    <!-- PATIENT HEADER -->
+    <div class="patient-header">
+        <img id="patientPhoto" src="<%= customer.photo_url || '/images/default-user.png' %>" class="patient-photo" />
+
+        <div>
+            <h3 id="patientName" data-name="<%= name %>">
+                <%= name %>
+            </h3>
+            <p class="mb-1"><strong>Phone:</strong>
+                <%= customer.phone %>
+            </p>
+            <p class="mb-0"><strong>Address:</strong>
+                <%= customer.address %>
+            </p>
+
+            <button id="uploadPhotoBtn" class="btn btn-outline-primary btn-sm mt-2" data-phone="<%= customer.phone %>">
+                Upload Photo
+            </button>
         </div>
     </div>
+
+    <!-- NOTES -->
+    <div class="card mb-4">
+        <div class="card-body notes-box">
+            <h5>Doctor / Admin Notes</h5>
+            <textarea id="adminNotes" class="form-control" rows="4"
+                data-phone="<%= customer.phone %>"><%= customer.admin_notes || '' %></textarea>
+
+            <button id="saveNotesBtn" class="btn btn-primary mt-2">
+                Save Notes
+            </button>
+        </div>
+    </div>
+
+    <!-- VISITS -->
+    <h4 class="mb-3">Visit History</h4>
+    <ul class="list-unstyled visit-timeline">
+        <% visits.forEach(v=> { %>
+            <li>
+                <strong>Date:</strong>
+                <%= v.date %><br>
+                    <strong>Slot:</strong>
+                    <%= v.slot %><br>
+                        <strong>Remarks:</strong>
+                        <%= v.remarks %>
+            </li>
+            <% }) %>
+    </ul>
+
+    <!-- External JS only -->
+    <script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
+    <script>
+
+        const csrfToken =
+            document.querySelector('meta[name="csrf-token"]').content;
+
+        const uploadBtn = document.getElementById('uploadPhotoBtn');
+        const saveNotesBtn = document.getElementById('saveNotesBtn');
+        const notesField = document.getElementById('adminNotes');
+        const photoImg = document.getElementById('patientPhoto');
+
+        uploadBtn.addEventListener('click', () => {
+            const phone = uploadBtn.dataset.phone;
+
+            cloudinary.openUploadWidget(
+                {
+                    cloudName: 'YOUR_NAME',
+                    uploadPreset: 'patient_photos',
+                    sources: ['local'],
+                    cropping: true,
+                    multiple: false,
+                    maxImageWidth: 800,
+                    resourceType: 'image'
+                },
+                (err, result) => {
+                    if (result?.event === 'success') {
+                        const url = result.info.secure_url;
+
+                        fetch('/admin/update-photo', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                _csrf: csrfToken,
+                                phone,
+                                photo: url
+                            })
+                        }).then(() => {
+                            photoImg.src = url;
+                        });
+                    }
+                }
+            );
+        });
+
+        saveNotesBtn.addEventListener('click', async () => {
+            const patientName =
+                document.getElementById('patientName').dataset.name;
+
+            const notes = document.getElementById('adminNotes').value;
+
+            try {
+                const response = await fetch('/admin/updatenotes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({
+                        name: patientName,
+                        notes
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText);
+                }
+
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Server did not return JSON');
+                }
+
+                const data = await response.json();
+                alert('Notes saved');
+
+            } catch (error) {
+                console.error('Error saving notes:', error);
+                alert('Unauthorized or session expired. Please login again.');
+            }
+        });
+
+
+    </script>
+
 </body>
+
 </html>

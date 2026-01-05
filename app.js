@@ -1,3 +1,6 @@
+/******************************************************************
+ * CORE SETUP
+ ******************************************************************/
 const express = require('express');
 const bodyParser = require('body-parser');
 const { body, validationResult } = require('express-validator');
@@ -6,34 +9,101 @@ const mysql = require('mysql2');
 const path = require('path');
 const twilio = require('twilio');
 const dotenv = require('dotenv');
-const schedule = require('node-schedule');
-const axios = require('axios');
+const http = require('http');
+const WebSocket = require('ws');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 const nodemailer = require('nodemailer');
 const cron = require('node-cron');
 const ejs = require('ejs');
-// const db = require('./models/db'); // Your database connection module
-// const adminRoutes = require('./routes/adminRoutes');
-const http = require('http');
-const socketIo = require('socket.io'); // Import Socket.IO module
-dotenv.config(); // Load environment variables
+
+dotenv.config();
+
 const app = express();
 const port = process.env.PORT || 3200;
-const server = http.createServer(app); // Create HTTP server
-const io = socketIo(server); // Initialize Socket.IO
-const WebSocket = require('ws');
-const wss = new WebSocket.Server({ port: 8000 });
+const server = http.createServer(app);
 
+/******************************************************************
+ * WEBSOCKET (UNCHANGED)
+ ******************************************************************/
+const wss = new WebSocket.Server({ port: 8000 });
 let clients = [];
 
-wss.on('connection', (ws) => {
+wss.on('connection', ws => {
     clients.push(ws);
-    console.log('New client connected');
-
     ws.on('close', () => {
-        clients = clients.filter(client => client !== ws);
-        console.log('Client disconnected');
+        clients = clients.filter(c => c !== ws);
     });
 });
+
+
+/******************************************************************
+ * MIDDLEWARE
+ ******************************************************************/
+app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}));
+
+/******************************************************************
+ * DATABASE
+ ******************************************************************/
+const db = mysql.createConnection({
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
+});
+
+/******************************************************************
+ * HELPERS
+ ******************************************************************/
+function normalizePhone(phone) {
+    if (!phone) return null;
+    phone = phone.toString().replace(/[^\d+]/g, '');
+    if (phone.startsWith('+91')) return phone;
+    if (phone.length === 10) return '+91' + phone;
+    return phone;
+}
+
+function requireAdmin(req, res, next) {
+    if (req.session?.isAdmin) return next();
+
+    const token =
+        req.cookies.admin_jwt ||
+        req.headers.authorization?.replace('Bearer ', '');
+
+    if (!token) return res.status(401).json({ message: 'Unauthorized' });
+
+    try {
+        jwt.verify(token, process.env.JWT_SECRET);
+        next();
+    } catch {
+        res.status(401).json({ message: 'Unauthorized' });
+    }
+}
+
+/******************************************************************
+ * TWILIO
+ ******************************************************************/
+const client = twilio(
+    process.env.TWILIO_ACCOUNT_SID,
+    process.env.TWILIO_AUTH_TOKEN
+);
+
+/******************************************************************
+ * ROUTER
+ ******************************************************************/
+const router = express.Router();
+
 
 function notifyClients(message) {
     clients.forEach(client => {
@@ -55,16 +125,6 @@ app.use(session({ secret: 'secret', resave: true, saveUninitialized: true }));
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
-const client = twilio(accountSid, authToken);
-
-
-const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-});
 
 
 
@@ -78,9 +138,6 @@ const db = mysql.createConnection({
 //         connection.release();
 //     }
 // });
-
-const router = express.Router();
-
 
 // Middleware function to require admin authentication
 function requireAdmin(req, res, next) {
@@ -98,34 +155,43 @@ router.get('/login', (req, res) => {
     res.render('admin/login'); // Assuming you have a login form view (e.g., login.ejs)
 });
 
-router.post('/login', async (req, res) => {
+/**************** ADMIN AUTH ****************/
+router.get('/login', (req, res) => {
+    res.render('admin/login');
+});
+
+router.post('/login', (req, res) => {
     const { username, password } = req.body;
-    try {
-        // Replace with your actual username and password retrieval logic
-        if (username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
-            req.session.isAdmin = true; // Set admin session flag
-            console.log('Admin logged in1:', username);
-            res.json({ redirect: '/admin/dashboard' });
-            console.log('Admiinn logged in:', username);
-        } else {
-            console.log('Admin logged in2:', username);
-            res.status(401).json({ error: 'Invalid credentials 123' }); // Send error response for invalid credentials
-        }
-    } catch (error) {
-        console.error('Login error:', error);
-        res.status(500).json({ error: 'Internal Server Error' }); // Send internal server error response
+
+    if (
+        username === process.env.ADMIN_USERNAME &&
+        password === process.env.ADMIN_PASSWORD
+    ) {
+        req.session.isAdmin = true;
+
+        const token = jwt.sign(
+            { role: 'admin' },
+            process.env.JWT_SECRET,
+            { expiresIn: '12h' }
+        );
+
+        res.cookie('admin_jwt', token, {
+            httpOnly: true,
+            sameSite: 'strict'
+        });
+
+        return res.json({ redirect: '/admin/dashboard' });
     }
+
+    res.status(401).json({ error: 'Invalid credentials' });
 });
 
 router.get('/logout', (req, res) => {
-    req.session.destroy(err => {
-        if (err) {
-            return res.status(500).json({ message: 'Failed to log out' });
-        }
-        res.render('admin/login'); // Assuming you have a login form view (e.g., login.ejs)
+    req.session.destroy(() => {
+        res.clearCookie('admin_jwt');
+        res.render('admin/login');
     });
 });
-
 
 app.post('/save-chat-query', (req, res) => {
     const { name, email, phone, question } = req.body;
@@ -163,7 +229,6 @@ app.get('/admin/live-chat-queries', requireAdmin, (req, res) => {
 // Admin dashboard route filter here
 router.get('/dashboard', requireAdmin, (req, res) => {
 
-
     // const { date } = req.query;
     const filterDate = req.query.date || '';
     // Define the base SQL query
@@ -191,7 +256,7 @@ router.get('/dashboard', requireAdmin, (req, res) => {
     });
 });
 
-module.exports = router;
+
 
 // POST request to approve an appointment
 router.post('/approve-appointment/:id', requireAdmin, (req, res) => {
@@ -269,7 +334,7 @@ router.delete('/delete-appointment/:id', requireAdmin, (req, res) => {
         });
     });
 });
-module.exports = router;
+
 
 
 function normalizePhone(phone) {
@@ -340,7 +405,7 @@ router.post('/patient-history', requireAdmin, (req, res) => {
 
 
 
-router.post('/admin/update-photo', requireAdmin, (req, res) => {
+router.post('/update-photo', requireAdmin, (req, res) => {
     db.query(
         'UPDATE customers SET photo_url=? WHERE phone=?',
         [req.body.photo, req.body.phone],
@@ -348,17 +413,16 @@ router.post('/admin/update-photo', requireAdmin, (req, res) => {
     );
 });
 
-router.post('/admin/update-notes', requireAdmin, (req, res) => {
+router.post('/updatenotes', (req, res) => {
     const { name, notes } = req.body;
 
     if (!name || typeof name !== 'string') {
         return res.status(400).json({ error: 'Invalid name' });
     }
-    console.log(name, notes);
 
     db.query(
         'UPDATE customers SET admin_notes = ? WHERE LOWER(name) = LOWER(?)',
-        [notes || 'null', name.trim()],
+        [notes ?? null, name.trim()],
         (err, result) => {
             if (err) {
                 console.error('Update notes error:', err);
@@ -369,12 +433,10 @@ router.post('/admin/update-notes', requireAdmin, (req, res) => {
                 return res.status(404).json({ error: 'Customer not found' });
             }
 
-            res.json({ ok: true });
+            return res.status(200).json({ ok: true });
         }
     );
 });
-
-
 
 
 router.get('/patient-search', requireAdmin, (req, res) => {
@@ -396,7 +458,7 @@ router.get('/patient-search', requireAdmin, (req, res) => {
 });
 
 
-module.exports = router;
+
 
 // Mount the admin routes under /admin
 app.use('/admin', router);
@@ -655,7 +717,7 @@ app.post('/add-appointment', [
                 console.log('Successfully inserted the appointment.');
 
                 // Insert into customers table
-                db.query('INSERT INTO customers (name, address, email, phone, city) VALUES (?, ?, ?, ?, ?)',
+                db.query('INSERT INTO customers (name, address, email, phone, city) VALUES ON DUPLICATE KEY UPDATE (?, ?, ?, ?, ?)',
                     [name, address, email, phone, city], (customerErr, customerResults) => {
                         if (customerErr) {
                             console.log('Error inserting into customers table:', customerErr);
@@ -713,10 +775,6 @@ app.get('/howhelp/sports', (req, res) => {
 
 app.get('/howhelp/muscularweak', (req, res) => {
     res.render(path.join(__dirname, 'views/howhelp/muscularweak'));
-});
-
-app.get('/howhelp/balance', (req, res) => {
-    res.render(path.join(__dirname, 'views/howhelp/return'));
 });
 
 app.get('/howhelp/conf', (req, res) => {
@@ -880,10 +938,21 @@ app.post('/admin/delete/:id', (req, res) => {
     });
 });
 
+module.exports = router;
 
 app.use((req, res) => {
+    if (
+        req.headers.accept?.includes('application/json') ||
+        req.headers['content-type']?.includes('application/json') ||
+        req.xhr
+    ) {
+        return res.status(404).json({ error: 'Not Found' });
+    }
+
+    // Browser navigation
     res.redirect('/error');
 });
+
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
