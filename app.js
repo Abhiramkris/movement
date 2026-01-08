@@ -640,7 +640,7 @@ app.post('/checkslot', [   // here add rate limiter and multiple reuest handelin
 
 app.post('/verify-otp', [
     body('otp').isLength({ min: 4, max: 6 }).withMessage('Invalid OTP')
-],  (req, res) => {
+], (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -869,67 +869,40 @@ app.post('/freecall', (req, res) => {
         return res.status(400).json({ error: 'Name and phone number are required' });
     }
 
-    // Example database interaction
-    const checkCustomerQuery = 'SELECT id FROM customers WHERE phone = ?';
-    db.query(checkCustomerQuery, [phone], (err, results) => {
+    // Insert new customer
+
+    const addCallRequestQuery = 'INSERT INTO call_requests (phone, name) VALUES (?, ?)';
+    db.query(addCallRequestQuery, [phone, name], (err) => {
         if (err) {
-            console.error('Database error1:', err); // Log the error
-            return res.status(500).json({ error: 'Database error1' });
+            console.error('Database error3:', err); // Log the error
+            return res.status(500).json({ error: 'Database error3' });
         }
-
-        let customerId;
-
-        if (results.length === 0) {
-            // Insert new customer
-            const addCustomerQuery = 'INSERT INTO customers (name, phone) VALUES (?, ?)';
-            db.query(addCustomerQuery, [name, phone], (err, result) => {
-                if (err) {
-                    console.error('Database error2:', err); // Log the error
-                    return res.status(500).json({ error: 'Database error2' });
-                }
-
-                customerId = result.insertId;
-                const addCallRequestQuery = 'INSERT INTO call_requests (customer_id, name) VALUES (?, ?)';
-                db.query(addCallRequestQuery, [customerId, name], (err) => {
-                    if (err) {
-                        console.error('Database error3:', err); // Log the error
-                        return res.status(500).json({ error: 'Database error3' });
-                    }
-                    res.json({ redirect: '/contactedsoon' });
-                });
-            });
-        } else {
-            customerId = results[0].id;
-            const addCallRequestQuery = 'INSERT INTO call_requests (customer_id, name) VALUES (?, ?)';
-            db.query(addCallRequestQuery, [customerId, name], (err) => {
-                if (err) {
-                    console.error('Database error4:', err); // Log the error
-                    return res.status(500).json({ error: 'Database error4' });
-                }
-                res.json({ redirect: '/contactedsoon' });
-            });
-        }
+        res.json({ redirect: '/contactedsoon' });
     });
+
+
 });
 
 
 
 
-// Admin route to view and manage call requests
 app.get('/admin/call', requireAdmin, (req, res) => {
     const getCallRequestsQuery = `
-      SELECT call_requests.id, customers.phone, call_requests.name
-      FROM call_requests
-      JOIN customers ON call_requests.customer_id = customers.id
-    `;
+    SELECT id, name, phone
+    FROM call_requests
+    ORDER BY id DESC
+  `;
+
     db.query(getCallRequestsQuery, (err, results) => {
         if (err) {
-            console.error('Database error:', err); // Improved error handling
+            console.error('Database error:', err);
             return res.status(500).send('Internal Server Error');
         }
+
         res.render('admin/caller', { callRequests: results });
     });
 });
+
 
 
 
@@ -944,6 +917,22 @@ app.post('/admin/delete/:id', (req, res) => {
         }
         res.redirect('/admin/call');
     });
+});
+
+app.post('/admin/call/delete/:id', requireAdmin, (req, res) => {
+    const { id } = req.params;
+
+    db.query(
+        'DELETE FROM call_requests WHERE id = ?',
+        [id],
+        err => {
+            if (err) {
+                console.error('Delete error:', err);
+                return res.status(500).send('Server Error');
+            }
+            res.redirect('/admin/call');
+        }
+    );
 });
 
 module.exports = router;

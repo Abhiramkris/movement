@@ -1,129 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - Call Requests</title>
+  <title>Admin – Call Requests</title>
+
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      padding: 0;
       background-color: #f9f9f9;
     }
+
     h1 {
-      background-color: #e0e0e0;
-      color: #333;
-      padding: 20px;
+      background-color: #010f49;
+      color: #fff;
+      padding: 16px;
       text-align: center;
       margin: 0;
     }
+
     table {
-      width: 100%;
+      width: 95%;
       margin: 20px auto;
       border-collapse: collapse;
       background-color: #ffffff;
     }
-    th, td {
-      padding: 10px;
-      text-align: left;
+
+    th,
+    td {
+      padding: 12px;
       border-bottom: 1px solid #ddd;
+      text-align: left;
     }
+
     th {
       background-color: #f0f0f0;
-      color: #333;
+      font-weight: bold;
     }
+
     tr:nth-child(even) {
-      background-color: #f9f9f9;
+      background-color: #fafafa;
     }
+
+    .empty {
+      text-align: center;
+      padding: 30px;
+      color: #777;
+    }
+
     button {
-      background-color: #007BFF;
+      background-color: #dc3545;
       color: #fff;
       border: none;
-      padding: 8px 16px;
+      padding: 8px 14px;
       border-radius: 4px;
       cursor: pointer;
       font-size: 14px;
     }
+
     button:hover {
-      background-color: #0056b3;
+      background-color: #b52a37;
     }
-    form {
-      margin: 0;
-    }
-    /* Responsive styles */
-    @media (max-width: 768px) {
-      table {
-        font-size: 14px;
-      }
-      th, td {
-        padding: 8px;
-      }
-      button {
-        padding: 6px 12px;
-        font-size: 12px;
-      }
-    }
-    @media (max-width: 480px) {
-      th, td {
-        display: block;
-        width: 100%;
-        box-sizing: border-box;
-        padding: 10px 0;
-        border-bottom: 1px solid #ddd;
-      }
+
+    /* MOBILE */
+    @media (max-width: 600px) {
+
+      table,
+      thead,
+      tbody,
+      th,
+      td,
       tr {
         display: block;
-        margin-bottom: 10px;
       }
+
+      thead {
+        display: none;
+      }
+
+      tr {
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        padding: 10px;
+        background: #fff;
+      }
+
       td {
-        text-align: right;
-        position: relative;
         padding-left: 50%;
-        white-space: nowrap;
+        position: relative;
       }
+
       td::before {
-        content: attr(data-label);
         position: absolute;
-        left: 0;
-        width: 45%;
-        padding-right: 10px;
-        white-space: nowrap;
+        left: 10px;
+        top: 12px;
         font-weight: bold;
-        color: #333;
+        content: attr(data-label);
       }
+
       button {
         width: 100%;
-        box-sizing: border-box;
-        padding: 12px;
-        font-size: 16px;
+        margin-top: 10px;
       }
     }
   </style>
 </head>
+
 <body>
-  <h1>Admin - Call Requests</h1>
+
+  <h1>Call Requests</h1>
+
   <table>
     <thead>
       <tr>
-        <th>Phone Number</th>
+        <th>Phone</th>
         <th>Name</th>
-        <th>Actions</th>
+        <th>Action</th>
       </tr>
     </thead>
+
     <tbody>
-      <% callRequests.forEach(request => { %>
+      <% if (callRequests.length===0) { %>
         <tr>
-          <td data-label="Phone Number"><%= request.phone %></td>
-          <td data-label="Name"><%= request.name %></td>
-          <td data-label="Actions">
-            <form action="/admin/delete/<%= request.id %>" method="post">
-              <button type="submit">Delete</button>
-            </form>
-          </td>
+          <td colspan="3" class="empty">No call requests found</td>
         </tr>
-      <% }) %>
+        <% } %>
+
+          <% callRequests.forEach(req=> { %>
+            <tr>
+              <td data-label="Phone">
+                <%= req.phone %>
+              </td>
+              <td data-label="Name">
+                <%= req.name || '-' %>
+              </td>
+              <td data-label="Action">
+                <form action="/admin/call/delete/<%= req.id %>" method="POST"
+                  onsubmit="return confirm('Delete this call request?')">
+                  <button type="submit">Delete</button>
+                </form>
+              </td>
+            </tr>
+            <% }) %>
     </tbody>
   </table>
+
 </body>
+
 </html>
