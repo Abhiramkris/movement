@@ -89,7 +89,8 @@
         <% visits.forEach(v=> { %>
             <li>
                 <strong>Date:</strong>
-                <%= v.date %><br>
+                <%= v.date.toString().slice(0, 10) %>
+                    <br>
                     <strong>Slot:</strong>
                     <%= v.slot %><br>
                         <strong>Remarks:</strong>

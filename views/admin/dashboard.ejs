@@ -265,7 +265,7 @@
             <%= appointment.name %>
           </h6>
           <p><strong>Date:</strong>
-            <%= appointment.date %>
+            <%= appointment.date.toString().slice(0, 10) %>
           </p>
           <p><strong>Slot:</strong>
             <%= appointment.slot %>
@@ -462,7 +462,7 @@
     });
 
     // Establish WebSocket connection
-    const socket = new WebSocket('wss://localhost:8000'); 
+    const socket = new WebSocket('wss://localhost:8000');
 
     socket.onopen = () => {
       console.log('WebSocket connection established');
