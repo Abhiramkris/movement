@@ -650,27 +650,15 @@
       }
     }
   </style>
-  <div class="container">
-    <div class="subhead" style="color: #023974;">
-      <b>
-        <span style="background-color: #023974; color: white; padding: 5px; border-radius: 3px;">"PRIORITISE YOUR
-          WELLBEING"</span>
-        <br>
-        SCHEDULE YOUR PHYSIOTHERAPY APPOINTMENT TODAY
-      </b>
-    </div>
-    <br>
-    <a href="/freecall" class="ctcbtn">Schedule A Free Online Call</a>
-  </div>
+
   <section class="treat-section reveal">
     <div class="treat-container">
-
       <!-- LEFT CONTENT -->
       <div class="treat-text">
         <!-- <span class="treat-label">WHAT WE TREAT</span> -->
-        <h2 class="header">
+        <!-- <h2 class="header">
           SAY <span>GOODBYE</span><br>TO PAIN
-        </h2> <br>
+        </h2> <br> -->
         <div class="subhead3 ">Movement Science provides treatment for all musculoskeletal issues from head to toe.
         </div>
       </div>
@@ -686,6 +674,20 @@
 
     </div>
   </section>
+
+  <div class="container">
+    <div class="subhead" style="color: #023974;">
+      <b>
+        <span style="background-color: #023974; color: white; padding: 5px; border-radius: 3px;">"PRIORITISE YOUR
+          WELLBEING"</span>
+        <br>
+        SCHEDULE YOUR PHYSIOTHERAPY APPOINTMENT TODAY
+      </b>
+    </div>
+    <br>
+    <a href="/freecall" class="ctcbtn">Schedule A Free Online Call</a>
+  </div>
+  <br><br><br>
 
   <style>
     /* ===============================
@@ -822,6 +824,141 @@
     });
   </script>
 
+
+  <div class="impact-section">
+    <h2><span>Impacting</span> real lives</h2>
+
+    <div class="wave-progress reveal" data-progress="60">
+      <div class="label">60 <span>%</span></div>
+      <div class="track">
+        <div class="wave"></div>
+      </div>
+      <p>Reduction in depression</p>
+    </div>
+
+    <div class="wave-progress reveal" data-progress="100">
+      <div class="label">100 <span>%</span></div>
+      <div class="track">
+        <div class="wave"></div>
+      </div>
+      <p>Success rate</p>
+    </div>
+
+    <div class="wave-progress reveal" data-progress="40">
+      <div class="label">40 <span>%</span></div>
+      <div class="track">
+        <div class="wave"></div>
+      </div>
+      <p>Reduction in painkillers</p>
+    </div>
+
+    <div class="wave-progress reveal" data-progress="70">
+      <div class="label">70 <span>%</span></div>
+      <div class="track">
+        <div class="wave"></div>
+      </div>
+      <p>Reduction in surgery intent</p>
+    </div>
+  </div>
+
+  <style>
+    .impact-section {
+      background: #010f49;
+      padding: 80px 24px;
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .impact-section h2 {
+      font-size: 36px;
+      margin-bottom: 50px;
+    }
+
+    .impact-section h2 span {
+      color: #d6e8f4;
+    }
+
+    .wave-progress {
+      margin-bottom: 45px;
+    }
+
+    .wave-progress .label {
+      font-size: 56px;
+      font-weight: 800;
+    }
+
+    .wave-progress .label span {
+      font-size: 24px;
+      font-weight: 500;
+    }
+
+    .wave-progress p {
+      margin-top: 8px;
+      font-size: 18px;
+      color: #d1d5db;
+    }
+
+    /* TRACK */
+    .track {
+      position: relative;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    /* WAVE */
+    .wave {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 0%;
+      background: #6fb3ff;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    /* WAVE LAYER */
+    .wave::before {
+      content: "";
+      position: absolute;
+      left: -200%;
+      top: -6px;
+      width: 400%;
+      height: 18px;
+      background: radial-gradient(circle at 10px 10px,
+          rgba(255, 255, 255, 0.35) 25%,
+          transparent 26%);
+      animation: waveMove 2.5s linear infinite;
+    }
+
+    @keyframes waveMove {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(50%);
+      }
+    }
+  </style>
+
+  <script>
+    document.querySelectorAll('.wave-progress').forEach(bar => {
+      const value = bar.dataset.progress;
+      const wave = bar.querySelector('.wave');
+
+      setTimeout(() => {
+        wave.style.width = value + '%';
+      }, 300);
+    });
+  </script>
+
+  <br> <br><br> <br>
   <div class="container">
     <div class="header">WHAT WE DO</div> <br>
     <div class="subhead3">We specialize in providing personalized, high-quality physiotherapy services in the comfort of
