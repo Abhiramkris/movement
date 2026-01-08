@@ -243,7 +243,7 @@
         </li>
       </ul>
       <div class="free-consultation">
-        <a href="/checkslot" class="nav-link">Book Free Consultation</a>
+        <a href="/checkslot" class="nav-link">Book Free Consultation</a> <br>
       </div>
     </div>
   </nav>
@@ -255,9 +255,10 @@
     });
   </script>
 
-  <div class="live-chat" onclick="toggleLiveChat()">
+  <!-- <div class="live-chat" onclick="toggleLiveChat()">
     <span class="icon"><i class="fas fa-comments"></i></span>Chat
-  </div>
+  </div> -->
+
   <div class="live-chat-modal" id="live-chat-modal">
     <button class="close-btn" onclick="toggleLiveChat()">&times;</button>
     <form id="live-chat-form">
@@ -331,10 +332,13 @@
 
 
   <section class="showcase">
-    <img src="/images/hero.jpg"></img>
-
+    <!-- <img src="/images/hero.jpg"></img> -->
+    <video autoplay muted loop playsinline poster="/images/hero.jpg">
+      <source src="/images/herohero.mp4" type="video/mp4">
+      <!-- Your browser does not support the video tag. -->
+    </video>
     <div class="overlay"> </div>
-    <div class="text1 reveal"> <br> <br><br> <br><br> <br>
+    <div class="text1 reveal"> <br> <br><br> <br><br> <br> <br> <br><br> <br>
       <h2 class="header1">Physiotherapy at <span class="highlight">home.</span></h2>
       <h2 class="header1">Specialist in</h2>
       <div class="typewriter">
@@ -342,6 +346,9 @@
       </div>
       <div class="free-consultation1">
         <a href="/checkslot" class="navu">Book Free Consultation</a>
+      </div>
+      <div class="free-consultation2">
+        <a href="/freecall" class="navu">Schedule A Free Online Call</a>
       </div>
     </div>
 
@@ -361,9 +368,7 @@
       .free-consultation1 {
         position: absolute;
         top: 100%;
-        /* Position the button 25% up from the bottom of the container */
         margin-left: auto;
-        /* Make margin-left auto to move the button to the right */
         background: linear-gradient(45deg, #1d1acb, #008CBA);
         height: 40px;
         border-radius: 5px;
@@ -371,6 +376,20 @@
         font-weight: 800;
         z-index: 1000;
         width: 220px;
+        text-align: center;
+      }
+
+      .free-consultation2 {
+        position: absolute;
+        top: 112%;
+        margin-left: auto;
+        background: linear-gradient(45deg, #1d1acb, #008CBA);
+        height: 40px;
+        border-radius: 5px;
+        padding: 5px 5px;
+        font-weight: 800;
+        z-index: 1000;
+        width: 250px;
         text-align: center;
       }
 
@@ -478,6 +497,58 @@
       startTextAnimation();
     </script>
   </section>
+
+  <style>
+    .showcase {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      /* full screen hero */
+      overflow: hidden;
+      background: #000;
+    }
+
+    /* VIDEO FIX */
+    .showcase video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+    }
+
+    /* OVERLAY */
+    .showcase .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(39, 59, 148, 0.13);
+      height: 100%;
+      z-index: 2;
+    }
+
+    /* TEXT */
+    .showcase .text1 {
+      position: relative;
+      z-index: 3;
+      color: #fff;
+    }
+
+    @media (max-width: 768px) {
+      .showcase {
+        height: 90vh;
+      }
+
+      .showcase video {
+        height: 100%;
+        width: auto;
+        min-width: 100%;
+      }
+    }
+  </style>
+  <br> <br> <br>
   <div class="container">
     <div class="header">Why Movement Science</div> <br>
     <div class="imagetext">
@@ -504,30 +575,30 @@
 
 
   <div class="container">
-    <div class="subhead"> <b>We provide</b></div> <br>
+    <div class="subhead reveal"> <b>We provide</b></div> <br>
     <ul class="custom-list">
       <li class="item">
         <img src="/images/image66.png" alt="Image 1">
         <span class="subhead">Highly skilled and compassionate physiotherapist Registered with Health care professional
           council (HCPC) and Active member of chartered society of physiotherapy (MCSP)</span>
       </li>
-      <li class="item">
+      <li class="item reveal">
         <img src="/images/image22.png" alt="Image 2">
         <span class="subhead">Convenient treatment options available on demand</span>
       </li>
-      <li class="item">
+      <li class="item reveal">
         <img src="/images/image55.png" alt="Image 3">
         <span class="subhead">Receive care in the comfort of your home, care home, or workplace</span>
       </li>
-      <li class="item">
+      <li class="item reveal">
         <img src="/images/image44.png" alt="Image 4">
         <span class="subhead">Services available seven days a week</span>
       </li>
-      <li class="item">
+      <li class="item reveal">
         <img src="/images/image11.png" alt="Image 5">
         <span class="subhead">Flexible scheduling with weekday, evening, and weekend appointments</span>
       </li>
-      <li class="item">
+      <li class="item reveal">
         <img src="/images/image33.png" alt="Image 6">
         <span class="subhead">Avoid the hassle of traveling to a clinic or hospital</span>
       </li>
@@ -589,10 +660,168 @@
       </b>
     </div>
     <br>
-    <a href="/freecall" class="ctcbtn">Schedule A Free Call</a>
-
+    <a href="/freecall" class="ctcbtn">Schedule A Free Online Call</a>
   </div>
-  <br><br> <br>
+  <section class="treat-section reveal">
+    <div class="treat-container">
+
+      <!-- LEFT CONTENT -->
+      <div class="treat-text">
+        <!-- <span class="treat-label">WHAT WE TREAT</span> -->
+        <h2 class="header">
+          SAY <span>GOODBYE</span><br>TO PAIN
+        </h2> <br>
+        <div class="subhead3 ">Movement Science provides treatment for all musculoskeletal issues from head to toe.
+        </div>
+      </div>
+
+      <!-- RIGHT VISUAL -->
+      <div class="treat-visual">
+        <div class="treat-bg-shape"></div>
+
+        <!-- replace image later -->
+        <img src="/images/strech.png" alt="Physiotherapy Treatment" class="treat-image">
+
+      </div>
+
+    </div>
+  </section>
+
+  <style>
+    /* ===============================
+   WHAT WE TREAT – FINAL MATCHED
+================================ */
+
+    .treat-section {
+      padding: 40px 0 120px;
+      background: #ffffff;
+      font-family: 'Poppins', sans-serif;
+      overflow: hidden;
+    }
+
+    .treat-container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 0 10px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 48px;
+    }
+
+    /* LEFT CONTENT */
+    .treat-label {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: #9aa6bd;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .treat-title {
+      font-size: 44px;
+      /* reduced = calmer */
+      font-weight: 800;
+      line-height: 1.2;
+      color: #010f49;
+      /* site primary */
+      margin-bottom: 14px;
+    }
+
+    .treat-title span {
+      color: #008CBA;
+      /* consistent accent */
+    }
+
+    .treat-desc {
+      font-size: 18px;
+      line-height: 1.7;
+      color: #5a6b8a;
+      /* matches subhead3 tone */
+      max-width: 460px;
+    }
+
+    /* RIGHT VISUAL */
+    .treat-visual {
+      position: relative;
+      height: 520px;
+    }
+
+    /* SHAPE – PUSHED DOWN, CALMER */
+    .treat-bg-shape {
+      position: absolute;
+      right: -160px;
+      width: 640px;
+      height: 640px;
+      background: #010f4929;
+      border-radius: 50%;
+      z-index: 1;
+    }
+
+    /* IMAGE */
+    .treat-image {
+      position: absolute;
+      bottom: 130px;
+      right: 90px;
+      max-height: 500px;
+      width: auto;
+      z-index: 2;
+      scale: 2;
+    }
+
+
+    @media (max-width: 900px) {
+      .treat-section {
+        padding: 70px 0 90px;
+      }
+
+      .treat-container {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .treat-title {
+        font-size: 34px;
+      }
+
+      .treat-desc {
+        font-size: 16.5px;
+      }
+
+      .treat-visual {
+        height: 360px;
+      }
+
+      .treat-bg-shape {
+        width: 420px;
+        height: 420px;
+        right: 50%;
+        bottom: -40px;
+        transform: translateX(50%);
+      }
+
+      .treat-image {
+        right: 94%;
+        transform: translateX(50%);
+        max-height: 360px;
+      }
+    }
+  </style>
+
+
+  <script>
+    gsap.from(".treat-title span", {
+      scrollTrigger: {
+        trigger: ".treat-section",
+        start: "top 75%"
+      },
+      y: 20,
+      opacity: 0,
+      duration: 0.6
+    });
+  </script>
+
   <div class="container">
     <div class="header">WHAT WE DO</div> <br>
     <div class="subhead3">We specialize in providing personalized, high-quality physiotherapy services in the comfort of

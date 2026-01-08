@@ -34,6 +34,9 @@ wss.on('connection', ws => {
     ws.on('close', () => {
         clients = clients.filter(c => c !== ws);
     });
+    ws.on('message', message => {
+        console.log('Received:', message);
+    });
 });
 
 
@@ -123,12 +126,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({ secret: 'secret', resave: true, saveUninitialized: true }));
 
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-
-
-
-
 
 // db.getConnection((err, connection) => {
 //     if (err) {
@@ -140,13 +137,14 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 // });
 
 // Middleware function to require admin authentication
-function requireAdmin(req, res, next) {
-    if (req.session && req.session.isAdmin) {
-        next();
-    } else {
-        res.status(401).json({ message: 'Unauthorized' });
-    }
-}
+
+// function requireAdmin(req, res, next) {
+//     if (req.session && req.session.isAdmin) {
+//         next();
+//     } else {
+//         res.status(401).json({ message: 'Unauthorized' });
+//     }
+// }
 
 
 
@@ -235,7 +233,6 @@ router.get('/dashboard', requireAdmin, (req, res) => {
     let query = 'SELECT * FROM appointments';
     let queryParams = [];
 
-    // If a date parameter is provided, add a WHERE clause to filter by date
 
     if (filterDate) {
         query += ' WHERE date = ?';
@@ -495,7 +492,7 @@ async function sendAppointmentEmails() {
 
         console.log(`Fetching appointments for date: ${dateString}`);
 
-        const [results] = await db.query(
+        const [results] = db.query(
             'SELECT * FROM appointments WHERE date = ? AND reminder_sent = FALSE',
             [dateString]
         );
@@ -583,24 +580,20 @@ app.get('/added', (req, res) => {
     res.render(path.join(__dirname, 'views/add'));
 });
 
-app.post('/checkslot', [
+app.post('/checkslot', [   // here add rate limiter and multiple reuest handeling 
     body('date').isISO8601().withMessage('Invalid date format').custom((value) => {
         const inputDate = new Date(value);
         const currentDate = new Date();
 
-        // Set the time for current date comparison to 11:00 AM
         currentDate.setHours(3, 0, 0, 0);
 
-        // Check if the input date is in the past
         if (inputDate < new Date().setHours(0, 0, 0, 0)) {
             throw new Error('Date cannot be in the past');
         }
 
-        // Check if the input date is today and the time is past 11:00 AM
         if (inputDate.toDateString() === currentDate.toDateString() && new Date() >= currentDate) {
             throw new Error('Cannot register for today after 11 AM');
         }
-
         return true;
     }),
     body('slot').notEmpty().withMessage('Slot is required'),
@@ -610,8 +603,12 @@ app.post('/checkslot', [
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-
     const { date, slot, phone, city } = req.body;
+
+    if (!date || isNaN(Date.parse(date))) return res.status(400).json({ message: "Invalid date" });
+    if (!/^slot\d+$/.test(slot)) return res.status(400).json({ message: "Invalid slot" });
+    if (/[^\d+\-\s]/.test(phone)) return res.status(400).json({ message: "Not allowed" });
+    if (!/^[a-zA-Z\s]{2,40}$/.test(city)) return res.status(400).json({ message: "Invalid city" });
 
     db.query('SELECT * FROM slots WHERE date = ? AND slot = ?', [date, slot], (err, results) => {
         if (err) {
@@ -643,7 +640,7 @@ app.post('/checkslot', [
 
 app.post('/verify-otp', [
     body('otp').isLength({ min: 4, max: 6 }).withMessage('Invalid OTP')
-], (req, res) => {
+],  (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -663,6 +660,7 @@ app.post('/verify-otp', [
             if (verification_check.status === 'approved') {
                 req.session.otp_verified = true;
                 res.json({ redirect: '/add-appointment' });
+                // see if the phone number laredy exist if it exists take the user id also add to trusted device 
             } else {
                 res.status(400).json({ error: 'Invalid OTP' });
 
@@ -695,6 +693,7 @@ app.post('/add-appointment', [
     }
 
     const { name, address, email } = req.body;
+
     const date = req.session.date;
     const slot = req.session.slot;
     const phone = req.session.phone;
@@ -716,40 +715,49 @@ app.post('/add-appointment', [
             if (results.affectedRows === 1) {
                 console.log('Successfully inserted the appointment.');
 
-                // Insert into customers table
-                db.query('INSERT INTO customers (name, address, email, phone, city) VALUES ON DUPLICATE KEY UPDATE (?, ?, ?, ?, ?)',
-                    [name, address, email, phone, city], (customerErr, customerResults) => {
-                        if (customerErr) {
-                            console.log('Error inserting into customers table:', customerErr);
-                            return res.status(500).json({ error: 'Error inserting into customers table' });
+                const customerSql = `
+    INSERT INTO customers (name, address, email, phone, city) 
+    VALUES (?, ?, ?, ?, ?)
+    AS new_data
+    ON DUPLICATE KEY UPDATE 
+        name = new_data.name,
+        address = new_data.address,
+        email = new_data.email,
+        phone = new_data.phone,
+        city = new_data.city
+`;
+
+                db.query(customerSql, [name, address, email, phone, city], (customerErr, customerResults) => {
+                    if (customerErr) {
+                        console.error('Error in customers table:', customerErr);
+                        return res.status(500).json({ error: 'Error processing customer data' });
+                    }
+
+                    // 2. Insert the slot
+                    db.query('INSERT INTO slots (date, slot) VALUES (?, ?)', [date, slot], (slotErr, slotResults) => {
+                        if (slotErr) {
+                            console.error('Error in slots table:', slotErr);
+                            return res.status(500).json({ error: 'Error booking slot' });
                         }
 
-                        db.query('INSERT INTO slots (date, slot) VALUES (?, ?)', [date, slot], (slotErr, slotResults) => {
-                            if (slotErr) {
-                                console.log('Error inserting into slots table:', slotErr);
-                                return res.status(500).json({ error: 'Error inserting into slots table' });
+                        // 3. Notify connected clients (WebSockets)
+                        const notification = JSON.stringify({
+                            title: 'New Appointment Added',
+                            body: `New appointment with ${name} on ${date} during ${slot}.`
+                        });
+
+                        clients.forEach(client => client.send(notification));
+
+                        // 4. Cleanup session
+                        req.session.destroy((sessionErr) => {
+                            if (sessionErr) {
+                                console.error('Session destruction error:', sessionErr);
+                                return res.status(500).json({ error: 'Cleanup error' });
                             }
-
-                            console.log('Successfully inserted into slots table:', slotResults);
-
-                            clients.forEach(client => {
-                                client.send(JSON.stringify({
-                                    title: 'New Appointment Added',
-                                    body: `New appointment with ${name} on ${date} during ${slot}.`
-                                }));
-                            });
-
-                            // Destroy the session after successful inserts
-                            req.session.destroy((sessionErr) => {
-                                if (sessionErr) {
-                                    console.log('Session destruction error:', sessionErr);
-                                    return res.status(500).json({ error: 'Session destruction error' });
-                                }
-                                console.log('Redirecting to /added');
-                                return res.json({ redirect: '/added' });
-                            });
+                            return res.json({ redirect: '/added' });
                         });
                     });
+                });
             } else {
                 console.log('Unexpected number of affected rows:', results.affectedRows);
                 return res.status(500).json({ error: 'Unexpected number of affected rows' });

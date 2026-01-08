@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -13,6 +12,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="./js/cokkie.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -97,12 +97,14 @@
     .slot label {
       font-weight: 400;
     }
+
     h5 {
-    margin-top: 8px;
-    font-weight: 800;
-    color: rgb(1, 19, 67);
-    font-family: 'Poppins', sans-serif;
-  }
+      margin-top: 8px;
+      font-weight: 800;
+      color: rgb(1, 19, 67);
+      font-family: 'Poppins', sans-serif;
+    }
+
     @media (min-width: 768px) {
       .container {
         max-width: 600px;
@@ -134,7 +136,8 @@
     <div class="name">
       <h5>MOVEMENT SCIENCE</h5>
     </div>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
@@ -161,8 +164,8 @@
     </div>
   </nav>
   <script>
-    $(document).ready(function() {
-      $('.navbar-toggler').click(function() {
+    $(document).ready(function () {
+      $('.navbar-toggler').click(function () {
         $('#navbarNav').collapse('toggle');
       });
     });
@@ -223,21 +226,23 @@
         </div>
       </div>
 
-      <button type="submit" class="btn">Check Availability</button>
+      <button type="submit" class="btn" id="checkBtn">Check Availability</button>
     </form>
   </div>
   <br><br>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/js/intlTelInput.min.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    let btnstatus = false
+    document.addEventListener('DOMContentLoaded', function () {
+      const checkBtn = document.getElementById("checkBtn");
       const phoneInputField = document.querySelector("#phone");
       const iti = window.intlTelInput(phoneInputField, {
         initialCountry: "auto", // or your default country code
         utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/js/utils.js"
       });
 
-      document.getElementById('date').addEventListener('change', function() {
+      document.getElementById('date').addEventListener('change', function () {
         const date = new Date(this.value);
         const currentDate = new Date();
         if (date < currentDate.setHours(0, 0, 0, 0)) {
@@ -246,7 +251,7 @@
           return;
         }
 
-        const day = date.getDay(); // Get the day of the week (0 for Sunday, 1 for Monday, etc.)
+        const day = date.getDay();
 
         if (day === 0) { // Sunday
           document.getElementById('slot4-container').style.display = 'block';
@@ -259,9 +264,13 @@
         }
       });
 
-      document.getElementById('appointmentForm').addEventListener('submit', function(event) {
-        event.preventDefault();
 
+
+      document.getElementById('appointmentForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        btnstatus = true;
+        checkBtn.disabled = true;
+        checkBtn.innerText = "Checking...";
         const slotElement = document.querySelector('input[name="slot"]:checked');
         if (!slotElement) {
           alert('Please select a slot.');
@@ -274,38 +283,48 @@
         const city = document.getElementById('city').value;
 
         fetch('/checkslot', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              date,
-              slot,
-              phone,
-              city
-            })
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            // need to add bearer token here for auth 
+          },
+          body: JSON.stringify({
+            date,
+            slot,
+            phone,
+            city
           })
+        })
           .then(response => response.json())
           .then(data => {
             if (data.redirect) {
               window.location.href = data.redirect;
             } else if (data.error) {
               alert(data.error);
+              btnstatus = false;
+              checkBtn.disabled = false;
+              checkBtn.innerText = "Check Availability";
             } else if (data.errors) {
               alert(data.errors.map(err => err.msg).join('\n'));
+              btnstatus = false;
+              checkBtn.disabled = false;
+              checkBtn.innerText = "Check Availability";
             }
           })
           .catch(error => {
             console.error('Error:', error);
+            btnstatus = false;
+            checkBtn.disabled = false;
+            checkBtn.innerText = "Check Availability";
           });
       });
     });
+
+    document.getElementById("checkBtn").disabled = btnstatus;
   </script>
 </body>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<!-- Popper.js -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<!-- Bootstrap JS -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</html>
 
+</html>

@@ -32,12 +32,13 @@
       height: 100vh;
       background-color: #f0f0f0;
     }
+
     h5 {
-        margin-top: 8px;
-        font-weight: 800;
-        color:  #023974;
-        font-family: 'Poppins', sans-serif;
-      }
+      margin-top: 8px;
+      font-weight: 800;
+      color: #023974;
+      font-family: 'Poppins', sans-serif;
+    }
 
     .container {
       background-color: #fff;
@@ -106,7 +107,8 @@
     <div class="name">
       <h5>MOVEMENT SCIENCE</h5>
     </div>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
@@ -140,8 +142,8 @@
     <form id="freeCallForm">
       <label for="name">Your Name:</label>
       <input type="text" id="name" name="name" placeholder="Enter your name" required>
-      <label for="phone">Your Phone Number:</label>
-      <input type="text" id="phone" name="phone" placeholder="Enter your phone number" required>
+      <label for="phone">Your Phone Number / Email Address</label>
+      <input type="text" id="phone" name="phone" placeholder="Enter your phone number/ Email" required>
       <button type="submit">Submit</button>
     </form>
   </div>
@@ -149,40 +151,40 @@
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
-  document.getElementById('freeCallForm').addEventListener('submit', function(event) {
-  event.preventDefault();
+    document.getElementById('freeCallForm').addEventListener('submit', function (event) {
+      event.preventDefault();
 
-  // Get the form values
-  const name = document.getElementById('name').value;
-  const phone = document.getElementById('phone').value;
+      // Get the form values
+      const name = document.getElementById('name').value;
+      const phone = document.getElementById('phone').value;
 
-  fetch('/freecall', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      name: name,
-      phone: phone
-    })
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.redirect) {
-      // Redirect to the specified URL
-      window.location.href = data.redirect;
-    } else if (data.error) {
-      // Display a single error message
-      alert(data.error);
-    } else if (data.errors) {
-      // Display multiple error messages
-      alert(data.errors.map(err => err.msg).join('\n'));
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
-});
+      fetch('/freecall', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: name,
+          phone: phone
+        })
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.redirect) {
+            // Redirect to the specified URL
+            window.location.href = data.redirect;
+          } else if (data.error) {
+            // Display a single error message
+            alert(data.error);
+          } else if (data.errors) {
+            // Display multiple error messages
+            alert(data.errors.map(err => err.msg).join('\n'));
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    });
 
   </script>
 </body>
