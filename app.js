@@ -726,15 +726,15 @@ app.post('/add-appointment', [
                 console.log('Successfully inserted the appointment.');
 
                 const customerSql = `
-    INSERT INTO customers (name, address, email, phone, city) 
-    VALUES (?, ?, ?, ?, ?)
-    AS new_data
-    ON DUPLICATE KEY UPDATE 
-        name = new_data.name,
-        address = new_data.address,
-        email = new_data.email,
-        phone = new_data.phone,
-        city = new_data.city
+INSERT INTO customers (name, address, email, phone, city)
+VALUES (?, ?, ?, ?, ?)
+ON DUPLICATE KEY UPDATE
+  name = VALUES(name),
+  address = VALUES(address),
+  email = VALUES(email),
+  phone = VALUES(phone),
+  city = VALUES(city);
+
 `;
 
                 db.query(customerSql, [name, address, email, phone, city], (customerErr, customerResults) => {

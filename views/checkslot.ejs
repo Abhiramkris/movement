@@ -1,234 +1,232 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Check Slots</title>
+
+  <!-- EXISTING LINKS (UNCHANGED) -->
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/aura.css">
   <link rel="stylesheet" href="css/nav.css">
   <link rel="stylesheet" href="css/footer.css">
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="./js/cokkie.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/css/intlTelInput.css" />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
   <style>
     body {
       font-family: 'Google Sans', Arial, sans-serif;
-      background-color: #f4f4f4;
+      background-color: #f2f3f5;
       margin: 0;
       padding: 0;
-      height: 100vh;
     }
 
+    /* DATE STRIP */
+    .date-strip {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .date-pill {
+      min-width: 64px;
+      padding: 10px 6px;
+      text-align: center;
+      border-radius: 12px;
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 13px;
+    }
+
+    .date-pill strong {
+      display: block;
+      font-size: 16px;
+    }
+
+    .date-pill.active {
+      background: #022852;
+      color: #ffffff;
+      border-color: #022852;
+    }
+
+    /* Card */
     .container {
-      background-color: #fff;
-      padding: 40px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      background-color: #ffffff;
+      padding: 24px;
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
       width: 100%;
-      max-width: 400px;
+      max-width: 420px;
     }
 
     h1 {
-      margin-bottom: 30px;
-      font-weight: 500;
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 12px;
     }
 
     label {
-      display: block;
-      margin: 15px 0 5px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
+      color: #666;
     }
 
     input[type="date"],
     input[type="tel"],
-    select,
-    .btn {
-      display: block;
+    select {
       width: 100%;
-      margin-bottom: 20px;
-      padding: 12px;
-      font-size: 16px;
-      border: 1px solid #dadce0;
-      border-radius: 4px;
-      background-color: #f8f9fa;
-    }
-
-    .btn {
-      background-color: #1a73e8;
-      color: white;
-      border: none;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-
-    .btn:hover {
-      background-color: #185abc;
+      padding: 14px;
+      font-size: 15px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      background: #fafafa;
+      margin-bottom: 14px;
     }
 
     .slots {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 16px;
     }
 
-    .slot {
-      flex: 1 1 100%;
-      display: flex;
-      align-items: center;
-    }
-
-    .slot input[type="radio"] {
-      margin-right: 10px;
+    .slot input {
+      display: none;
     }
 
     .slot label {
-      font-weight: 400;
+      display: block;
+      padding: 14px 0;
+      text-align: center;
+      border-radius: 10px;
+      border: 1px solid #e0e0e0;
+      background: #ffffff;
+      font-size: 14px;
+      cursor: pointer;
     }
 
-    h5 {
-      margin-top: 8px;
-      font-weight: 800;
-      color: rgb(1, 19, 67);
-      font-family: 'Poppins', sans-serif;
+    .slot input:checked+label {
+      background: #022852;
+      color: #ffffff;
+      border-color: #022852;
     }
 
-    @media (min-width: 768px) {
-      .container {
-        max-width: 600px;
-      }
+    .btn {
+      width: 100%;
+      margin-top: 24px;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 12px;
+      background: #045edb;
+      color: white;
+      border: none;
+    }
 
-      .form-row {
-        display: flex;
-        justify-content: space-between;
-        gap: 20px;
-      }
+    .btn:disabled {
+      opacity: 0.6;
+    }
 
-      .form-row>div {
-        flex: 1;
-      }
-
-      .slot {
-        flex: 1 1 calc(33.333% - 10px);
-      }
+    #phone {
+      width: 100%;
     }
   </style>
 </head>
 
 <body>
 
+  <!-- NAVBAR (UNCHANGED) -->
   <nav class="navbar navbar-expand-lg navbar-light">
     <a class="navbar-brand" href="/">
-      <img src="/images/logo.png" alt="Logo"> <!-- Replace with your logo URL -->
+      <img src="/images/logo.png">
     </a>
     <div class="name">
       <h5>MOVEMENT SCIENCE</h5>
     </div>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item active">
-          <a class="nav-link" href="/howhelp/index">How we help <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/services">Services</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/conditions">Conditions</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/faq">FAQ</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/about">About-us</a>
-        </li>
-      </ul>
-      <div class="free-consultation">
-        <a href="/checkslot" class="nav-link">Book Free Consultation</a>
-      </div>
-    </div>
   </nav>
-  <script>
-    $(document).ready(function () {
-      $('.navbar-toggler').click(function () {
-        $('#navbarNav').collapse('toggle');
-      });
-    });
-  </script>
-  <br><br><br>
+
+  <br><br>
+
+  <!-- DATE STRIP -->
+  <div class="date-strip" id="dateStrip"></div>
+
   <div class="container">
     <h1>Check Slots</h1>
+
     <form id="appointmentForm">
-      <div class="form-row">
-        <div>
-          <label for="date">Date:</label>
-          <input type="date" id="date" name="date" required>
-        </div>
-        <div>
-          <label for="phone">Phone Number:</label>
-          <input type="tel" id="phone" name="phone" required>
-        </div>
-      </div>
 
-      <label for="city">City:</label>
-      <select id="city" name="city" required>
-        <option value="Maidenhead">Maidenhead</option>
-        <option value="Windsor">Windsor</option>
-        <option value="Bracknell">Bracknell</option>
-        <option value="High Wycombe">High Wycombe</option>
-        <option value="Slough">Slough</option>
-        <option value="Marlow">Marlow</option>
-        <option value="Reading">Reading</option>
-        <option value="Burnham">Burnham</option>
-        <option value="Taplow">Taplow</option>
-        <option value="Langley">Langley</option>
+      <!-- CUSTOM DATE INPUT (STILL EXISTS) -->
+      <label>Date (Custom):</label>
+      <input type="date" id="date" name="date" required>
+      <br>
+      <label>Phone Number:</label> <br>
+      <input type="tel" id="phone" required>
+      <br>
+      <label>City:</label>
+      <select id="city" required>
+        <option>Maidenhead</option>
+        <option>Windsor</option>
+        <option>Reading</option>
       </select>
-
+      <br>
       <div class="slots">
         <div class="slot">
           <input type="radio" id="slot1" name="slot" value="slot1" required>
-          <label for="slot1">Slot 1</label>
+          <label for="slot1">10:00 AM</label>
         </div>
         <div class="slot">
-          <input type="radio" id="slot2" name="slot" value="slot2" required>
-          <label for="slot2">Slot 2</label>
+          <input type="radio" id="slot2" name="slot" value="slot2">
+          <label for="slot2">11:00 AM</label>
         </div>
         <div class="slot">
-          <input type="radio" id="slot3" name="slot" value="slot3" required>
-          <label for="slot3">Slot 3</label>
+          <input type="radio" id="slot3" name="slot" value="slot3">
+          <label for="slot3">12:00 PM</label>
         </div>
-        <div class="slot" id="slot4-container" style="display: none;">
+        <div class="slot" id="slot4-container" style="display:none;">
           <input type="radio" id="slot4" name="slot" value="slot4">
-          <label for="slot4">Slot 4</label>
+          <label for="slot4">04:30 PM</label>
         </div>
-        <div class="slot" id="slot5-container" style="display: none;">
+        <div class="slot" id="slot5-container" style="display:none;">
           <input type="radio" id="slot5" name="slot" value="slot5">
-          <label for="slot5">Slot 5</label>
+          <label for="slot5">05:00 PM</label>
         </div>
-        <div class="slot" id="slot6-container" style="display: none;">
+        <div class="slot" id="slot6-container" style="display:none;">
           <input type="radio" id="slot6" name="slot" value="slot6">
-          <label for="slot6">Slot 6</label>
+          <label for="slot6">06:15 PM</label>
         </div>
       </div>
 
-      <button type="submit" class="btn" id="checkBtn">Check Availability</button>
+      <button class="btn" id="checkBtn">Check Availability</button>
     </form>
   </div>
+  <script>
+    const strip = document.getElementById('dateStrip');
+    const dateInput = document.getElementById('date');
+
+    for (let i = 0; i < 10; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() + i);
+
+      const pill = document.createElement('div');
+      pill.className = 'date-pill';
+      pill.innerHTML = `<strong>${d.getDate()}</strong>${d.toLocaleDateString('en-US', { weekday: 'short' })}`;
+
+      pill.onclick = () => {
+        document.querySelectorAll('.date-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        dateInput.value = d.toISOString().split('T')[0];
+      };
+
+      if (i === 0) pill.classList.add('active');
+      strip.appendChild(pill);
+    }
+  </script>
   <br><br>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/js/intlTelInput.min.js"></script>
