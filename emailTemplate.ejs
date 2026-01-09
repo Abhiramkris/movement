@@ -1,15 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Appointment Reminder</title>
+    <meta charset="UTF-8" />
+    <title>Appointment Reminder | Movement Science</title>
 </head>
-<body>
-    <h1>Appointment Reminder</h1>
-    <p>Dear <%= name %>,</p>
-    <p>This is a reminder for your appointment scheduled on <%= date %> during the <%= slot %> slot.</p>
-    <p>Please be on time.</p>
-    <p>Thank you!</p>
+
+<body style="margin:0; padding:0; background-color:#f4f6f8; font-family:Arial, Helvetica, sans-serif;">
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f6f8; padding:20px;">
+        <tr>
+            <td align="center">
+
+                <table width="600" cellpadding="0" cellspacing="0"
+                    style="background:#ffffff; border-radius:8px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+
+                    <!-- HEADER -->
+                    <tr>
+                        <td style="background:#010f49; padding:20px; text-align:center;">
+                            <img src="/public/images/logo.png" alt="Movement Science Logo"
+                                style="height:60px; display:block; margin:0 auto 10px;">
+                            <h2 style="color:#ffffff; margin:0; font-size:20px; letter-spacing:1px;">
+                                MOVEMENT SCIENCE
+                            </h2>
+                        </td>
+                    </tr>
+
+                    <!-- BODY -->
+                    <tr>
+                        <td style="padding:30px; color:#333333; font-size:15px; line-height:1.6;">
+
+                            <h3 style="color:#010f49; margin-top:0;">
+                                Appointment Reminder
+                            </h3>
+
+                            <p>Dear <strong>
+                                    <%= name %>
+                                </strong>,</p>
+
+                            <p>
+                                This is a reminder for your upcoming physiotherapy appointment with
+                                <strong>Movement Science</strong>.
+                            </p>
+
+                            <!-- APPOINTMENT DETAILS -->
+                            <table width="100%" cellpadding="10" cellspacing="0"
+                                style="background:#f1f4ff; border-radius:6px; margin:20px 0;">
+                                <tr>
+                                    <td style="font-size:14px;">
+                                        <strong>Date:</strong>
+                                        <%= date %><br>
+                                            <strong>Time Slot:</strong>
+                                            <%= slot %>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p>
+                                Your physiotherapist will be on time and fully prepared to provide you with
+                                the highest standard of care.
+                            </p>
+
+                            <!-- DOCTOR INFO -->
+                            <p style="background:#f9fafc; border-left:4px solid #010f49; padding:15px; font-size:14px;">
+                                <strong>About Your Physiotherapist:</strong><br>
+                                Highly skilled and compassionate physiotherapist, registered with the
+                                <strong>Health Care Professions Council (HCPC)</strong> and an active member of the
+                                <strong>Chartered Society of Physiotherapy (MCSP)</strong>.
+                            </p>
+
+                            <!-- CTA BUTTONS -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="margin:30px 0;">
+                                <tr>
+                                    <td align="center">
+
+                                        <!-- CALL BUTTON -->
+                                        <a href="tel:+4407930167674" style="display:inline-block; background:#010f49; color:#ffffff; text-decoration:none;
+                           padding:12px 20px; border-radius:5px; font-size:14px; margin:5px;">
+                                            📞 Call Us
+                                        </a>
+
+                                        <!-- WHATSAPP BUTTON -->
+                                        <a href="https://wa.me/4407930167674" style="display:inline-block; background:#25D366; color:#ffffff; text-decoration:none;
+                           padding:12px 20px; border-radius:5px; font-size:14px; margin:5px;">
+                                            💬 WhatsApp Us
+                                        </a>
+
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p>
+                                If you have any questions or need to reschedule, feel free to call or message us.
+                            </p>
+
+                            <p style="margin-bottom:0;">
+                                Warm regards,<br>
+                                <strong>Movement Science Team</strong><br>
+                                <a href="tel:+4407930167674" style="color:#010f49; text-decoration:none;">
+                                    +44 07930 167674
+                                </a>
+                            </p>
+
+                        </td>
+                    </tr>
+
+                    <!-- FOOTER -->
+                    <tr>
+                        <td style="background:#f1f4ff; padding:15px; text-align:center; font-size:12px; color:#555;">
+                            © <%= new Date().getFullYear() %> Movement Science. All rights reserved.
+                        </td>
+                    </tr>
+
+                </table>
+
+            </td>
+        </tr>
+    </table>
+
 </body>
+
 </html>

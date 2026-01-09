@@ -16,7 +16,6 @@ const cookieParser = require('cookie-parser');
 const nodemailer = require('nodemailer');
 const cron = require('node-cron');
 const ejs = require('ejs');
-
 dotenv.config();
 
 const app = express();
@@ -65,6 +64,9 @@ const db = mysql.createConnection({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME
 });
+
+const promiseDb = db.promise();
+
 
 /******************************************************************
  * HELPERS
@@ -481,6 +483,7 @@ cron.schedule('0 8 * * *', async () => {
     timezone: "America/New_York"
 });
 
+
 console.log('Appointment email scheduler started.');
 
 // Function to fetch and send appointment reminders
@@ -492,8 +495,8 @@ async function sendAppointmentEmails() {
 
         console.log(`Fetching appointments for date: ${dateString}`);
 
-        const [results] = db.query(
-            'SELECT * FROM appointments WHERE date = ? AND reminder_sent = FALSE',
+        const [results] = await promiseDb.query(
+            'SELECT * FROM appointments WHERE date = ? AND reminder_sent = 0',
             [dateString]
         );
 
@@ -529,7 +532,8 @@ async function sendEmail(appointment) {
         console.log(`Email sent to ${appointment.email}: ${info.response}`);
 
         // Mark email as sent in the database
-        await db.query('UPDATE appointments SET reminder_sent = TRUE WHERE id = ?', [appointment.id]);
+        await promiseDb.query('UPDATE appointments SET reminder_sent = 1 WHERE id = ?', [appointment.id]);
+
         console.log(`Marked appointment ID ${appointment.id} as reminder sent.`);
     } catch (error) {
         console.error('Error sending email:', error);
@@ -539,9 +543,15 @@ async function sendEmail(appointment) {
 // Function to generate email HTML
 async function generateEmailHtml(appointment) {
     const emailTemplate = path.join(__dirname, 'emailTemplate.ejs');
+    const appointmentDate = new Date(appointment.date);
+    const formattedDate = appointmentDate.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+    });
     return ejs.renderFile(emailTemplate, {
         name: appointment.name,
-        date: appointment.date,
+        date: formattedDate,
         slot: appointment.slot
     });
 }
