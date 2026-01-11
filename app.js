@@ -5,7 +5,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { body, validationResult } = require('express-validator');
 const session = require('express-session');
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 const path = require('path');
 const twilio = require('twilio');
 const dotenv = require('dotenv');
@@ -57,15 +57,40 @@ app.use(session({
 /******************************************************************
  * DATABASE
  ******************************************************************/
-const db = mysql.createConnection({
+// const db = mysql.createConnection({
+//     host: process.env.DB_HOST,
+//     port: process.env.DB_PORT,
+//     user: process.env.DB_USER,
+//     password: process.env.DB_PASSWORD,
+//     database: process.env.DB_NAME
+// });
+
+const db = mysql.createPool({
     host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 });
 
-const promiseDb = db.promise();
+(async () => {
+    try {
+        const connection = await db.getConnection();
+        console.log('✅ MySQL pool connected');
+        connection.release();
+    } catch (err) {
+        console.error('❌ MySQL connection error:', {
+            code: err.code,
+            errno: err.errno,
+            message: err.message
+        });
+    }
+})();
+
+// const promiseDb = db.promise();
 
 
 /******************************************************************
@@ -150,11 +175,6 @@ app.use(session({ secret: 'secret', resave: true, saveUninitialized: true }));
 
 
 
-// Login route
-router.get('/login', (req, res) => {
-    res.render('admin/login'); // Assuming you have a login form view (e.g., login.ejs)
-});
-
 /**************** ADMIN AUTH ****************/
 router.get('/login', (req, res) => {
     res.render('admin/login');
@@ -193,148 +213,189 @@ router.get('/logout', (req, res) => {
     });
 });
 
-app.post('/save-chat-query', (req, res) => {
+app.post('/save-chat-query', async (req, res) => {
     const { name, email, phone, question } = req.body;
     console.log(req.body);
-    // Validate incoming data (optional)
+
+    // Validate incoming data
     if (!name || !email || !phone || !question) {
         return res.status(400).json({ message: 'Missing required fields' });
     }
 
-    // Insert into database
-    db.query('INSERT INTO chat_queries (name, email, phone, question) VALUES (?, ?, ?, ?)', [name, email, phone, question], (error, results) => {
-        if (error) {
-            console.error('Error inserting chat query:', error);
-            return res.status(500).json({ message: 'Failed to save query', error: error.message });
-        }
+    try {
+        await db.query(
+            'INSERT INTO chat_queries (name, email, phone, question) VALUES (?, ?, ?, ?)',
+            [name, email, phone, question]
+        );
+
         res.json({ message: 'Query saved successfully' });
-    });
+    } catch (err) {
+        console.error('❌ Error inserting chat query:', {
+            code: err.code,
+            message: err.message
+        });
+
+        res.status(500).json({
+            message: 'Failed to save query',
+            error: err.message
+        });
+    }
 });
 
-app.get('/admin/live-chat-queries', requireAdmin, (req, res) => {
-    // Example SQL query to retrieve live chat queries
-    const sql = 'SELECT * FROM chat_queries ORDER BY id DESC';
 
-    db.query(sql, (err, results) => {
-        if (err) {
-            console.error('Error fetching live chat queries:', err);
-            res.status(500).json({ error: 'Internal Server Error' });
-            return;
-        }
-        // Assuming results is an array of chat queries
+app.get('/admin/live-chat-queries', requireAdmin, async (req, res) => {
+    try {
+        const [results] = await db.query(
+            'SELECT * FROM chat_queries ORDER BY id DESC'
+        );
+
         res.json(results);
-    });
+    } catch (err) {
+        console.error('❌ Error fetching live chat queries:', {
+            code: err.code,
+            message: err.message
+        });
+
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
+
 
 // Admin dashboard route filter here
-router.get('/dashboard', requireAdmin, (req, res) => {
-
-    // const { date } = req.query;
+app.get('/admin/dashboard', requireAdmin, async (req, res) => {
     const filterDate = req.query.date || '';
-    // Define the base SQL query
-    let query = 'SELECT * FROM appointments';
-    let queryParams = [];
 
+    let query = 'SELECT * FROM appointments';
+    const queryParams = [];
 
     if (filterDate) {
         query += ' WHERE date = ?';
         queryParams.push(filterDate);
     }
 
-    // Execute the SQL query
-    db.query(query, queryParams, (error, results) => {
-        if (error) {
-            console.error('Error fetching appointments:', error);
-            return res.status(500).json({ message: 'Failed to fetch appointments', error: error.message });
-        }
+    try {
+        const [results] = await db.query(query, queryParams);
 
         res.render('admin/dashboard', {
             appointments: results,
-            filterDate: filterDate // Pass filterDate to the EJS template
+            filterDate
         });
-    });
+    } catch (err) {
+        console.error('❌ Database error (fetch appointments):', {
+            code: err.code,
+            message: err.message
+        });
+
+        res.status(500).json({
+            message: 'Failed to fetch appointments',
+            error: err.message
+        });
+    }
 });
 
-
-
 // POST request to approve an appointment
-router.post('/approve-appointment/:id', requireAdmin, (req, res) => {
+router.post('/approve-appointment/:id', requireAdmin, async (req, res) => {
     const { id } = req.params;
     const { remarks } = req.body;
 
-    db.query('SELECT * FROM appointments WHERE id = ?', [id], (selectError, results) => {
-        if (selectError) {
-            console.error('Error fetching appointment:', selectError);
-            return res.status(500).json({ message: 'Failed to fetch appointment', error: selectError.message });
-        }
+    try {
+        // 1️⃣ Fetch appointment
+        const [results] = await db.query(
+            'SELECT * FROM appointments WHERE id = ?',
+            [id]
+        );
 
-        if (results.length === 0) {
+        if (!results || results.length === 0) {
             return res.status(404).json({ message: 'Appointment not found' });
         }
 
         const appointment = results[0];
 
-        db.query('INSERT INTO approved_appointments (name, address, date, slot, phone, email, city, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            [appointment.name, appointment.address, appointment.date, appointment.slot, appointment.phone, appointment.email, appointment.city, remarks],
-            (insertError, insertResults) => {
-                if (insertError) {
-                    console.error('Error inserting approved appointment:', insertError);
-                    return res.status(500).json({ message: 'Failed to approve appointment', error: insertError.message });
-                }
-                else {
-                    console.log("OOPSY");
-                }
+        // 2️⃣ Insert into approved_appointments
+        await db.query(
+            `INSERT INTO approved_appointments 
+            (name, address, date, slot, phone, email, city, remarks) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [
+                appointment.name,
+                appointment.address,
+                appointment.date,
+                appointment.slot,
+                appointment.phone,
+                appointment.email,
+                appointment.city,
+                remarks
+            ]
+        );
 
-                db.query('DELETE FROM appointments WHERE id = ?', [id], (deleteError, deleteResults) => {
-                    if (deleteError) {
-                        console.error('Error deleting appointment:', deleteError);
-                        return res.status(500).json({ message: 'Failed to delete original appointment', error: deleteError.message });
-                    }
+        // 3️⃣ Delete from appointments
+        await db.query(
+            'DELETE FROM appointments WHERE id = ?',
+            [id]
+        );
 
-                    res.status(200).json({ message: 'Appointment approved successfully' });
-                });
+        return res.status(200).json({
+            message: 'Appointment approved successfully'
+        });
 
-            });
-    });
+    } catch (err) {
+        console.error('❌ Error approving appointment:', {
+            code: err.code,
+            message: err.message
+        });
+
+        return res.status(500).json({
+            message: 'Failed to approve appointment',
+            error: err.message
+        });
+    }
 });
 
-router.delete('/delete-appointment/:id', requireAdmin, (req, res) => {
+
+router.delete('/delete-appointment/:id', requireAdmin, async (req, res) => {
     const { id } = req.params;
 
-    // Fetch the slot details before deleting the appointment
-    db.query('SELECT date, slot FROM appointments WHERE id = ?', [id], (selectError, selectResults) => {
-        if (selectError) {
-            console.error('Error fetching appointment:', selectError);
-            return res.status(500).json({ message: 'Failed to fetch appointment', error: selectError.message });
-        }
+    try {
+        // 1️⃣ Fetch slot details before deletion
+        const [selectResults] = await db.query(
+            'SELECT date, slot FROM appointments WHERE id = ?',
+            [id]
+        );
 
-        if (selectResults.length === 0) {
+        if (!selectResults || selectResults.length === 0) {
             return res.status(404).json({ message: 'Appointment not found' });
         }
 
         const { date, slot } = selectResults[0];
 
-        // Delete the appointment
-        db.query('DELETE FROM appointments WHERE id = ?', [id], (deleteError, deleteResults) => {
-            if (deleteError) {
-                console.error('Error deleting appointment:', deleteError);
-                return res.status(500).json({ message: 'Failed to delete appointment', error: deleteError.message });
-            }
+        // 2️⃣ Delete appointment
+        await db.query(
+            'DELETE FROM appointments WHERE id = ?',
+            [id]
+        );
 
-            // Delete the corresponding slot
-            db.query('DELETE FROM slots WHERE date = ? AND slot = ?', [date, slot], (slotError, slotResults) => {
-                if (slotError) {
-                    console.error('Error deleting slot:', slotError);
-                    return res.status(500).json({ message: 'Failed to delete slot', error: slotError.message });
-                }
+        // 3️⃣ Delete corresponding slot
+        await db.query(
+            'DELETE FROM slots WHERE date = ? AND slot = ?',
+            [date, slot]
+        );
 
-                res.status(200).json({ message: 'Appointment and corresponding slot deleted successfully' });
-            });
+        return res.status(200).json({
+            message: 'Appointment and corresponding slot deleted successfully'
         });
-    });
+
+    } catch (err) {
+        console.error('❌ Error deleting appointment:', {
+            code: err.code,
+            message: err.message
+        });
+
+        return res.status(500).json({
+            message: 'Failed to delete appointment',
+            error: err.message
+        });
+    }
 });
-
-
 
 function normalizePhone(phone) {
     if (!phone) return null;
@@ -347,60 +408,76 @@ function normalizePhone(phone) {
     return phone;
 }
 
-router.post('/patient-history', requireAdmin, (req, res) => {
+router.post('/patient-history', requireAdmin, async (req, res) => {
     const { name } = req.body;
 
     if (!name || name.trim().length < 2) {
         return res.status(400).send('Invalid patient name');
     }
 
-    // 1️⃣ Fetch ALL visits by name
-    db.query(
-        `SELECT date, slot, remarks, phone 
-         FROM approved_appointments 
-         WHERE LOWER(name) = LOWER(?) 
-         ORDER BY date DESC`,
-        [name.trim()],
-        (err, visits) => {
-            if (err || visits.length === 0) {
-                return res.render('patient-history', {
-                    name,
-                    visits: [],
-                    customer: {},
-                    csrfToken: req.session.csrfToken
-                });
-            }
+    try {
+        // 1️⃣ Fetch ALL visits by name
+        const [visits] = await db.query(
+            `
+            SELECT date, slot, remarks, phone
+            FROM approved_appointments
+            WHERE LOWER(name) = LOWER(?)
+            ORDER BY date DESC
+            `,
+            [name.trim()]
+        );
 
-            // 2️⃣ Normalize phone from first visit
-            const phone = normalizePhone(visits[0].phone);
-
-            if (!phone) {
-                return res.render('patient-history', {
-                    name,
-                    visits,
-                    customer: {},
-                    csrfToken: req.session.csrfToken
-                });
-            }
-
-            // 3️⃣ Fetch customer profile (notes + photo)
-            db.query(
-                'SELECT * FROM customers WHERE phone = ? LIMIT 1',
-                [phone],
-                (custErr, customers) => {
-                    const customer = customers?.[0] || {};
-
-                    res.render('patient-history', {
-                        name: customer.name || name,
-                        visits,
-                        customer,
-                        csrfToken: req.session.csrfToken
-                    });
-                }
-            );
+        if (!visits || visits.length === 0) {
+            return res.render('patient-history', {
+                name,
+                visits: [],
+                customer: {},
+                csrfToken: req.session.csrfToken
+            });
         }
-    );
+
+        // 2️⃣ Normalize phone from first visit
+        const phone = normalizePhone(visits[0].phone);
+
+        if (!phone) {
+            return res.render('patient-history', {
+                name,
+                visits,
+                customer: {},
+                csrfToken: req.session.csrfToken
+            });
+        }
+
+        // 3️⃣ Fetch customer profile (notes + photo)
+        const [customers] = await db.query(
+            'SELECT * FROM customers WHERE phone = ? LIMIT 1',
+            [phone]
+        );
+
+        const customer = customers?.[0] || {};
+
+        return res.render('patient-history', {
+            name: customer.name || name,
+            visits,
+            customer,
+            csrfToken: req.session.csrfToken
+        });
+
+    } catch (err) {
+        console.error('❌ Error fetching patient history:', {
+            code: err.code,
+            message: err.message
+        });
+
+        return res.render('patient-history', {
+            name,
+            visits: [],
+            customer: {},
+            csrfToken: req.session.csrfToken
+        });
+    }
 });
+
 
 
 
@@ -412,49 +489,61 @@ router.post('/update-photo', requireAdmin, (req, res) => {
     );
 });
 
-router.post('/updatenotes', (req, res) => {
+router.post('/updatenotes', async (req, res) => {
     const { name, notes } = req.body;
 
     if (!name || typeof name !== 'string') {
         return res.status(400).json({ error: 'Invalid name' });
     }
 
-    db.query(
-        'UPDATE customers SET admin_notes = ? WHERE LOWER(name) = LOWER(?)',
-        [notes ?? null, name.trim()],
-        (err, result) => {
-            if (err) {
-                console.error('Update notes error:', err);
-                return res.status(500).json({ error: 'Database error' });
-            }
+    try {
+        const [result] = await db.query(
+            'UPDATE customers SET admin_notes = ? WHERE LOWER(name) = LOWER(?)',
+            [notes ?? null, name.trim()]
+        );
 
-            if (result.affectedRows === 0) {
-                return res.status(404).json({ error: 'Customer not found' });
-            }
-
-            return res.status(200).json({ ok: true });
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Customer not found' });
         }
-    );
+
+        return res.status(200).json({ ok: true });
+
+    } catch (err) {
+        console.error('❌ Update notes error:', {
+            code: err.code,
+            message: err.message
+        });
+
+        return res.status(500).json({ error: 'Database error' });
+    }
 });
 
 
-router.get('/patient-search', requireAdmin, (req, res) => {
+router.get('/patient-search', requireAdmin, async (req, res) => {
     const q = `%${req.query.q}%`;
 
-    db.query(
-        `
-    SELECT DISTINCT name, phone
-    FROM approved_appointments
-    WHERE name LIKE ? OR phone LIKE ?
-    LIMIT 10
-    `,
-        [q, q],
-        (err, rows) => {
-            if (err) return res.status(500).json([]);
-            res.json(rows);
-        }
-    );
+    try {
+        const [rows] = await db.query(
+            `
+            SELECT DISTINCT name, phone
+            FROM approved_appointments
+            WHERE name LIKE ? OR phone LIKE ?
+            LIMIT 10
+            `,
+            [q, q]
+        );
+
+        res.json(rows);
+    } catch (err) {
+        console.error('❌ Database error (patient search):', {
+            code: err.code,
+            message: err.message
+        });
+
+        res.status(500).json([]);
+    }
 });
+
 
 
 
@@ -486,16 +575,16 @@ cron.schedule('0 8 * * *', async () => {
 
 console.log('Appointment email scheduler started.');
 
-// Function to fetch and send appointment reminders
 async function sendAppointmentEmails() {
     try {
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
+
         const dateString = tomorrow.toISOString().split('T')[0];
 
         console.log(`Fetching appointments for date: ${dateString}`);
 
-        const [results] = await promiseDb.query(
+        const [results] = await db.query(
             'SELECT * FROM appointments WHERE date = ? AND reminder_sent = 0',
             [dateString]
         );
@@ -507,20 +596,27 @@ async function sendAppointmentEmails() {
 
         console.log(`Found ${results.length} appointments for tomorrow.`);
 
-        // Send emails one by one using a loop (avoiding async issues)
+        // Send emails sequentially (safe for SMTP + DB)
         for (const appointment of results) {
             await sendEmail(appointment);
         }
+
     } catch (err) {
-        console.error('Database query error:', err);
+        console.error('❌ Error in sendAppointmentEmails:', {
+            code: err.code,
+            message: err.message
+        });
     }
 }
+
 
 // Function to send email
 async function sendEmail(appointment) {
     try {
+        // 1️⃣ Generate email HTML
         const emailHtml = await generateEmailHtml(appointment);
 
+        // 2️⃣ Send email
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: appointment.email,
@@ -531,12 +627,22 @@ async function sendEmail(appointment) {
         const info = await transporter.sendMail(mailOptions);
         console.log(`Email sent to ${appointment.email}: ${info.response}`);
 
-        // Mark email as sent in the database
-        await promiseDb.query('UPDATE appointments SET reminder_sent = 1 WHERE id = ?', [appointment.id]);
+        // 3️⃣ Mark reminder as sent
+        await db.query(
+            'UPDATE appointments SET reminder_sent = 1 WHERE id = ?',
+            [appointment.id]
+        );
 
-        console.log(`Marked appointment ID ${appointment.id} as reminder sent.`);
-    } catch (error) {
-        console.error('Error sending email:', error);
+        console.log(
+            `Marked appointment ID ${appointment.id} as reminder sent.`
+        );
+
+    } catch (err) {
+        console.error('❌ Error sending reminder email:', {
+            appointmentId: appointment?.id,
+            code: err.code,
+            message: err.message
+        });
     }
 }
 
@@ -590,63 +696,93 @@ app.get('/added', (req, res) => {
     res.render(path.join(__dirname, 'views/add'));
 });
 
-app.post('/checkslot', [   // here add rate limiter and multiple reuest handeling 
-    body('date').isISO8601().withMessage('Invalid date format').custom((value) => {
-        const inputDate = new Date(value);
-        const currentDate = new Date();
+app.post(
+    '/checkslot',
+    [
+        body('date')
+            .isISO8601()
+            .withMessage('Invalid date format')
+            .custom(value => {
+                const inputDate = new Date(value);
+                const currentDate = new Date();
 
-        currentDate.setHours(3, 0, 0, 0);
+                currentDate.setHours(3, 0, 0, 0);
 
-        if (inputDate < new Date().setHours(0, 0, 0, 0)) {
-            throw new Error('Date cannot be in the past');
+                if (inputDate < new Date().setHours(0, 0, 0, 0)) {
+                    throw new Error('Date cannot be in the past');
+                }
+
+                if (
+                    inputDate.toDateString() === currentDate.toDateString() &&
+                    new Date() >= currentDate
+                ) {
+                    throw new Error('Cannot register for today after 11 AM');
+                }
+                return true;
+            }),
+        body('slot').notEmpty().withMessage('Slot is required'),
+        body('phone').isMobilePhone('any').withMessage('Invalid phone number')
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
         }
 
-        if (inputDate.toDateString() === currentDate.toDateString() && new Date() >= currentDate) {
-            throw new Error('Cannot register for today after 11 AM');
-        }
-        return true;
-    }),
-    body('slot').notEmpty().withMessage('Slot is required'),
-    body('phone').isMobilePhone('any').withMessage('Invalid phone number')
-], (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-    const { date, slot, phone, city } = req.body;
+        const { date, slot, phone, city } = req.body;
 
-    if (!date || isNaN(Date.parse(date))) return res.status(400).json({ message: "Invalid date" });
-    if (!/^slot\d+$/.test(slot)) return res.status(400).json({ message: "Invalid slot" });
-    if (/[^\d+\-\s]/.test(phone)) return res.status(400).json({ message: "Not allowed" });
-    if (!/^[a-zA-Z\s]{2,40}$/.test(city)) return res.status(400).json({ message: "Invalid city" });
+        if (!date || isNaN(Date.parse(date)))
+            return res.status(400).json({ message: 'Invalid date' });
 
-    db.query('SELECT * FROM slots WHERE date = ? AND slot = ?', [date, slot], (err, results) => {
-        if (err) {
-            return res.status(500).json({ error: 'Database query error' });
-        }
+        if (!/^slot\d+$/.test(slot))
+            return res.status(400).json({ message: 'Invalid slot' });
 
-        if (results.length === 0) {
-            // Slot is available, send OTP
-            client.verify.v2.services(process.env.TWILIO_SERVICE_SID)
-                .verifications
-                .create({ to: phone, channel: 'sms' })
-                .then(verification => {
-                    req.session.date = date;
-                    req.session.slot = slot;
-                    req.session.phone = phone;
-                    req.session.city = city;
-                    req.session.otp_requested = true;
-                    res.json({ redirect: '/verify-otp' });
-                })
-                .catch(error => {
-                    console.error('Failed to send OTP:', error);
-                    res.status(500).json({ error: 'Failed to send OTP' });
+        if (/[^\d+\-\s]/.test(phone))
+            return res.status(400).json({ message: 'Not allowed' });
+
+        if (!/^[a-zA-Z\s]{2,40}$/.test(city))
+            return res.status(400).json({ message: 'Invalid city' });
+
+        try {
+            // 1️⃣ Check slot availability
+            const [results] = await db.query(
+                'SELECT * FROM slots WHERE date = ? AND slot = ?',
+                [date, slot]
+            );
+
+            if (results.length !== 0) {
+                return res.status(400).json({ error: 'Slot not available' });
+            }
+
+            // 2️⃣ Send OTP
+            await client.verify.v2
+                .services(process.env.TWILIO_SERVICE_SID)
+                .verifications.create({
+                    to: phone,
+                    channel: 'sms'
                 });
-        } else {
-            res.status(400).json({ error: 'Slot not available' });
+
+            // 3️⃣ Store session data
+            req.session.date = date;
+            req.session.slot = slot;
+            req.session.phone = phone;
+            req.session.city = city;
+            req.session.otp_requested = true;
+
+            return res.json({ redirect: '/verify-otp' });
+
+        } catch (err) {
+            console.error('❌ Error in /checkslot:', {
+                code: err.code,
+                message: err.message
+            });
+
+            return res.status(500).json({
+                error: 'Failed to process request'
+            });
         }
-    });
-});
+    }
+);
 
 app.post('/verify-otp', [
     body('otp').isLength({ min: 4, max: 6 }).withMessage('Invalid OTP')
@@ -682,98 +818,121 @@ app.post('/verify-otp', [
         });
 });
 
-app.get('/appointmentsall', requireAdmin, (req, res) => {
-    db.query('SELECT * FROM approved_appointments', (error, results) => {
-        if (error) {
-            console.error('Error fetching appointments:', error);
-            return res.status(500).json({ message: 'Failed to fetch appointments', error: error.message });
-        }
-        res.render('allAppo', { appointments: results }); // Pass the results to the template
-    });
-});
+app.get('/appointmentsall', requireAdmin, async (req, res) => {
+    try {
+        const [results] = await db.query(
+            'SELECT * FROM approved_appointments'
+        );
 
-app.post('/add-appointment', [
-    body('name').trim().escape().notEmpty().withMessage('Name is required'),
-    body('address').trim().escape().notEmpty().withMessage('Address is required'),
-    body('email').trim().escape().notEmpty().withMessage('Email is required')
-], (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-
-    const { name, address, email } = req.body;
-
-    const date = req.session.date;
-    const slot = req.session.slot;
-    const phone = req.session.phone;
-    const city = req.session.city;
-
-    if (!date || !slot || !phone || !email || !city) {
-        console.log('Session data is missing:', { date, slot, phone });
-        return res.status(400).json({ error: 'Session data is missing, please try again' });
-    }
-
-    // Insert into appointments table
-    db.query('INSERT INTO appointments (name, address, email, phone, city, date, slot) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        [name, address, email, phone, city, date, slot], (err, results) => {
-            if (err) {
-                console.log('Database insert error:', err);
-                return res.status(500).json({ error: 'Database insert error' });
-            }
-
-            if (results.affectedRows === 1) {
-                console.log('Successfully inserted the appointment.');
-
-                const customerSql = `
-INSERT INTO customers (name, address, email, phone, city)
-VALUES (?, ?, ?, ?, ?)
-ON DUPLICATE KEY UPDATE
-  name = VALUES(name),
-  address = VALUES(address),
-  email = VALUES(email),
-  phone = VALUES(phone),
-  city = VALUES(city);
-
-`;
-
-                db.query(customerSql, [name, address, email, phone, city], (customerErr, customerResults) => {
-                    if (customerErr) {
-                        console.error('Error in customers table:', customerErr);
-                        return res.status(500).json({ error: 'Error processing customer data' });
-                    }
-
-                    // 2. Insert the slot
-                    db.query('INSERT INTO slots (date, slot) VALUES (?, ?)', [date, slot], (slotErr, slotResults) => {
-                        if (slotErr) {
-                            console.error('Error in slots table:', slotErr);
-                            return res.status(500).json({ error: 'Error booking slot' });
-                        }
-
-                        // 3. Notify connected clients (WebSockets)
-                        const notification = JSON.stringify({
-                            title: 'New Appointment Added',
-                            body: `New appointment with ${name} on ${date} during ${slot}.`
-                        });
-
-                        clients.forEach(client => client.send(notification));
-
-                        // 4. Cleanup session
-                        req.session.destroy((sessionErr) => {
-                            if (sessionErr) {
-                                console.error('Session destruction error:', sessionErr);
-                                return res.status(500).json({ error: 'Cleanup error' });
-                            }
-                            return res.json({ redirect: '/added' });
-                        });
-                    });
-                });
-            } else {
-                console.log('Unexpected number of affected rows:', results.affectedRows);
-                return res.status(500).json({ error: 'Unexpected number of affected rows' });
-            }
+        res.render('allAppo', { appointments: results });
+    } catch (err) {
+        console.error('❌ Error fetching appointments:', {
+            code: err.code,
+            message: err.message
         });
+
+        res.status(500).json({
+            message: 'Failed to fetch appointments',
+            error: err.message
+        });
+    }
 });
+
+
+app.post(
+    '/add-appointment',
+    [
+        body('name').trim().escape().notEmpty().withMessage('Name is required'),
+        body('address').trim().escape().notEmpty().withMessage('Address is required'),
+        body('email').trim().escape().notEmpty().withMessage('Email is required')
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const { name, address, email } = req.body;
+
+        const date = req.session.date;
+        const slot = req.session.slot;
+        const phone = req.session.phone;
+        const city = req.session.city;
+
+        if (!date || !slot || !phone || !email || !city) {
+            console.log('Session data is missing:', { date, slot, phone });
+            return res.status(400).json({
+                error: 'Session data is missing, please try again'
+            });
+        }
+
+        try {
+            // 1️⃣ Insert appointment
+            const [appointmentResult] = await db.query(
+                'INSERT INTO appointments (name, address, email, phone, city, date, slot) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                [name, address, email, phone, city, date, slot]
+            );
+
+            if (appointmentResult.affectedRows !== 1) {
+                console.log('Unexpected number of affected rows:', appointmentResult.affectedRows);
+                return res.status(500).json({
+                    error: 'Unexpected number of affected rows'
+                });
+            }
+
+            console.log('Successfully inserted the appointment.');
+
+            // 2️⃣ Insert / update customer
+            const customerSql = `
+        INSERT INTO customers (name, address, email, phone, city)
+        VALUES (?, ?, ?, ?, ?)
+        ON DUPLICATE KEY UPDATE
+          name = VALUES(name),
+          address = VALUES(address),
+          email = VALUES(email),
+          phone = VALUES(phone),
+          city = VALUES(city)
+      `;
+
+            await db.query(customerSql, [name, address, email, phone, city]);
+
+            // 3️⃣ Insert slot
+            await db.query(
+                'INSERT INTO slots (date, slot) VALUES (?, ?)',
+                [date, slot]
+            );
+
+            // 4️⃣ Notify WebSocket clients
+            const notification = JSON.stringify({
+                title: 'New Appointment Added',
+                body: `New appointment with ${name} on ${date} during ${slot}.`
+            });
+
+            clients.forEach(client => client.send(notification));
+
+            // 5️⃣ Destroy session
+            req.session.destroy(sessionErr => {
+                if (sessionErr) {
+                    console.error('Session destruction error:', sessionErr);
+                    return res.status(500).json({ error: 'Cleanup error' });
+                }
+
+                return res.json({ redirect: '/added' });
+            });
+
+        } catch (err) {
+            console.error('❌ Database error (add appointment):', {
+                code: err.code,
+                message: err.message
+            });
+
+            return res.status(500).json({
+                error: 'Database insert error'
+            });
+        }
+    }
+);
+
 
 app.get('/howhelp/recovery', (req, res) => {
     res.render(path.join(__dirname, 'views/howhelp/recovery'));
@@ -871,7 +1030,7 @@ app.get('/about', (req, res) => {
     res.render('about');
 });
 
-app.post('/freecall', (req, res) => {
+app.post('/freecall', async (req, res) => {
     const { name, phone } = req.body;
 
     if (!name || !phone) {
@@ -881,68 +1040,89 @@ app.post('/freecall', (req, res) => {
 
     // Insert new customer
 
-    const addCallRequestQuery = 'INSERT INTO call_requests (phone, name) VALUES (?, ?)';
-    db.query(addCallRequestQuery, [phone, name], (err) => {
-        if (err) {
-            console.error('Database error3:', err); // Log the error
-            return res.status(500).json({ error: 'Database error3' });
-        }
-        res.json({ redirect: '/contactedsoon' });
-    });
+    const addCallRequestQuery =
+        'INSERT INTO call_requests (phone, name) VALUES (?, ?)';
 
+    try {
+        await db.query(addCallRequestQuery, [phone, name]);
+        res.json({ redirect: '/contactedsoon' });
+    } catch (err) {
+        console.error('❌ Database error (add call request):', {
+            code: err.code,
+            message: err.message
+        });
+
+        res.status(500).json({ error: 'Database error' });
+    }
 
 });
 
 
 
-
-app.get('/admin/call', requireAdmin, (req, res) => {
+app.get('/admin/call', requireAdmin, async (req, res) => {
     const getCallRequestsQuery = `
-    SELECT id, name, phone
-    FROM call_requests
-    ORDER BY id DESC
-  `;
+        SELECT id, name, phone
+        FROM call_requests
+        ORDER BY id DESC
+    `;
 
-    db.query(getCallRequestsQuery, (err, results) => {
-        if (err) {
-            console.error('Database error:', err);
-            return res.status(500).send('Internal Server Error');
-        }
+    try {
+        const [results] = await db.query(getCallRequestsQuery);
 
         res.render('admin/caller', { callRequests: results });
-    });
+    } catch (err) {
+        console.error('❌ Database error (fetch call requests):', {
+            code: err.code,
+            message: err.message
+        });
+
+        res.status(500).json({ error: 'Database error' });
+    }
 });
 
 
 
 
 // Route to delete a call request
-app.post('/admin/delete/:id', (req, res) => {
-    console.log('Deleting call request with ID:', req.params.id); // Debugging line
-    const deleteCallRequestQuery = 'DELETE FROM call_requests WHERE id = ?';
-    db.query(deleteCallRequestQuery, [req.params.id], (err) => {
-        if (err) {
-            console.error('Error deleting call request:', err); // Improved error handling
-            return res.status(500).send('Internal Server Error');
-        }
-        res.redirect('/admin/call');
-    });
-});
-
-app.post('/admin/call/delete/:id', requireAdmin, (req, res) => {
+app.post('/admin/delete/:id', requireAdmin, async (req, res) => {
     const { id } = req.params;
 
-    db.query(
-        'DELETE FROM call_requests WHERE id = ?',
-        [id],
-        err => {
-            if (err) {
-                console.error('Delete error:', err);
-                return res.status(500).send('Server Error');
-            }
-            res.redirect('/admin/call');
-        }
-    );
+    console.log('Deleting call request with ID:', id);
+
+    const deleteCallRequestQuery =
+        'DELETE FROM call_requests WHERE id = ?';
+
+    try {
+        await db.query(deleteCallRequestQuery, [id]);
+        res.redirect('/admin/call');
+    } catch (err) {
+        console.error('❌ Database error (delete call request):', {
+            code: err.code,
+            message: err.message
+        });
+
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.post('/admin/call/delete/:id', requireAdmin, async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        await db.query(
+            'DELETE FROM call_requests WHERE id = ?',
+            [id]
+        );
+
+        res.redirect('/admin/call');
+    } catch (err) {
+        console.error('❌ Database error (delete call request):', {
+            code: err.code,
+            message: err.message
+        });
+
+        res.status(500).send('Server Error');
+    }
 });
 
 module.exports = router;
