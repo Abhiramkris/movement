@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Center | Movement Science</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f1f5f9;
+        }
+
+        .patient-card {
+            transition: all 0.2s;
+        }
+
+        .patient-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-fade {
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .search-glow:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+    </style>
+</head>
+
+<body class="text-gray-800 antialiased h-screen flex flex-col md:flex-row overflow-hidden">
+
+    <!-- Mobile Top Navigation -->
+    <div class="md:hidden bg-[#011d3b] text-white p-4 flex justify-between items-center shadow-md z-40">
+        <div class="flex items-center gap-3">
+            <i class="fas fa-user-injured text-xl text-blue-400"></i>
+            <span class="font-bold text-lg">Patient Center</span>
+        </div>
+        <button id="mobile-menu-btn" class="p-2 bg-white/10 rounded-lg hover:bg-white/20 transition">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
+    </div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar"
+        class="bg-[#011d3b] text-white w-64 flex-shrink-0 fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition duration-200 ease-in-out z-50 flex flex-col shadow-2xl md:shadow-none">
+        <div class="p-5 border-b border-white/10 hidden md:block">
+            <h1 class="text-xl font-bold tracking-tight">Movement Science</h1>
+            <p class="text-xs text-gray-400 mt-1">Admin Panel</p>
+        </div>
+        <div class="md:hidden flex justify-end p-4 border-b border-white/10">
+            <button id="close-sidebar-btn" class="p-2 text-gray-300 hover:text-white transition">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+            <a href="/admin/dashboard"
+                class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-white/10 hover:text-white font-medium transition">
+                <i class="fas fa-calendar-day w-5 text-center"></i> Dashboard
+            </a>
+            <a href="/admin/call"
+                class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-white/10 hover:text-white font-medium transition">
+                <i class="fas fa-phone-alt w-5 text-center"></i> Call Requests
+            </a>
+            <a href="/admin/patients"
+                class="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-600 text-white font-medium transition shadow-sm">
+                <i class="fas fa-user-injured w-5 text-center"></i> Patient Center
+            </a>
+            <a href="/admin/notifications"
+                class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-white/10 hover:text-white font-medium transition">
+                <i class="fas fa-bell w-5 text-center"></i> Notification Center
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-white/10">
+            <a href="/admin/logout"
+                class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white rounded-xl font-medium transition duration-200">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-screen overflow-hidden bg-gray-50 relative z-0">
+        <!-- Top Bar -->
+        <header
+            class="bg-white shadow-sm border-b border-gray-100 p-4 md:px-8 flex justify-between items-center z-10 shrink-0">
+            <div>
+                <h2 class="text-xl md:text-2xl font-bold text-gray-800">Patient Center</h2>
+                <p class="text-sm text-gray-500 mt-0.5">Search and manage patient records</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg text-sm font-semibold">
+                    <i class="fas fa-users mr-1"></i> <span id="total-count">
+                        <%= patients.length %>
+                    </span> Patients
+                </span>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-4 md:p-8">
+            <!-- Search -->
+            <div class="mb-6">
+                <div class="relative max-w-xl">
+                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" id="search-input" placeholder="Search by name, phone, or email..."
+                        class="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none search-glow focus:border-blue-400 transition">
+                    <div id="search-spinner" class="absolute right-4 top-1/2 -translate-y-1/2 hidden">
+                        <div class="animate-spin rounded-full h-5 w-5 border-2 border-blue-500 border-t-transparent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white rounded-xl p-4 border border-gray-100">
+                    <div class="text-2xl font-bold text-blue-600">
+                        <%= patients.length %>
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1">Total Patients</div>
+                </div>
+                <div class="bg-white rounded-xl p-4 border border-gray-100">
+                    <div class="text-2xl font-bold text-green-600">
+                        <%= patients.reduce((a,p)=> a + (p.total_visits || 0), 0) %>
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1">Total Visits</div>
+                </div>
+                <div class="bg-white rounded-xl p-4 border border-gray-100">
+                    <div class="text-2xl font-bold text-purple-600">
+                        <%= patients.filter(p=> p.total_visits > 1).length %>
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1">Returning Patients</div>
+                </div>
+                <div class="bg-white rounded-xl p-4 border border-gray-100">
+                    <div class="text-2xl font-bold text-amber-600">
+                        <%= patients.filter(p=> p.total_visits === 1).length %>
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1">Single Visit</div>
+                </div>
+            </div>
+
+            <!-- Patient Grid -->
+            <div id="patients-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <% patients.forEach(function(p) { %>
+                    <div class="patient-card bg-white rounded-2xl border border-gray-100 p-5 cursor-pointer"
+                        onclick="showPatientDetail('<%= p.phone %>')">
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-11 h-11 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg">
+                                    <%= p.name ? p.name.charAt(0).toUpperCase() : '?' %>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-800 text-sm">
+                                        <%= p.name || 'Unknown' %>
+                                    </h3>
+                                    <p class="text-xs text-gray-400">
+                                        <%= p.phone %>
+                                    </p>
+                                </div>
+                            </div>
+                            <span class="bg-blue-50 text-blue-600 px-2 py-0.5 rounded-md text-xs font-semibold">
+                                <%= p.total_visits %> visit<%= p.total_visits> 1 ? 's' : '' %>
+                            </span>
+                        </div>
+                        <div class="space-y-1.5 text-xs text-gray-500">
+                            <% if (p.email) { %>
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-envelope w-4 text-gray-400"></i>
+                                    <%= p.email %>
+                                </div>
+                                <% } %>
+                                    <% if (p.city) { %>
+                                        <div class="flex items-center gap-2">
+                                            <i class="fas fa-map-marker-alt w-4 text-gray-400"></i>
+                                            <%= p.city %>
+                                        </div>
+                                        <% } %>
+                                            <% if (p.last_visit) { %>
+                                                <div class="flex items-center gap-2">
+                                                    <i class="fas fa-calendar w-4 text-gray-400"></i>
+                                                    Last visit: <%= new Date(p.last_visit).toLocaleDateString('en-GB', {
+                                                        day:'numeric', month:'short', year:'numeric' }) %>
+                                                </div>
+                                                <% } %>
+                        </div>
+                    </div>
+                    <% }); %>
+            </div>
+
+            <% if (patients.length===0) { %>
+                <div class="text-center py-20">
+                    <i class="fas fa-user-injured text-5xl text-gray-300 mb-4"></i>
+                    <h3 class="text-lg font-semibold text-gray-500">No patients yet</h3>
+                    <p class="text-sm text-gray-400 mt-1">Patient records will appear here once appointments are
+                        approved.</p>
+                </div>
+                <% } %>
+        </div>
+    </main>
+
+    <!-- Sidebar Overlay (mobile) -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-40 hidden md:hidden"></div>
+
+    <!-- Patient Detail Modal -->
+    <div id="detail-modal"
+        class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+        <div
+            class="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col modal-fade overflow-hidden">
+            <div class="p-5 border-b border-gray-100 flex items-center justify-between shrink-0">
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800" id="modal-name">Patient</h3>
+                    <p class="text-sm text-gray-400" id="modal-phone"></p>
+                </div>
+                <button onclick="closeDetailModal()"
+                    class="text-gray-400 hover:bg-gray-200 hover:text-gray-600 p-2 rounded-full transition">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-5" id="modal-body">
+                <div class="flex justify-center py-10">
+                    <div class="animate-spin rounded-full h-8 w-8 border-2 border-blue-500 border-t-transparent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conflict Resolver Modal -->
+    <% if (typeof needsGroupingPreference !=='undefined' && needsGroupingPreference) { %>
+        <div id="conflict-resolver-modal"
+            class="fixed inset-0 bg-gray-900/70 backdrop-blur-sm z-[200] flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden modal-fade">
+                <div class="p-6 border-b border-gray-100 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
+                    <h3 class="text-xl font-bold flex items-center gap-2"><i class="fas fa-sitemap"></i> Patient
+                        Grouping Rule</h3>
+                    <p class="text-sm text-blue-100 mt-1">How should the system identify unique patients?</p>
+                </div>
+                <div class="p-6 space-y-4">
+                    <p class="text-sm text-gray-600">Choose the primary identifier to merge patient records. *This will
+                        only be asked once.*</p>
+
+                    <label
+                        class="flex items-start gap-4 p-4 border border-blue-100 bg-blue-50/50 rounded-xl cursor-pointer hover:bg-blue-50 transition">
+                        <input type="radio" name="grouping_pref" value="phone"
+                            class="mt-1 w-4 h-4 text-blue-600 focus:ring-blue-500" checked>
+                        <div>
+                            <div class="font-semibold text-gray-800">Phone Number (Recommended)</div>
+                            <div class="text-sm text-gray-500 mt-0.5">Groups records sharing the same phone number. Best
+                                for WhatsApp/SMS tracking.</div>
+                        </div>
+                    </label>
+
+                    <label
+                        class="flex items-start gap-4 p-4 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition">
+                        <input type="radio" name="grouping_pref" value="email"
+                            class="mt-1 w-4 h-4 text-blue-600 focus:ring-blue-500">
+                        <div>
+                            <div class="font-semibold text-gray-800">Email Address</div>
+                            <div class="text-sm text-gray-500 mt-0.5">Groups records sharing the same email. Best if
+                                users frequently change numbers.</div>
+                        </div>
+                    </label>
+
+                    <label
+                        class="flex items-start gap-4 p-4 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition">
+                        <input type="radio" name="grouping_pref" value="both"
+                            class="mt-1 w-4 h-4 text-blue-600 focus:ring-blue-500">
+                        <div>
+                            <div class="font-semibold text-gray-800">Both Phone & Email</div>
+                            <div class="text-sm text-gray-500 mt-0.5">Strict grouping. Records must share identical
+                                phone AND email to be merged.</div>
+                        </div>
+                    </label>
+                </div>
+                <div class="p-5 border-t border-gray-100 bg-gray-50 flex justify-end">
+                    <button onclick="saveGroupingPreference()"
+                        class="bg-blue-600 text-white px-6 py-2.5 rounded-xl font-medium hover:bg-blue-700 transition shadow-md hover:shadow-lg flex items-center gap-2">
+                        <i class="fas fa-save"></i> Save Rules
+                    </button>
+                </div>
+            </div>
+        </div>
+        <% } %>
+
+            <script>
+                // Mobile sidebar
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('sidebar-overlay');
+                const closeBtn = document.getElementById('close-sidebar-btn');
+                document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
+                    sidebar.classList.toggle('-translate-x-full');
+                    overlay.classList.toggle('hidden');
+                });
+                closeBtn?.addEventListener('click', () => {
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                });
+                overlay?.addEventListener('click', () => {
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                });
+
+                // Search
+                let searchTimer = null;
+                const searchInput = document.getElementById('search-input');
+                const spinner = document.getElementById('search-spinner');
+                const grid = document.getElementById('patients-grid');
+
+                searchInput.addEventListener('input', () => {
+                    clearTimeout(searchTimer);
+                    const q = searchInput.value.trim();
+                    if (!q) {
+                        location.reload();
+                        return;
+                    }
+                    spinner.classList.remove('hidden');
+                    searchTimer = setTimeout(async () => {
+                        try {
+                            const res = await fetch(`/admin/api/patients/search?q=${encodeURIComponent(q)}`);
+                            const patients = await res.json();
+                            renderPatients(patients);
+                        } catch (e) {
+                            console.error(e);
+                        } finally {
+                            spinner.classList.add('hidden');
+                        }
+                    }, 400);
+                });
+
+                function renderPatients(patients) {
+                    if (!patients.length) {
+                        grid.innerHTML = `<div class="col-span-full text-center py-16">
+          <i class="fas fa-search text-4xl text-gray-300 mb-3"></i>
+          <p class="text-gray-500">No patients found</p>
+        </div>`;
+                        return;
+                    }
+                    grid.innerHTML = patients.map(p => `
+        <div class="patient-card bg-white rounded-2xl border border-gray-100 p-5 cursor-pointer" onclick="showPatientDetail('${p.phone}')">
+          <div class="flex items-start justify-between mb-3">
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg">
+                ${(p.name || '?').charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <h3 class="font-semibold text-gray-800 text-sm">${p.name || 'Unknown'}</h3>
+                <p class="text-xs text-gray-400">${p.phone}</p>
+              </div>
+            </div>
+            <span class="bg-blue-50 text-blue-600 px-2 py-0.5 rounded-md text-xs font-semibold">
+              ${p.total_visits || 0} visit${p.total_visits > 1 ? 's' : ''}
+            </span>
+          </div>
+          <div class="space-y-1.5 text-xs text-gray-500">
+            ${p.email ? `<div class="flex items-center gap-2"><i class="fas fa-envelope w-4 text-gray-400"></i> ${p.email}</div>` : ''}
+            ${p.city ? `<div class="flex items-center gap-2"><i class="fas fa-map-marker-alt w-4 text-gray-400"></i> ${p.city}</div>` : ''}
+            ${p.last_visit ? `<div class="flex items-center gap-2"><i class="fas fa-calendar w-4 text-gray-400"></i> Last: ${new Date(p.last_visit).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</div>` : ''}
+          </div>
+        </div>
+      `).join('');
+                }
+
+                // Patient Detail Modal
+                async function showPatientDetail(phone) {
+                    const modal = document.getElementById('detail-modal');
+                    const body = document.getElementById('modal-body');
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                    body.innerHTML = '<div class="flex justify-center py-10"><div class="animate-spin rounded-full h-8 w-8 border-2 border-blue-500 border-t-transparent"></div></div>';
+
+                    try {
+                        const res = await fetch(`/admin/api/patients/${encodeURIComponent(phone)}/detail`);
+                        const data = await res.json();
+
+                        const allAppts = [...(data.appointments || []), ...(data.pending || [])];
+                        const name = allAppts[0]?.name || data.calls?.[0]?.name || 'Patient';
+                        document.getElementById('modal-name').textContent = name;
+                        document.getElementById('modal-phone').textContent = phone;
+
+                        let html = '';
+
+                        // Approved appointments
+                        if (data.appointments?.length) {
+                            html += `<h4 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i> Approved Appointments (${data.appointments.length})</h4>`;
+                            html += '<div class="space-y-2 mb-6">';
+                            data.appointments.forEach(a => {
+                                const d = new Date(a.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+                                html += `<div class="bg-green-50 border border-green-100 rounded-xl p-3 flex justify-between items-center">
+              <div>
+                <div class="font-medium text-sm text-gray-800">${d} — ${a.slot || ''}</div>
+                <div class="text-xs text-gray-500">${a.status || 'approved'}</div>
+              </div>
+              <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-md">${a.status || 'Approved'}</span>
+            </div>`;
+                            });
+                            html += '</div>';
+                        }
+
+                        // Pending
+                        if (data.pending?.length) {
+                            html += `<h4 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><i class="fas fa-clock text-amber-500"></i> Pending (${data.pending.length})</h4>`;
+                            html += '<div class="space-y-2 mb-6">';
+                            data.pending.forEach(a => {
+                                const d = new Date(a.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+                                html += `<div class="bg-amber-50 border border-amber-100 rounded-xl p-3">
+              <div class="font-medium text-sm text-gray-800">${d} — ${a.slot || ''}</div>
+            </div>`;
+                            });
+                            html += '</div>';
+                        }
+
+                        // Call requests
+                        if (data.calls?.length) {
+                            html += `<h4 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><i class="fas fa-phone text-blue-500"></i> Call Requests (${data.calls.length})</h4>`;
+                            html += '<div class="space-y-2 mb-6">';
+                            data.calls.forEach(c => {
+                                const statusColors = { new: 'blue', contacted: 'green', follow_up: 'amber', resolved: 'gray' };
+                                const color = statusColors[c.status] || 'gray';
+                                html += `<div class="bg-${color}-50 border border-${color}-100 rounded-xl p-3 flex justify-between items-center">
+              <div class="text-sm text-gray-800">${c.email || c.phone}</div>
+              <span class="text-xs bg-${color}-100 text-${color}-700 px-2 py-1 rounded-md">${c.status || 'new'}</span>
+            </div>`;
+                            });
+                            html += '</div>';
+                        }
+
+                        if (!html) {
+                            html = '<div class="text-center py-10 text-gray-400"><i class="fas fa-folder-open text-3xl mb-2"></i><p>No records found</p></div>';
+                        }
+
+                        // Quick actions
+                        const email = allAppts[0]?.email || data.calls?.[0]?.email;
+                        html += `<div class="border-t border-gray-100 pt-4 mt-4 flex gap-2 flex-wrap">
+          <a href="tel:${phone}" class="inline-flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600 transition">
+            <i class="fas fa-phone"></i> Call
+          </a>
+          <a href="https://wa.me/${phone.replace(/[^0-9]/g, '')}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm font-medium hover:bg-emerald-600 transition">
+            <i class="fab fa-whatsapp"></i> WhatsApp
+          </a>
+          ${email ? `<a href="/admin/notifications?email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition">
+            <i class="fas fa-envelope"></i> Email
+          </a>` : ''}
+        </div>`;
+
+                        body.innerHTML = html;
+                    } catch (err) {
+                        body.innerHTML = '<div class="text-center py-10 text-red-500"><i class="fas fa-exclamation-circle text-3xl mb-2"></i><p>Error loading patient details</p></div>';
+                    }
+                }
+
+                function closeDetailModal() {
+                    document.getElementById('detail-modal').classList.add('hidden');
+                    document.getElementById('detail-modal').classList.remove('flex');
+                }
+
+                // Conflict Resolver Save action
+                async function saveGroupingPreference() {
+                    const btn = document.querySelector('#conflict-resolver-modal button');
+                    const selected = document.querySelector('input[name="grouping_pref"]:checked').value;
+
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                    btn.disabled = true;
+
+                    try {
+                        const res = await fetch('/admin/api/settings', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ key: 'patient_grouping', value: selected })
+                        });
+
+                        const data = await res.json();
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Rules Applied',
+                                text: 'Patient list is recompiling...',
+                                timer: 1500,
+                                showConfirmButton: false
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            throw new Error(data.error);
+                        }
+                    } catch (err) {
+                        Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to save settings' });
+                        btn.innerHTML = '<i class="fas fa-save"></i> Save Rules';
+                        btn.disabled = false;
+                    }
+                }
+            </script>
+</body>
+
+</html>

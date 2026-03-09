@@ -322,6 +322,7 @@
         })
           .then(async response => {
             const data = await response.json();
+
             if (!response.ok) {
               if (data.errors) {
                 const errorMsgs = data.errors.map(err => err.msg).join('\n');
@@ -668,52 +669,139 @@
     }
   </style>
 
-  <section class="treat-section reveal">
+  <!-- ========== INTERACTIVE BODY TREATMENT SECTION ========== -->
+  <section class="treat-section reveal" id="treat-section">
     <div class="treat-container">
-      <!-- LEFT CONTENT -->
-      <div class="treat-text">
-        <!-- <span class="treat-label">WHAT WE TREAT</span> -->
-        <!-- <h2 class="header">
-          SAY <span>GOODBYE</span><br>TO PAIN
-        </h2> <br> -->
-        <div class="subhead3 ">Movement Science provides treatment for all musculoskeletal issues from head to toe.
+
+      <!-- LEFT — Info Cards -->
+      <div class="treat-left">
+        <span class="treat-label">WHAT WE TREAT</span>
+        <h2 class="treat-main-title">
+          Expert Care,<br><span>Head to Toe</span>
+        </h2>
+        <p class="treat-subtitle">Movement Science provides treatment for all musculoskeletal issues. Tap a body point
+          to learn more.</p>
+
+        <!-- Rotating Card -->
+        <div class="treat-card-wrapper">
+          <div class="treat-card active" data-point="head">
+            <div class="treat-card-icon" style="background: linear-gradient(135deg, #c084fc, #a855f7);">
+              <i class="fas fa-head-side-brain"></i>
+            </div>
+            <div class="treat-card-body">
+              <h4>Head & Neck</h4>
+              <p>Migraines, cervical pain, TMJ disorders, tension headaches, and postural neck strain.</p>
+            </div>
+          </div>
+          <div class="treat-card" data-point="shoulder">
+            <div class="treat-card-icon" style="background: linear-gradient(135deg, #60a5fa, #3b82f6);">
+              <i class="fas fa-hand-paper"></i>
+            </div>
+            <div class="treat-card-body">
+              <h4>Shoulders & Arms</h4>
+              <p>Frozen shoulder, rotator cuff injuries, tennis elbow, carpal tunnel, and arm weakness.</p>
+            </div>
+          </div>
+          <div class="treat-card" data-point="chest">
+            <div class="treat-card-icon" style="background: linear-gradient(135deg, #34d399, #10b981);">
+              <i class="fas fa-lungs"></i>
+            </div>
+            <div class="treat-card-body">
+              <h4>Spine & Core</h4>
+              <p>Scoliosis, herniated discs, sciatica, core instability, and thoracic stiffness.</p>
+            </div>
+          </div>
+          <div class="treat-card" data-point="hip">
+            <div class="treat-card-icon" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);">
+              <i class="fas fa-bone"></i>
+            </div>
+            <div class="treat-card-body">
+              <h4>Hip & Pelvis</h4>
+              <p>Hip bursitis, labral tears, pelvic floor dysfunction, SI joint pain, and hip replacements.</p>
+            </div>
+          </div>
+          <div class="treat-card" data-point="knee">
+            <div class="treat-card-icon" style="background: linear-gradient(135deg, #fb923c, #f97316);">
+              <i class="fas fa-running"></i>
+            </div>
+            <div class="treat-card-body">
+              <h4>Knees</h4>
+              <p>ACL/MCL injuries, meniscus tears, patellofemoral pain, arthritis, and post-surgical rehab.</p>
+            </div>
+          </div>
+          <div class="treat-card" data-point="ankle">
+            <div class="treat-card-icon" style="background: linear-gradient(135deg, #f87171, #ef4444);">
+              <i class="fas fa-shoe-prints"></i>
+            </div>
+            <div class="treat-card-body">
+              <h4>Ankles & Feet</h4>
+              <p>Plantar fasciitis, ankle sprains, Achilles tendinopathy, flat feet, and stress fractures.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress dots -->
+        <div class="treat-progress">
+          <button class="treat-dot active" data-index="0"></button>
+          <button class="treat-dot" data-index="1"></button>
+          <button class="treat-dot" data-index="2"></button>
+          <button class="treat-dot" data-index="3"></button>
+          <button class="treat-dot" data-index="4"></button>
+          <button class="treat-dot" data-index="5"></button>
         </div>
       </div>
 
-      <!-- RIGHT VISUAL -->
+      <!-- RIGHT — Body Image with Interactive Points -->
       <div class="treat-visual">
         <div class="treat-bg-shape"></div>
-
-        <!-- replace image later -->
         <img src="/images/strech.png" alt="Physiotherapy Treatment" class="treat-image">
 
+        <!-- Interactive body point buttons -->
+        <button class="body-point active" data-point="head" style="top: 8%; left: 55%;">
+          <span class="point-pulse"></span>
+          <span class="point-core" style="background: #a855f7;"></span>
+        </button>
+        <button class="body-point" data-point="shoulder" style="top: 22%; left: 52%;">
+          <span class="point-pulse"></span>
+          <span class="point-core" style="background: #3b82f6;"></span>
+        </button>
+        <button class="body-point" data-point="chest" style="top: 36%; left: 48%;">
+          <span class="point-pulse"></span>
+          <span class="point-core" style="background: #10b981;"></span>
+        </button>
+        <button class="body-point" data-point="hip" style="top: 50%; left: 44%;">
+          <span class="point-pulse"></span>
+          <span class="point-core" style="background: #f59e0b;"></span>
+        </button>
+        <button class="body-point" data-point="knee" style="top: 64%; left: 38%;">
+          <span class="point-pulse"></span>
+          <span class="point-core" style="background: #f97316;"></span>
+        </button>
+        <button class="body-point" data-point="ankle" style="top: 82%; left: 32%;">
+          <span class="point-pulse"></span>
+          <span class="point-core" style="background: #ef4444;"></span>
+        </button>
       </div>
-
     </div>
   </section>
 
-  <div class="container">
-    <div class="subhead" style="color: #023974;">
-      <b>
-        <span style="background-color: #023974; color: white; padding: 5px; border-radius: 3px;">"PRIORITISE YOUR
-          WELLBEING"</span>
-        <br>
-        SCHEDULE YOUR PHYSIOTHERAPY APPOINTMENT TODAY
-      </b>
+  <!-- CTA Banner -->
+  <section class="treat-cta-banner">
+    <div class="treat-cta-inner">
+      <div>
+        <span class="treat-cta-badge">"PRIORITISE YOUR WELLBEING"</span>
+        <h3 class="treat-cta-title">SCHEDULE YOUR PHYSIOTHERAPY APPOINTMENT TODAY</h3>
+      </div>
+      <a href="/freecall" class="treat-cta-btn">
+        <i class="fas fa-phone-alt"></i> Schedule A Free Online Call
+      </a>
     </div>
-    <br>
-    <a href="/freecall" class="ctcbtn">Schedule A Free Online Call</a>
-  </div>
-
-  <br><br><br>
+  </section>
 
   <style>
-    /* ===============================
-   WHAT WE TREAT – FINAL MATCHED
-================================ */
-
+    /* ========== INTERACTIVE BODY TREATMENT SECTION ========== */
     .treat-section {
-      padding: 40px 0 120px;
+      padding: 80px 0 60px;
       background: #ffffff;
       font-family: 'Poppins', sans-serif;
       overflow: hidden;
@@ -722,116 +810,418 @@
     .treat-container {
       max-width: 1200px;
       margin: auto;
-      padding: 0 10px;
+      padding: 0 24px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       align-items: center;
-      gap: 48px;
+      gap: 60px;
     }
 
-    /* LEFT CONTENT */
+    /* LEFT */
+    .treat-left {
+      position: relative;
+    }
+
     .treat-label {
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      color: #9aa6bd;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #3b82f6;
       text-transform: uppercase;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
+      display: block;
     }
 
-    .treat-title {
-      font-size: 44px;
-      /* reduced = calmer */
+    .treat-main-title {
+      font-size: 40px;
       font-weight: 800;
-      line-height: 1.2;
+      line-height: 1.15;
       color: #010f49;
-      /* site primary */
-      margin-bottom: 14px;
+      margin: 0 0 12px 0;
     }
 
-    .treat-title span {
-      color: #008CBA;
-      /* consistent accent */
+    .treat-main-title span {
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
-    .treat-desc {
-      font-size: 18px;
-      line-height: 1.7;
-      color: #5a6b8a;
-      /* matches subhead3 tone */
-      max-width: 460px;
+    .treat-subtitle {
+      font-size: 16px;
+      color: #64748b;
+      line-height: 1.6;
+      margin-bottom: 28px;
+      max-width: 400px;
     }
 
-    /* RIGHT VISUAL */
+    /* Card Wrapper */
+    .treat-card-wrapper {
+      position: relative;
+      min-height: 120px;
+    }
+
+    .treat-card {
+      display: none;
+      align-items: flex-start;
+      gap: 16px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 20px;
+      animation: cardSlideIn 0.35s ease-out;
+    }
+
+    .treat-card.active {
+      display: flex;
+    }
+
+    @keyframes cardSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .treat-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .treat-card-body h4 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 0 0 6px;
+    }
+
+    .treat-card-body p {
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* Progress Dots */
+    .treat-progress {
+      display: flex;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .treat-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: none;
+      background: #cbd5e1;
+      cursor: pointer;
+      transition: all 0.3s;
+      padding: 0;
+    }
+
+    .treat-dot.active {
+      width: 28px;
+      border-radius: 5px;
+      background: #3b82f6;
+    }
+
+    /* RIGHT — Visual */
     .treat-visual {
       position: relative;
-      height: 520px;
+      height: 560px;
     }
 
-    /* SHAPE – PUSHED DOWN, CALMER */
     .treat-bg-shape {
       position: absolute;
-      right: -160px;
-      width: 640px;
-      height: 640px;
-      background: #010f4929;
+      right: -100px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 520px;
+      height: 520px;
+      background: linear-gradient(135deg, #010f4915, #010f4908);
       border-radius: 50%;
       z-index: 1;
     }
 
-    /* IMAGE */
     .treat-image {
       position: absolute;
-      bottom: 130px;
-      right: 90px;
-      max-height: 500px;
+      bottom: 0;
+      right: 30px;
+      max-height: 540px;
       width: auto;
       z-index: 2;
-      scale: 2;
     }
 
+    /* Body Point Buttons */
+    .body-point {
+      position: absolute;
+      z-index: 10;
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
 
+    .point-core {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s;
+    }
+
+    .body-point:hover .point-core,
+    .body-point.active .point-core {
+      transform: scale(1.4);
+    }
+
+    .point-pulse {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: inherit;
+      opacity: 0;
+      z-index: 1;
+    }
+
+    .body-point.active .point-pulse {
+      animation: pointPulse 2s ease-out infinite;
+    }
+
+    @keyframes pointPulse {
+      0% {
+        transform: scale(0.5);
+        opacity: 0.5;
+        background: currentColor;
+      }
+
+      100% {
+        transform: scale(2);
+        opacity: 0;
+        background: currentColor;
+      }
+    }
+
+    .body-point.active .point-pulse {
+      color: inherit;
+    }
+
+    /* Each body-point gets pulse color from its core */
+    .body-point[data-point="head"] .point-pulse {
+      background: #a855f7;
+    }
+
+    .body-point[data-point="shoulder"] .point-pulse {
+      background: #3b82f6;
+    }
+
+    .body-point[data-point="chest"] .point-pulse {
+      background: #10b981;
+    }
+
+    .body-point[data-point="hip"] .point-pulse {
+      background: #f59e0b;
+    }
+
+    .body-point[data-point="knee"] .point-pulse {
+      background: #f97316;
+    }
+
+    .body-point[data-point="ankle"] .point-pulse {
+      background: #ef4444;
+    }
+
+    /* CTA Banner */
+    .treat-cta-banner {
+      background: linear-gradient(135deg, #011d3b, #023974);
+      padding: 40px 24px;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .treat-cta-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .treat-cta-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.15);
+      color: #93c5fd;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .treat-cta-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0;
+    }
+
+    .treat-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #3b82f6;
+      color: white;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+
+    .treat-cta-btn:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+    }
+
+    /* MOBILE */
     @media (max-width: 900px) {
       .treat-section {
-        padding: 70px 0 90px;
+        padding: 50px 0 40px;
       }
 
       .treat-container {
         grid-template-columns: 1fr;
-        gap: 32px;
+        gap: 20px;
       }
 
-      .treat-title {
-        font-size: 34px;
-      }
-
-      .treat-desc {
-        font-size: 16.5px;
+      .treat-main-title {
+        font-size: 30px;
       }
 
       .treat-visual {
-        height: 360px;
+        height: 480px;
+        order: -1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .treat-bg-shape {
-        width: 420px;
-        height: 420px;
-        right: 50%;
-        bottom: -40px;
-        transform: translateX(50%);
+        width: 400px;
+        height: 400px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        right: auto;
       }
 
       .treat-image {
-        right: 94%;
-        transform: translateX(50%);
-        max-height: 360px;
+        position: relative;
+        left: auto;
+        right: auto;
+        transform: none;
+        max-height: 460px;
+        margin: 0 auto;
+        display: block;
+      }
+
+      .body-point {
+        display: none;
+      }
+
+      /* hide on mobile, cards auto-cycle */
+      .treat-cta-inner {
+        text-align: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+
+      .treat-cta-title {
+        font-size: 16px;
       }
     }
   </style>
 
+  <script>
+    // Interactive body points + auto-cycling cards
+    (function () {
+      const cards = document.querySelectorAll('.treat-card');
+      const dots = document.querySelectorAll('.treat-dot');
+      const points = document.querySelectorAll('.body-point');
+      const pointNames = ['head', 'shoulder', 'chest', 'hip', 'knee', 'ankle'];
+      let currentIndex = 0;
+      let autoTimer = null;
+
+      function activatePoint(index) {
+        currentIndex = index;
+        // Update cards
+        cards.forEach((c, i) => c.classList.toggle('active', i === index));
+        // Update dots
+        dots.forEach((d, i) => d.classList.toggle('active', i === index));
+        // Update body points
+        points.forEach((p, i) => p.classList.toggle('active', i === index));
+      }
+
+      function startAutoCycle() {
+        stopAutoCycle();
+        autoTimer = setInterval(() => {
+          activatePoint((currentIndex + 1) % pointNames.length);
+        }, 4000);
+      }
+
+      function stopAutoCycle() {
+        if (autoTimer) clearInterval(autoTimer);
+      }
+
+      // Body point clicks
+      points.forEach((p, i) => {
+        p.addEventListener('click', () => {
+          activatePoint(i);
+          startAutoCycle(); // restart timer
+        });
+      });
+
+      // Dot clicks
+      dots.forEach((d) => {
+        d.addEventListener('click', () => {
+          activatePoint(parseInt(d.dataset.index));
+          startAutoCycle();
+        });
+      });
+
+      startAutoCycle();
+    })();
+  </script>
 
   <script>
-    gsap.from(".treat-title span", {
+    gsap.from(".treat-main-title span", {
       scrollTrigger: {
         trigger: ".treat-section",
         start: "top 75%"

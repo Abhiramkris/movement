@@ -93,8 +93,11 @@ router.get('/api/appointments', requireAdmin, async (req, res) => {
         const [pending] = await db.query('SELECT * FROM appointments ORDER BY date ASC, slot ASC');
         const [approved] = await db.query('SELECT * FROM approved_appointments ORDER BY date ASC, slot ASC');
 
-        const pendingWithStatus = pending.map(a => ({ ...a, status: 'pending' }));
-        const allAppointments = [...pendingWithStatus, ...approved];
+        // Prefix IDs to handle overlapping ranges between tables
+        const pendingWithStatus = pending.map(a => ({ ...a, id: `req_${a.id}`, status: 'pending' }));
+        const approvedWithStatus = approved.map(a => ({ ...a, id: `appt_${a.id}` }));
+
+        const allAppointments = [...pendingWithStatus, ...approvedWithStatus];
 
         res.json(allAppointments);
     } catch (err) {
@@ -126,24 +129,36 @@ router.get('/api/patient/:phone/history', requireAdmin, async (req, res) => {
 router.post('/api/appointment/:id/notes',
     requireAdmin,
     [
-        body('clinical_notes.s').trim().escape().optional({ checkFalsy: true }),
-        body('clinical_notes.o').trim().escape().optional({ checkFalsy: true }),
-        body('clinical_notes.ap').trim().escape().optional({ checkFalsy: true }),
+        body('clinical_notes.s').trim().optional({ checkFalsy: true }),
+        body('clinical_notes.o').trim().optional({ checkFalsy: true }),
+        body('clinical_notes.ap').trim().optional({ checkFalsy: true }),
         body('status').trim().notEmpty().withMessage('Status is required')
     ],
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
-        const { id } = req.params;
+        const { id: rawId } = req.params;
         const { clinical_notes, status } = req.body;
+        console.log('Update Request:', { rawId, status, hasNotes: !!clinical_notes });
 
         try {
-            let updateQuery = 'UPDATE approved_appointments SET ';
+            let tableName = 'approved_appointments';
+            let actualId = rawId;
+
+            if (typeof rawId === 'string' && rawId.startsWith('req_')) {
+                tableName = 'appointments';
+                actualId = rawId.replace('req_', '');
+            } else if (typeof rawId === 'string' && rawId.startsWith('appt_')) {
+                tableName = 'approved_appointments';
+                actualId = rawId.replace('appt_', '');
+            }
+
+            let updateQuery = `UPDATE ${tableName} SET `;
             const queryParams = [];
             const updates = [];
 
-            if (clinical_notes && (clinical_notes.s || clinical_notes.o || clinical_notes.ap)) {
+            if (clinical_notes) {
                 updates.push('clinical_notes = ?');
                 queryParams.push(JSON.stringify(clinical_notes));
             }
@@ -155,14 +170,10 @@ router.post('/api/appointment/:id/notes',
             if (updates.length === 0) return res.status(400).json({ error: 'No data to update' });
 
             updateQuery += updates.join(', ') + ' WHERE id = ?';
-            queryParams.push(id);
+            queryParams.push(actualId);
 
-            const [result] = await db.query(updateQuery, queryParams);
-            if (result.affectedRows === 0) {
-                return res.status(404).json({ error: 'Appointment not found' });
-            }
-
-            res.json({ message: 'Record updated successfully' });
+            await db.query(updateQuery, queryParams);
+            res.json({ message: 'Record updated successfully', type: tableName });
         } catch (err) {
             console.error('Error updating appointment notes:', err);
             res.status(500).json({ error: 'Database error' });
@@ -171,8 +182,13 @@ router.post('/api/appointment/:id/notes',
 
 // Approve Appointment
 router.post('/approve', requireAdmin, async (req, res) => {
-    const { id } = req.body;
+    let { id } = req.body;
     if (!id) return res.status(400).json({ error: 'Missing appointment ID' });
+
+    // Handle prefixed IDs from UI
+    if (typeof id === 'string' && id.startsWith('req_')) {
+        id = id.replace('req_', '');
+    }
 
     try {
         // Move from appointments to approved_appointments
@@ -198,24 +214,37 @@ router.post('/approve', requireAdmin, async (req, res) => {
     }
 });
 
-// Delete Appointment (Decline)
+// Delete Appointment// Delete Request
 router.post('/delete', requireAdmin, async (req, res) => {
-    const { id } = req.body;
+    let { id } = req.body;
     if (!id) return res.status(400).json({ error: 'Missing appointment ID' });
 
     try {
-        const [pending] = await db.query('SELECT * FROM appointments WHERE id = ?', [id]);
+        let tableName = 'appointments';
+        let actualId = id;
 
-        if (pending && pending.length > 0) {
-            const appt = pending[0];
-            await db.query('DELETE FROM appointments WHERE id = ?', [id]);
-            await db.query('DELETE FROM slots WHERE date = ? AND slot = ?', [appt.date, appt.slot]);
-
-            // Trigger Email (Non-blocking)
-            const emailService = require('../utils/email');
-            emailService.sendStatusUpdate(appt.email, appt.name, appt.date, appt.slot, 'cancelled')
-                .catch(e => console.error("Email err:", e));
+        if (typeof id === 'string' && id.startsWith('req_')) {
+            tableName = 'appointments';
+            actualId = id.replace('req_', '');
+        } else if (typeof id === 'string' && id.startsWith('appt_')) {
+            tableName = 'approved_appointments';
+            actualId = id.replace('appt_', '');
         }
+
+        // Fetch to get email/name for notification before delete
+        const [target] = await db.query(`SELECT * FROM ${tableName} WHERE id = ?`, [actualId]);
+        if (!target || target.length === 0) return res.status(404).json({ error: 'Not found' });
+
+        const appt = target[0];
+
+        // Delete
+        await db.query(`DELETE FROM ${tableName} WHERE id = ?`, [actualId]);
+        await db.query('DELETE FROM slots WHERE date = ? AND slot = ?', [appt.date, appt.slot]);
+
+        // Trigger Email (Non-blocking)
+        const emailService = require('../utils/email');
+        emailService.sendStatusUpdate(appt.email, appt.name, appt.date, appt.slot, 'cancelled')
+            .catch(e => console.error("Email err:", e));
         res.json({ message: 'Deleted successfully' });
     } catch (err) {
         console.error('Delete error:', err);
@@ -223,13 +252,62 @@ router.post('/delete', requireAdmin, async (req, res) => {
     }
 });
 
-// Call Requests
+// Call Requests Page
 router.get('/call', requireAdmin, async (req, res) => {
     try {
-        const [results] = await db.query('SELECT * FROM call_requests ORDER BY id DESC');
+        const [results] = await db.query('SELECT * FROM call_requests ORDER BY created_at DESC, id DESC');
         res.render('admin/caller', { callRequests: results });
     } catch (err) {
         res.status(500).send('Database error');
+    }
+});
+
+// Update Call Request Status
+router.post('/call/status/:id', requireAdmin, async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+    const validStatuses = ['new', 'contacted', 'follow_up', 'resolved'];
+
+    if (!validStatuses.includes(status)) {
+        return res.status(400).json({ error: 'Invalid status' });
+    }
+
+    try {
+        const [result] = await db.query('UPDATE call_requests SET status = ? WHERE id = ?', [status, id]);
+        if (result.affectedRows === 0) return res.status(404).json({ error: 'Request not found' });
+        res.json({ success: true, message: `Status updated to ${status}` });
+    } catch (err) {
+        console.error('Error updating call request status:', err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+// Reply to Call Request via Email
+router.post('/call/reply/:id', requireAdmin, async (req, res) => {
+    const { id } = req.params;
+    const { message } = req.body;
+
+    if (!message || !message.trim()) {
+        return res.status(400).json({ error: 'Reply message is required' });
+    }
+
+    try {
+        const [rows] = await db.query('SELECT * FROM call_requests WHERE id = ?', [id]);
+        if (rows.length === 0) return res.status(404).json({ error: 'Request not found' });
+
+        const request = rows[0];
+        if (!request.email) return res.status(400).json({ error: 'No email address for this request' });
+
+        const emailService = require('../utils/email');
+        await emailService.sendCallRequestReply(request.email, request.name || 'Valued Patient', message.trim());
+
+        // Auto-update status to contacted
+        await db.query("UPDATE call_requests SET status = 'contacted' WHERE id = ? AND status = 'new'", [id]);
+
+        res.json({ success: true, message: 'Reply sent successfully' });
+    } catch (err) {
+        console.error('Error sending call request reply:', err);
+        res.status(500).json({ error: 'Failed to send reply' });
     }
 });
 
@@ -237,10 +315,390 @@ router.get('/call', requireAdmin, async (req, res) => {
 router.post('/call/delete/:id', requireAdmin, async (req, res) => {
     try {
         await db.query('DELETE FROM call_requests WHERE id = ?', [req.params.id]);
-        res.redirect('/admin/call');
+        res.json({ success: true, message: 'Deleted successfully' });
     } catch (err) {
         console.error('Error deleting call request:', err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+// ──────────────────────────────────────────────
+// SETTINGS
+// ──────────────────────────────────────────────
+
+router.post('/api/settings', requireAdmin, async (req, res) => {
+    try {
+        const { key, value } = req.body;
+        if (!key || value === undefined) return res.status(400).json({ error: 'Key and value required' });
+
+        await db.query(
+            'INSERT INTO app_settings (setting_key, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = ?',
+            [key, value, value]
+        );
+        res.json({ success: true, message: 'Settings saved' });
+    } catch (err) {
+        console.error('Error saving settings:', err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+// Helper to get a setting
+async function getSetting(key, defaultValue = null) {
+    try {
+        const [rows] = await db.query('SELECT setting_value FROM app_settings WHERE setting_key = ?', [key]);
+        return rows.length ? rows[0].setting_value : defaultValue;
+    } catch (e) {
+        return defaultValue;
+    }
+}
+
+// ──────────────────────────────────────────────
+// PATIENT CENTER
+// ──────────────────────────────────────────────
+
+// Render Patient Center page
+router.get('/patients', requireAdmin, async (req, res) => {
+    try {
+        const groupingPref = await getSetting('patient_grouping');
+        const needsGroupingPreference = !groupingPref;
+
+        // Define grouping logic based on preference
+        let groupBy = 'phone, name, email, city';
+        let whereClause = "phone IS NOT NULL AND phone != ''";
+
+        if (groupingPref === 'email') {
+            groupBy = 'email, name, phone, city';
+            whereClause = "email IS NOT NULL AND email != ''";
+        } else if (groupingPref === 'both') {
+            groupBy = 'phone, email, name, city';
+            whereClause = "(phone IS NOT NULL AND phone != '') OR (email IS NOT NULL AND email != '')";
+        }
+
+        // Get unique patients from approved_appointments (most complete records)
+        const [patients] = await db.query(`
+            SELECT name, phone, email, city,
+                   COUNT(*) as total_visits,
+                   MAX(date) as last_visit,
+                   MIN(date) as first_visit
+            FROM approved_appointments
+            WHERE ${whereClause}
+            GROUP BY ${groupBy}
+            ORDER BY last_visit DESC
+        `);
+        res.render('admin/patients', { patients, needsGroupingPreference, currentGrouping: groupingPref });
+    } catch (err) {
+        console.error('Error fetching patients:', err);
         res.status(500).send('Database error');
+    }
+});
+
+// Search patients API
+router.get('/api/patients/search', requireAdmin, async (req, res) => {
+    const q = req.query.q || '';
+    if (!q.trim()) return res.json([]);
+
+    try {
+        const searchTerm = `%${q.trim()}%`;
+        const groupingPref = await getSetting('patient_grouping') || 'phone';
+
+        let groupBy = 'phone, name, email, city';
+        let whereClause = "phone IS NOT NULL AND phone != ''";
+        let callWhereClause = "phone NOT IN (SELECT DISTINCT phone FROM approved_appointments WHERE phone IS NOT NULL)";
+        let callGroupBy = 'phone, name, email';
+
+        if (groupingPref === 'email') {
+            groupBy = 'email, name, phone, city';
+            whereClause = "email IS NOT NULL AND email != ''";
+            callWhereClause = "email NOT IN (SELECT DISTINCT email FROM approved_appointments WHERE email IS NOT NULL)";
+            callGroupBy = 'email, name, phone';
+        } else if (groupingPref === 'both') {
+            groupBy = 'phone, email, name, city';
+            whereClause = "(phone IS NOT NULL AND phone != '') OR (email IS NOT NULL AND email != '')";
+            callWhereClause = "phone NOT IN (SELECT DISTINCT phone FROM approved_appointments WHERE phone IS NOT NULL) AND email NOT IN (SELECT DISTINCT email FROM approved_appointments WHERE email IS NOT NULL)";
+            callGroupBy = 'phone, email, name';
+        }
+
+        const [patients] = await db.query(`
+            SELECT name, phone, email, city,
+                   COUNT(*) as total_visits,
+                   MAX(date) as last_visit
+            FROM approved_appointments
+            WHERE (name LIKE ? OR phone LIKE ? OR email LIKE ?)
+              AND (${whereClause})
+            GROUP BY ${groupBy}
+            ORDER BY last_visit DESC
+            LIMIT 50
+        `, [searchTerm, searchTerm, searchTerm]);
+
+        // Also check call_requests for patients not in appointments
+        const [callPatients] = await db.query(`
+            SELECT name, phone, email, 'call_request' as source
+            FROM call_requests
+            WHERE (name LIKE ? OR phone LIKE ? OR email LIKE ?)
+              AND (${callWhereClause})
+            GROUP BY ${callGroupBy}
+            LIMIT 20
+        `, [searchTerm, searchTerm, searchTerm]);
+
+        const combined = [...patients, ...callPatients.map(cp => ({
+            ...cp, total_visits: 0, last_visit: null, city: ''
+        }))];
+
+        res.json(combined);
+    } catch (err) {
+        console.error('Error searching patients:', err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+// Get patient detail by identifier (phone or email depending on grouping)
+router.get('/api/patients/:identifier/detail', requireAdmin, async (req, res) => {
+    const identifier = req.params.identifier;
+    try {
+        const groupingPref = await getSetting('patient_grouping') || 'phone';
+        let matchField = 'phone';
+        let normalizedId = identifier;
+
+        if (groupingPref === 'phone') {
+            normalizedId = normalizePhone(identifier);
+        } else if (groupingPref === 'email' && identifier.includes('@')) {
+            matchField = 'email';
+        } else if (groupingPref === 'both') {
+            // Heuristic: if it has @ it's an email, else treat as phone
+            if (identifier.includes('@')) {
+                matchField = 'email';
+            } else {
+                normalizedId = normalizePhone(identifier);
+            }
+        } else {
+            // Fallback for safety if somehow phone is passed when email is default
+            normalizedId = normalizePhone(identifier);
+        }
+
+        // Get all approved appointments
+        const [appointments] = await db.query(
+            `SELECT * FROM approved_appointments WHERE ${matchField} = ? ORDER BY date DESC`,
+            [normalizedId]
+        );
+
+        // Get pending appointments
+        const [pending] = await db.query(
+            `SELECT *, 'pending' as appt_status FROM appointments WHERE ${matchField} = ? ORDER BY date DESC`,
+            [normalizedId]
+        );
+
+        // Get call requests
+        const [calls] = await db.query(
+            `SELECT * FROM call_requests WHERE ${matchField} = ? ORDER BY created_at DESC`,
+            [normalizedId]
+        );
+
+        res.json({ appointments, pending, calls });
+    } catch (err) {
+        console.error('Error fetching patient detail:', err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+// ──────────────────────────────────────────────
+// NOTIFICATION CENTER
+// ──────────────────────────────────────────────
+
+// Render Notification Center page
+router.get('/notifications', requireAdmin, async (req, res) => {
+    try {
+        const [groups] = await db.query('SELECT g.*, COUNT(m.id) as member_count FROM email_groups g LEFT JOIN email_group_members m ON g.id = m.group_id GROUP BY g.id, g.name, g.description, g.created_at ORDER BY g.created_at DESC');
+        const [log] = await db.query('SELECT * FROM email_log ORDER BY sent_at DESC LIMIT 50');
+        const [patients] = await db.query(`
+            SELECT DISTINCT name, email, phone FROM (
+                SELECT name COLLATE utf8mb4_unicode_ci as name, 
+                       email COLLATE utf8mb4_unicode_ci as email, 
+                       phone COLLATE utf8mb4_unicode_ci as phone 
+                FROM approved_appointments WHERE email IS NOT NULL AND email != ''
+                UNION
+                SELECT name COLLATE utf8mb4_unicode_ci as name, 
+                       email COLLATE utf8mb4_unicode_ci as email, 
+                       phone COLLATE utf8mb4_unicode_ci as phone 
+                FROM call_requests WHERE email IS NOT NULL AND email != ''
+            ) as all_patients ORDER BY name
+        `);
+        res.render('admin/notifications', { groups, log, patients });
+    } catch (err) {
+        console.error('Error loading notification center:', err);
+        res.status(500).send('Database error');
+    }
+});
+
+// Send individual email
+router.post('/api/notifications/send', requireAdmin, async (req, res) => {
+    const { email, name, subject, message } = req.body;
+    if (!email || !subject || !message) {
+        return res.status(400).json({ error: 'Email, subject, and message are required' });
+    }
+
+    try {
+        const emailService = require('../utils/email');
+        await emailService.sendCustomEmail(email, name || '', subject, message);
+
+        await db.query(
+            'INSERT INTO email_log (recipient_email, recipient_name, subject, message, type) VALUES (?,?,?,?,?)',
+            [email, name || '', subject, message, 'individual']
+        );
+
+        res.json({ success: true, message: 'Email sent successfully' });
+    } catch (err) {
+        console.error('Error sending notification:', err);
+        await db.query(
+            'INSERT INTO email_log (recipient_email, recipient_name, subject, message, type, status) VALUES (?,?,?,?,?,?)',
+            [email, name || '', subject, message, 'individual', 'failed']
+        ).catch(() => { });
+        res.status(500).json({ error: 'Failed to send email' });
+    }
+});
+
+// Send group email
+router.post('/api/notifications/send-group', requireAdmin, async (req, res) => {
+    const { group_id, subject, message } = req.body;
+    if (!group_id || !subject || !message) {
+        return res.status(400).json({ error: 'Group, subject, and message are required' });
+    }
+
+    try {
+        const [members] = await db.query('SELECT * FROM email_group_members WHERE group_id = ?', [group_id]);
+        const [group] = await db.query('SELECT name FROM email_groups WHERE id = ?', [group_id]);
+        if (!members.length) return res.status(400).json({ error: 'Group has no members' });
+
+        const emailService = require('../utils/email');
+        let sent = 0, failed = 0;
+
+        for (const member of members) {
+            try {
+                await emailService.sendCustomEmail(member.email, member.name || '', subject, message);
+                await db.query(
+                    'INSERT INTO email_log (recipient_email, recipient_name, subject, message, type, group_name) VALUES (?,?,?,?,?,?)',
+                    [member.email, member.name || '', subject, message, 'group', group[0]?.name || '']
+                );
+                sent++;
+            } catch (e) {
+                failed++;
+                await db.query(
+                    'INSERT INTO email_log (recipient_email, recipient_name, subject, message, type, group_name, status) VALUES (?,?,?,?,?,?,?)',
+                    [member.email, member.name || '', subject, message, 'group', group[0]?.name || '', 'failed']
+                ).catch(() => { });
+            }
+        }
+
+        res.json({ success: true, message: `Sent to ${sent}/${sent + failed} members` });
+    } catch (err) {
+        console.error('Error sending group email:', err);
+        res.status(500).json({ error: 'Failed to send group email' });
+    }
+});
+
+// Create email group
+router.post('/api/notifications/groups', requireAdmin, async (req, res) => {
+    const { name, description } = req.body;
+    if (!name) return res.status(400).json({ error: 'Group name is required' });
+
+    try {
+        const [result] = await db.query('INSERT INTO email_groups (name, description) VALUES (?,?)', [name, description || '']);
+        res.json({ success: true, id: result.insertId, message: 'Group created' });
+    } catch (err) {
+        console.error('Error creating group:', err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+// Get group members
+router.get('/api/notifications/groups/:id/members', requireAdmin, async (req, res) => {
+    try {
+        const [members] = await db.query('SELECT * FROM email_group_members WHERE group_id = ? ORDER BY added_at DESC', [req.params.id]);
+        res.json(members);
+    } catch (err) {
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+// Middleware to ensure unique emails in a batch request
+const ensureUniqueEmails = (req, res, next) => {
+    let { members } = req.body;
+
+    // Support legacy single add mode
+    if (!members && req.body.email) {
+        members = [{ email: req.body.email, name: req.body.name }];
+    }
+
+    if (!members || !Array.isArray(members)) {
+        return res.status(400).json({ error: 'Invalid members payload' });
+    }
+
+    // Deduplicate incoming list by email
+    const uniqueMap = new Map();
+    members.forEach(m => {
+        if (m.email) {
+            const lowerEmail = m.email.toLowerCase().trim();
+            if (!uniqueMap.has(lowerEmail)) {
+                uniqueMap.set(lowerEmail, { email: lowerEmail, name: m.name || '' });
+            }
+        }
+    });
+
+    req.uniqueMembers = Array.from(uniqueMap.values());
+    next();
+};
+
+// Add members to group (Bulk)
+router.post('/api/notifications/groups/:id/members', requireAdmin, ensureUniqueEmails, async (req, res) => {
+    const groupId = req.params.id;
+    const members = req.uniqueMembers;
+
+    if (members.length === 0) return res.status(400).json({ error: 'No valid emails provided' });
+
+    try {
+        // Fetch existing emails in the group
+        const [existingRows] = await db.query('SELECT email FROM email_group_members WHERE group_id = ?', [groupId]);
+        const existingEmails = new Set(existingRows.map(r => r.email.toLowerCase()));
+
+        // Filter out those already in the group
+        const toInsert = members.filter(m => !existingEmails.has(m.email));
+
+        if (toInsert.length === 0) {
+            return res.json({ success: true, message: 'All provided members are already in the group' });
+        }
+
+        // Bulk insert
+        const values = toInsert.map(m => [groupId, m.email, m.name]);
+        const placeholders = toInsert.map(() => '(?, ?, ?)').join(', ');
+        const flatValues = values.reduce((acc, val) => acc.concat(val), []);
+
+        await db.query(`INSERT INTO email_group_members (group_id, email, name) VALUES ${placeholders}`, flatValues);
+
+        res.json({ success: true, message: `Added ${toInsert.length} member(s)` });
+    } catch (err) {
+        console.error('Error adding group members:', err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+// Remove member from group
+router.post('/api/notifications/groups/:id/members/remove', requireAdmin, async (req, res) => {
+    const { member_id } = req.body;
+    try {
+        await db.query('DELETE FROM email_group_members WHERE id = ? AND group_id = ?', [member_id, req.params.id]);
+        res.json({ success: true, message: 'Member removed' });
+    } catch (err) {
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+// Delete email group
+router.post('/api/notifications/groups/:id/delete', requireAdmin, async (req, res) => {
+    try {
+        await db.query('DELETE FROM email_groups WHERE id = ?', [req.params.id]);
+        res.json({ success: true, message: 'Group deleted' });
+    } catch (err) {
+        console.error('Error deleting group:', err);
+        res.status(500).json({ error: 'Database error' });
     }
 });
 

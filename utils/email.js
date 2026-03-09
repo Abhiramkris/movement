@@ -160,6 +160,7 @@ const sendStatusUpdate = async (patientEmail, patientName, date, slot, status) =
     const isApproved = status === 'approved';
     const title = isApproved ? 'Appointment Confirmed!' : 'Appointment Cancelled';
     const statusColor = isApproved ? '#16a34a' : '#dc2626';
+    const dateStr = date instanceof Date ? date.toISOString().split('T')[0] : (typeof date === 'string' ? date.split('T')[0] : String(date));
 
     let content = `<p>Dear ${patientName},</p>`;
 
@@ -167,14 +168,14 @@ const sendStatusUpdate = async (patientEmail, patientName, date, slot, status) =
         content += `
             <p>Great news! Your physiotherapy appointment has been officially confirmed.</p>
             <div style="background-color: #f0fdf4; border-left: 4px solid #16a34a; padding: 15px; margin: 20px 0;">
-                <p style="margin: 0; font-size: 18px;"><strong>${date.split('T')[0]}</strong> at <strong>${slot}</strong></p>
+                <p style="margin: 0; font-size: 18px;"><strong>${dateStr}</strong> at <strong>${slot}</strong></p>
             </div>
             <p>Our physiotherapist will arrive at your provided location at the scheduled time. If you need to make any changes, please contact us at least 24 hours in advance.</p>
         `;
     } else {
         content += `
             <p>We regret to inform you that we are unable to fulfill your appointment request for:</p>
-            <p style="color: ${statusColor}; font-weight: bold;">${date.split('T')[0]} at ${slot}</p>
+            <p style="color: ${statusColor}; font-weight: bold;">${dateStr} at ${slot}</p>
             <p>Please contact us directly at our phone number or reply to this email to reschedule, and we will do our best to accommodate you.</p>
         `;
     }
@@ -192,8 +193,72 @@ const sendStatusUpdate = async (patientEmail, patientName, date, slot, status) =
     }
 };
 
+/**
+ * Send Reply to Call Request Enquiry
+ */
+const sendCallRequestReply = async (patientEmail, patientName, replyMessage) => {
+    if (!resend) return console.warn('Email skipped: No RESEND_API_KEY');
+
+    const content = `
+        <p>Dear ${patientName},</p>
+        <p>Thank you for reaching out to Movement Science. We have received your enquiry and our team would like to share the following with you:</p>
+        
+        <div style="background-color: #eff6ff; border-left: 4px solid #2563eb; padding: 15px; margin: 20px 0; border-radius: 0 6px 6px 0;">
+            <p style="margin: 0; color: #1e40af; white-space: pre-wrap;">${replyMessage}</p>
+        </div>
+        
+        <p>If you would like to proceed with booking an appointment, you can do so directly on our website or reply to this email.</p>
+        <p>Best regards,<br>The Movement Science Team</p>
+    `;
+
+    try {
+        await resend.emails.send({
+            from: FROM_EMAIL,
+            to: patientEmail,
+            subject: 'Re: Your Enquiry - Movement Science',
+            html: generateEmailHTML('Response to Your Enquiry', content, { text: 'Book Appointment', url: (process.env.URL_ORIGIN || 'http://localhost:3200') + '/checkslot' })
+        });
+        console.log(`Call request reply sent to ${patientEmail}`);
+    } catch (error) {
+        console.error('Failed to send call request reply:', error);
+        throw error;
+    }
+};
+
+// Send Custom Email (for Notification Center)
+const sendCustomEmail = async (recipientEmail, recipientName, subject, messageBody) => {
+    if (!resend) {
+        console.log('Email service not configured — skipping custom email');
+        return;
+    }
+
+    const content = `
+        <p style="font-size:16px;line-height:1.6;color:#333;">Dear ${recipientName || 'Valued Patient'},</p>
+        <p style="font-size:16px;line-height:1.6;color:#333;">${messageBody.replace(/\n/g, '<br>')}</p>
+        <p style="font-size:16px;line-height:1.6;color:#333;margin-top:24px;">Warm regards,<br><strong>Movement Science Team</strong></p>
+    `;
+
+    try {
+        await resend.emails.send({
+            from: FROM_EMAIL,
+            to: recipientEmail,
+            subject: subject,
+            html: generateEmailHTML(subject, content, {
+                url: process.env.URL_ORIGIN || 'https://movement-science.com',
+                text: 'Visit Our Website'
+            })
+        });
+        console.log(`Custom email sent to ${recipientEmail}: ${subject}`);
+    } catch (error) {
+        console.error('Failed to send custom email:', error);
+        throw error;
+    }
+};
+
 module.exports = {
     sendBookingConfirmation,
     sendAdminBookingAlert,
-    sendStatusUpdate
+    sendStatusUpdate,
+    sendCallRequestReply,
+    sendCustomEmail
 };

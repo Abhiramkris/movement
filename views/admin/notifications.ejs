@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Center | Movement Science</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f1f5f9;
+        }
+
+        .tab-btn.active {
+            background: rgba(59, 130, 246, 0.1);
+            color: #2563eb;
+            border-color: #3b82f6;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .modal-fade {
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body class="text-gray-800 antialiased h-screen flex flex-col md:flex-row overflow-hidden">
+
+    <!-- Mobile Top Navigation -->
+    <div class="md:hidden bg-[#011d3b] text-white p-4 flex justify-between items-center shadow-md z-40">
+        <div class="flex items-center gap-3">
+            <i class="fas fa-bell text-xl text-blue-400"></i>
+            <span class="font-bold text-lg">Notifications</span>
+        </div>
+        <button id="mobile-menu-btn" class="p-2 bg-white/10 rounded-lg hover:bg-white/20 transition">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
+    </div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar"
+        class="bg-[#011d3b] text-white w-64 flex-shrink-0 fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition duration-200 ease-in-out z-50 flex flex-col shadow-2xl md:shadow-none">
+        <div class="p-5 border-b border-white/10 hidden md:block">
+            <h1 class="text-xl font-bold tracking-tight">Movement Science</h1>
+            <p class="text-xs text-gray-400 mt-1">Admin Panel</p>
+        </div>
+        <div class="md:hidden flex justify-end p-4 border-b border-white/10">
+            <button id="close-sidebar-btn" class="p-2 text-gray-300 hover:text-white transition">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+            <a href="/admin/dashboard"
+                class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-white/10 hover:text-white font-medium transition">
+                <i class="fas fa-calendar-day w-5 text-center"></i> Dashboard
+            </a>
+            <a href="/admin/call"
+                class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-white/10 hover:text-white font-medium transition">
+                <i class="fas fa-phone-alt w-5 text-center"></i> Call Requests
+            </a>
+            <a href="/admin/patients"
+                class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-white/10 hover:text-white font-medium transition">
+                <i class="fas fa-user-injured w-5 text-center"></i> Patient Center
+            </a>
+            <a href="/admin/notifications"
+                class="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-600 text-white font-medium transition shadow-sm">
+                <i class="fas fa-bell w-5 text-center"></i> Notification Center
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-white/10">
+            <a href="/admin/logout"
+                class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white rounded-xl font-medium transition duration-200">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-screen overflow-hidden bg-gray-50 relative z-0">
+        <!-- Top Bar -->
+        <header
+            class="bg-white shadow-sm border-b border-gray-100 p-4 md:px-8 flex justify-between items-center z-10 shrink-0">
+            <div>
+                <h2 class="text-xl md:text-2xl font-bold text-gray-800">Notification Center</h2>
+                <p class="text-sm text-gray-500 mt-0.5">Send emails to patients and manage groups</p>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-4 md:p-8">
+            <!-- Tab Navigation -->
+            <div class="flex gap-2 mb-6 flex-wrap">
+                <button
+                    class="tab-btn active px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium transition"
+                    data-tab="compose">
+                    <i class="fas fa-pen mr-1"></i> Compose
+                </button>
+                <button
+                    class="tab-btn px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-500 transition"
+                    data-tab="groups">
+                    <i class="fas fa-users mr-1"></i> Groups (<%= groups.length %>)
+                </button>
+                <button
+                    class="tab-btn px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-500 transition"
+                    data-tab="history">
+                    <i class="fas fa-history mr-1"></i> History (<%= log.length %>)
+                </button>
+            </div>
+
+            <!-- TAB: Compose -->
+            <div id="tab-compose" class="tab-content active">
+                <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                    <!-- Compose Form -->
+                    <div class="lg:col-span-3 bg-white rounded-2xl border border-gray-100 p-6">
+                        <h3 class="font-bold text-gray-800 mb-4">Send Email</h3>
+                        <form id="compose-form" class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-500 mb-1.5">Recipient Email
+                                        *</label>
+                                    <input type="email" id="compose-email" required placeholder="patient@email.com"
+                                        class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-500 mb-1.5">Recipient
+                                        Name</label>
+                                    <input type="text" id="compose-name" placeholder="Patient name"
+                                        class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 mb-1.5">Subject *</label>
+                                <input type="text" id="compose-subject" required placeholder="Email subject"
+                                    class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-500 mb-1.5">Message *</label>
+                                <textarea id="compose-message" required rows="6" placeholder="Write your message..."
+                                    class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 resize-none"></textarea>
+                            </div>
+                            <button type="submit" id="send-btn"
+                                class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold text-sm transition flex items-center justify-center gap-2">
+                                <i class="fas fa-paper-plane"></i> Send Email
+                            </button>
+                        </form>
+
+                        <!-- Group Email -->
+                        <div class="mt-8 pt-6 border-t border-gray-100">
+                            <h3 class="font-bold text-gray-800 mb-4">Send to Group</h3>
+                            <form id="group-send-form" class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-500 mb-1.5">Select Group
+                                        *</label>
+                                    <select id="group-select" required
+                                        class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400">
+                                        <option value="">Choose a group...</option>
+                                        <% groups.forEach(g=> { %>
+                                            <option value="<%= g.id %>">
+                                                <%= g.name %> (<%= g.member_count %> members)
+                                            </option>
+                                            <% }); %>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-500 mb-1.5">Subject *</label>
+                                    <input type="text" id="group-subject" required placeholder="Email subject"
+                                        class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-500 mb-1.5">Message *</label>
+                                    <textarea id="group-message" required rows="4" placeholder="Write your message..."
+                                        class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 resize-none"></textarea>
+                                </div>
+                                <button type="submit" id="group-send-btn"
+                                    class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl font-semibold text-sm transition flex items-center justify-center gap-2">
+                                    <i class="fas fa-users"></i> Send to Group
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Quick Select Panel -->
+                    <div class="lg:col-span-2 bg-white rounded-2xl border border-gray-100 p-5">
+                        <h4 class="font-bold text-gray-700 mb-3 text-sm">Quick Select Patient</h4>
+                        <input type="text" id="patient-search" placeholder="Search patients..."
+                            class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-blue-100">
+                        <div id="patient-list" class="space-y-1.5 max-h-[400px] overflow-y-auto">
+                            <% patients.forEach(p=> { %>
+                                <button type="button"
+                                    class="patient-item w-full text-left px-3 py-2 rounded-lg hover:bg-blue-50 transition text-sm flex items-center gap-2"
+                                    data-email="<%= p.email %>" data-name="<%= p.name %>">
+                                    <div
+                                        class="w-7 h-7 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                                        <%= p.name ? p.name.charAt(0).toUpperCase() : '?' %>
+                                    </div>
+                                    <div class="overflow-hidden">
+                                        <div class="font-medium text-gray-700 truncate">
+                                            <%= p.name || 'Unknown' %>
+                                        </div>
+                                        <div class="text-xs text-gray-400 truncate">
+                                            <%= p.email %>
+                                        </div>
+                                    </div>
+                                </button>
+                                <% }); %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Groups -->
+            <div id="tab-groups" class="tab-content">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Create Group -->
+                    <div class="bg-white rounded-2xl border border-gray-100 p-6">
+                        <h3 class="font-bold text-gray-800 mb-4">Create New Group</h3>
+                        <form id="create-group-form" class="space-y-3">
+                            <input type="text" id="group-name" required placeholder="Group name (e.g., VIP Patients)"
+                                class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400">
+                            <textarea id="group-desc" rows="2" placeholder="Description (optional)"
+                                class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 resize-none"></textarea>
+                            <button type="submit"
+                                class="bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition">
+                                <i class="fas fa-plus mr-1"></i> Create Group
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Existing Groups -->
+                    <div class="bg-white rounded-2xl border border-gray-100 p-6">
+                        <h3 class="font-bold text-gray-800 mb-4">Existing Groups</h3>
+                        <div id="groups-list" class="space-y-3">
+                            <% if (groups.length===0) { %>
+                                <div class="text-center py-8 text-gray-400">
+                                    <i class="fas fa-folder-open text-3xl mb-2"></i>
+                                    <p class="text-sm">No groups yet. Create one to get started.</p>
+                                </div>
+                                <% } else { groups.forEach(g=> { %>
+                                    <div class="border border-gray-100 rounded-xl p-4 hover:border-blue-200 transition">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <div>
+                                                <h4 class="font-semibold text-gray-800 text-sm">
+                                                    <%= g.name %>
+                                                </h4>
+                                                <p class="text-xs text-gray-400">
+                                                    <%= g.member_count %> members
+                                                </p>
+                                            </div>
+                                            <div class="flex gap-1.5">
+                                                <button onclick="manageGroup(<%= g.id %>, '<%= g.name %>')"
+                                                    class="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition text-xs">
+                                                    <i class="fas fa-users-cog"></i>
+                                                </button>
+                                                <button onclick="deleteGroup(<%= g.id %>)"
+                                                    class="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition text-xs">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <% if (g.description) { %>
+                                            <p class="text-xs text-gray-500">
+                                                <%= g.description %>
+                                            </p>
+                                            <% } %>
+                                    </div>
+                                    <% }); } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: History -->
+            <div id="tab-history" class="tab-content">
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-gray-50 text-xs font-semibold text-gray-500 uppercase">
+                                <tr>
+                                    <th class="px-4 py-3 text-left">Recipient</th>
+                                    <th class="px-4 py-3 text-left">Subject</th>
+                                    <th class="px-4 py-3 text-left">Type</th>
+                                    <th class="px-4 py-3 text-left">Sent</th>
+                                    <th class="px-4 py-3 text-left">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-50">
+                                <% if (log.length===0) { %>
+                                    <tr>
+                                        <td colspan="5" class="px-4 py-12 text-center text-gray-400">
+                                            <i class="fas fa-inbox text-3xl mb-2"></i>
+                                            <p>No emails sent yet</p>
+                                        </td>
+                                    </tr>
+                                    <% } else { log.forEach(l=> { %>
+                                        <tr class="hover:bg-gray-50 transition">
+                                            <td class="px-4 py-3">
+                                                <div class="font-medium text-gray-800">
+                                                    <%= l.recipient_name || l.recipient_email %>
+                                                </div>
+                                                <div class="text-xs text-gray-400">
+                                                    <%= l.recipient_email %>
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-3 text-gray-700 max-w-[200px] truncate">
+                                                <%= l.subject %>
+                                            </td>
+                                            <td class="px-4 py-3">
+                                                <span class="px-2 py-0.5 rounded text-xs font-medium
+                      <%= l.type === 'group' ? 'bg-purple-50 text-purple-600' : 'bg-blue-50 text-blue-600' %>">
+                                                    <%= l.type==='group' ? l.group_name || 'Group' : 'Individual' %>
+                                                </span>
+                                            </td>
+                                            <td class="px-4 py-3 text-gray-500 text-xs">
+                                                <%= new Date(l.sent_at).toLocaleDateString('en-GB', { day:'numeric',
+                                                    month:'short', hour:'2-digit', minute:'2-digit' }) %>
+                                            </td>
+                                            <td class="px-4 py-3">
+                                                <span class="px-2 py-0.5 rounded text-xs font-medium
+                      <%= l.status === 'sent' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600' %>">
+                                                    <%= l.status %>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <% }); } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Sidebar Overlay (mobile) -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-40 hidden md:hidden"></div>
+
+    <!-- Group Members Modal -->
+    <div id="members-modal"
+        class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+        <div
+            class="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[80vh] flex flex-col modal-fade overflow-hidden">
+            <div class="p-5 border-b border-gray-100 flex items-center justify-between shrink-0">
+                <h3 class="text-lg font-bold text-gray-800" id="members-modal-title">Group Members</h3>
+                <button onclick="closeMembersModal()"
+                    class="text-gray-400 hover:bg-gray-200 p-2 rounded-full transition">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-5 border-b border-gray-100">
+                <div class="flex gap-2">
+                    <input type="email" id="add-member-email" placeholder="Email"
+                        class="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-400">
+                    <input type="text" id="add-member-name" placeholder="Name"
+                        class="w-32 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-400">
+                    <button onclick="addMember()"
+                        class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+                <!-- Quick add from patients (Checkboxes) -->
+                <div class="mt-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="text-sm font-semibold text-gray-700">Quick Add Patients</label>
+                        <div class="flex gap-2">
+                            <button onclick="selectAllPatients()"
+                                class="text-xs text-blue-600 hover:text-blue-800 transition font-medium">Select
+                                All</button>
+                            <span class="text-gray-300">|</span>
+                            <button onclick="deselectAllPatients()"
+                                class="text-xs text-gray-500 hover:text-red-600 transition font-medium">Deselect
+                                All</button>
+                        </div>
+                    </div>
+                    <div class="border border-gray-200 rounded-lg max-h-48 overflow-y-auto p-2 bg-gray-50 space-y-1">
+                        <% patients.forEach((p, i)=> { if (p.email) { %>
+                            <label
+                                class="flex items-center gap-3 p-2 hover:bg-white rounded-md cursor-pointer transition">
+                                <input type="checkbox" value="<%= p.email %>|<%= p.name %>"
+                                    class="patient-checkbox w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
+                                <div class="flex-1 min-w-0">
+                                    <div class="text-sm font-medium text-gray-800 truncate">
+                                        <%= p.name || 'Unknown' %>
+                                    </div>
+                                    <div class="text-xs text-gray-400 truncate">
+                                        <%= p.email %>
+                                    </div>
+                                </div>
+                            </label>
+                            <% }}); %>
+                    </div>
+                    <div class="mt-3 flex justify-end">
+                        <button onclick="addSelectedMembers()"
+                            class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition w-full shadow-sm flex items-center justify-center gap-2">
+                            <i class="fas fa-users"></i> Add Selected Patients
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-1 overflow-y-auto p-5" id="members-list">
+                <div class="text-center py-6 text-gray-400"><i class="fas fa-spinner fa-spin"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile sidebar
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        });
+        document.getElementById('close-sidebar-btn')?.addEventListener('click', () => {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        });
+        overlay?.addEventListener('click', () => {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        });
+
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+            });
+        });
+
+        // Patient quick select
+        document.querySelectorAll('.patient-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.getElementById('compose-email').value = item.dataset.email;
+                document.getElementById('compose-name').value = item.dataset.name;
+                document.getElementById('compose-email').focus();
+            });
+        });
+
+        // Patient search filter
+        document.getElementById('patient-search')?.addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase();
+            document.querySelectorAll('.patient-item').forEach(item => {
+                const text = (item.dataset.name + item.dataset.email).toLowerCase();
+                item.style.display = text.includes(q) ? '' : 'none';
+            });
+        });
+
+        // Pre-fill from URL params (from Patient Center)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('email')) {
+            document.getElementById('compose-email').value = urlParams.get('email');
+            document.getElementById('compose-name').value = urlParams.get('name') || '';
+        }
+
+        // Send individual email
+        document.getElementById('compose-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('send-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+            try {
+                const res = await fetch('/admin/api/notifications/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: document.getElementById('compose-email').value,
+                        name: document.getElementById('compose-name').value,
+                        subject: document.getElementById('compose-subject').value,
+                        message: document.getElementById('compose-message').value
+                    })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    Swal.fire({ icon: 'success', title: 'Sent!', text: data.message, timer: 2000, showConfirmButton: false });
+                    document.getElementById('compose-form').reset();
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Failed', text: data.error });
+                }
+            } catch (err) {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Network error' });
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Email';
+            }
+        });
+
+        // Send group email
+        document.getElementById('group-send-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('group-send-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+            try {
+                const res = await fetch('/admin/api/notifications/send-group', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        group_id: document.getElementById('group-select').value,
+                        subject: document.getElementById('group-subject').value,
+                        message: document.getElementById('group-message').value
+                    })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    Swal.fire({ icon: 'success', title: 'Sent!', text: data.message, timer: 2500, showConfirmButton: false });
+                    document.getElementById('group-send-form').reset();
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Failed', text: data.error });
+                }
+            } catch (err) {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Network error' });
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-users"></i> Send to Group';
+            }
+        });
+
+        // Create group
+        document.getElementById('create-group-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                const res = await fetch('/admin/api/notifications/groups', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: document.getElementById('group-name').value,
+                        description: document.getElementById('group-desc').value
+                    })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    Swal.fire({ icon: 'success', title: 'Created!', timer: 1500, showConfirmButton: false });
+                    setTimeout(() => location.reload(), 1600);
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Error', text: data.error });
+                }
+            } catch (err) {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Network error' });
+            }
+        });
+
+        // Delete group
+        async function deleteGroup(id) {
+            const result = await Swal.fire({ title: 'Delete Group?', text: 'This will remove all members too.', icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444' });
+            if (!result.isConfirmed) return;
+            try {
+                await fetch(`/admin/api/notifications/groups/${id}/delete`, { method: 'POST' });
+                location.reload();
+            } catch (err) {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to delete' });
+            }
+        }
+
+        // Manage group members
+        let currentGroupId = null;
+        async function manageGroup(id, name) {
+            currentGroupId = id;
+            document.getElementById('members-modal-title').textContent = `${name} — Members`;
+            document.getElementById('members-modal').classList.remove('hidden');
+            document.getElementById('members-modal').classList.add('flex');
+            await loadMembers(id);
+        }
+
+        function closeMembersModal() {
+            document.getElementById('members-modal').classList.add('hidden');
+            document.getElementById('members-modal').classList.remove('flex');
+            currentGroupId = null;
+        }
+
+        async function loadMembers(id) {
+            const list = document.getElementById('members-list');
+            list.innerHTML = '<div class="text-center py-6 text-gray-400"><i class="fas fa-spinner fa-spin"></i></div>';
+            try {
+                const res = await fetch(`/admin/api/notifications/groups/${id}/members`);
+                const members = await res.json();
+                if (!members.length) {
+                    list.innerHTML = '<div class="text-center py-6 text-gray-400"><p class="text-sm">No members yet</p></div>';
+                    return;
+                }
+                list.innerHTML = members.map(m => `
+          <div class="flex items-center justify-between py-2 border-b border-gray-50">
+            <div>
+              <div class="font-medium text-sm text-gray-800">${m.name || m.email}</div>
+              <div class="text-xs text-gray-400">${m.email}</div>
+            </div>
+            <button onclick="removeMember(${m.id})" class="text-red-400 hover:text-red-600 p-1.5 rounded transition text-xs">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        `).join('');
+            } catch (err) {
+                list.innerHTML = '<div class="text-center py-6 text-red-400"><p>Error loading members</p></div>';
+            }
+        }
+
+        async function addMember() {
+            const email = document.getElementById('add-member-email').value;
+            const name = document.getElementById('add-member-name').value;
+            if (!email) return;
+            try {
+                const res = await fetch(`/admin/api/notifications/groups/${currentGroupId}/members`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, name })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('add-member-email').value = '';
+                    document.getElementById('add-member-name').value = '';
+                    await loadMembers(currentGroupId);
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Error', text: data.error, timer: 2000 });
+                }
+            } catch (err) {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to add' });
+            }
+        }
+
+        async function removeMember(memberId) {
+            try {
+                await fetch(`/admin/api/notifications/groups/${currentGroupId}/members/remove`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ member_id: memberId })
+                });
+                await loadMembers(currentGroupId);
+            } catch (err) {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to remove' });
+            }
+        }
+
+        function selectAllPatients() {
+            document.querySelectorAll('.patient-checkbox').forEach(cb => cb.checked = true);
+        }
+
+        function deselectAllPatients() {
+            document.querySelectorAll('.patient-checkbox').forEach(cb => cb.checked = false);
+        }
+
+        async function addSelectedMembers() {
+            const checkboxes = document.querySelectorAll('.patient-checkbox:checked');
+            if (checkboxes.length === 0) {
+                Swal.fire({ toast: true, position: 'top-end', icon: 'warning', title: 'Please select at least one patient', showConfirmButton: false, timer: 2000 });
+                return;
+            }
+
+            const members = Array.from(checkboxes).map(cb => {
+                const [email, name] = cb.value.split('|');
+                return { email, name: name || '' };
+            });
+
+            try {
+                const res = await fetch(`/admin/api/notifications/groups/${currentGroupId}/members`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ members })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    deselectAllPatients();
+                    Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: data.message, showConfirmButton: false, timer: 2000 });
+                    await loadMembers(currentGroupId);
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Error', text: data.error });
+                }
+            } catch (err) {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to add members' });
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -4,149 +4,529 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin – Call Requests</title>
+  <title>Call Requests | Movement Science Admin</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background-color: #f9f9f9;
+      font-family: 'Poppins', sans-serif;
+      background-color: #f3f4f6;
     }
 
-    h1 {
-      background-color: #010f49;
-      color: #fff;
-      padding: 16px;
-      text-align: center;
-      margin: 0;
+    .hero-gradient {
+      background: linear-gradient(135deg, #011d3b 0%, #023974 100%);
     }
 
-    table {
-      width: 95%;
-      margin: 20px auto;
-      border-collapse: collapse;
-      background-color: #ffffff;
+    ::-webkit-scrollbar {
+      width: 6px;
     }
 
-    th,
-    td {
-      padding: 12px;
-      border-bottom: 1px solid #ddd;
-      text-align: left;
+    ::-webkit-scrollbar-track {
+      background: transparent;
     }
 
-    th {
-      background-color: #f0f0f0;
-      font-weight: bold;
-    }
-
-    tr:nth-child(even) {
-      background-color: #fafafa;
-    }
-
-    .empty {
-      text-align: center;
-      padding: 30px;
-      color: #777;
-    }
-
-    button {
-      background-color: #dc3545;
-      color: #fff;
-      border: none;
-      padding: 8px 14px;
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
       border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
     }
 
-    button:hover {
-      background-color: #b52a37;
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
     }
 
-    /* MOBILE */
-    @media (max-width: 600px) {
+    .modal-fade {
+      animation: fadeIn 0.2s ease-out;
+    }
 
-      table,
-      thead,
-      tbody,
-      th,
-      td,
-      tr {
-        display: block;
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
       }
 
-      thead {
-        display: none;
-      }
-
-      tr {
-        margin-bottom: 15px;
-        border: 1px solid #ddd;
-        padding: 10px;
-        background: #fff;
-      }
-
-      td {
-        padding-left: 50%;
-        position: relative;
-      }
-
-      td::before {
-        position: absolute;
-        left: 10px;
-        top: 12px;
-        font-weight: bold;
-        content: attr(data-label);
-      }
-
-      button {
-        width: 100%;
-        margin-top: 10px;
+      to {
+        opacity: 1;
+        transform: scale(1);
       }
     }
   </style>
 </head>
 
-<body>
+<body class="text-gray-800 antialiased h-screen flex flex-col md:flex-row overflow-hidden">
 
-  <h1>Call Requests</h1>
+  <!-- Mobile Top Navigation -->
+  <div class="md:hidden bg-[#011d3b] text-white p-4 flex justify-between items-center shadow-md z-40">
+    <div class="flex items-center gap-3">
+      <img src="/images/logo.png" alt="Logo" class="h-8 w-auto filter brightness-0 invert">
+      <h1 class="font-bold text-lg tracking-tight">Call Requests</h1>
+    </div>
+    <button id="mobile-menu-btn" class="p-2 bg-white/10 rounded-lg hover:bg-white/20 transition">
+      <i class="fas fa-bars text-xl"></i>
+    </button>
+  </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Phone</th>
-        <th>Name</th>
-        <th>Action</th>
-      </tr>
-    </thead>
+  <!-- Sidebar Navigation -->
+  <aside id="sidebar"
+    class="bg-[#011d3b] text-white w-64 flex-shrink-0 fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition duration-200 ease-in-out z-50 flex flex-col shadow-2xl md:shadow-none">
+    <div class="p-6 flex items-center gap-3 hidden md:flex border-b border-white/10">
+      <img src="/images/logo.png" alt="Logo" class="h-10 w-auto filter brightness-0 invert">
+      <span class="font-bold text-xl tracking-tight leading-tight">Movement<br>Science</span>
+    </div>
 
-    <tbody>
-      <% if (callRequests.length===0) { %>
-        <tr>
-          <td colspan="3" class="empty">No call requests found</td>
-        </tr>
-        <% } %>
+    <div class="md:hidden flex justify-end p-4 border-b border-white/10">
+      <button id="close-sidebar-btn" class="p-2 text-gray-300 hover:text-white transition">
+        <i class="fas fa-times text-xl"></i>
+      </button>
+    </div>
 
-          <% callRequests.forEach(req=> { %>
-            <tr>
-              <td data-label="Phone">
-                <%= req.phone %>
-              </td>
-              <td data-label="Name">
-                <%= req.name || '-' %>
-              </td>
-              <td data-label="Action">
-                <form action="/admin/call/delete/<%= req.id %>" method="POST"
-                  onsubmit="return confirm('Delete this call request?')">
-                  <button type="submit">Delete</button>
-                </form>
-              </td>
-            </tr>
-            <% }) %>
-    </tbody>
-  </table>
+    <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+      <a href="/admin/dashboard"
+        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-white/10 hover:text-white font-medium transition">
+        <i class="fas fa-calendar-day w-5 text-center"></i>
+        Today's Itinerary
+      </a>
+      <a href="/admin/dashboard"
+        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-white/10 hover:text-white font-medium transition">
+        <i class="fas fa-list w-5 text-center"></i>
+        All Appointments
+      </a>
+      <a href="/admin/dashboard"
+        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-white/10 hover:text-white font-medium transition">
+        <i class="fas fa-calendar-alt w-5 text-center"></i>
+        Calendar View
+      </a>
+      <a href="/admin/call"
+        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-600 text-white font-medium transition shadow-sm">
+        <i class="fas fa-phone-alt w-5 text-center"></i>
+        Call Requests
+      </a>
+      <a href="/admin/patients"
+        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-white/10 hover:text-white font-medium transition">
+        <i class="fas fa-user-injured w-5 text-center"></i>
+        Patient Center
+      </a>
+      <a href="/admin/notifications"
+        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-white/10 hover:text-white font-medium transition">
+        <i class="fas fa-bell w-5 text-center"></i>
+        Notification Center
+      </a>
+    </nav>
 
+    <div class="p-4 border-t border-white/10">
+      <a href="/admin/logout"
+        class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white rounded-xl font-medium transition duration-200">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="flex-1 flex flex-col h-screen overflow-hidden bg-gray-50 relative z-0">
+    <!-- Top Bar -->
+    <header
+      class="bg-white shadow-sm border-b border-gray-100 p-4 md:px-8 flex justify-between items-center z-10 shrink-0">
+      <h2 class="text-2xl font-bold text-gray-800">
+        <i class="fas fa-phone-alt text-blue-500 mr-2"></i>Call Requests
+        <span id="total-count" class="text-sm font-normal text-gray-400 ml-2"></span>
+      </h2>
+
+      <div class="flex items-center gap-4">
+        <!-- Search Box -->
+        <div class="relative hidden sm:block">
+          <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+          <input type="text" id="search-input" placeholder="Search name, phone, email..."
+            class="pl-10 pr-4 py-2 bg-gray-100 border-transparent rounded-full text-sm focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition outline-none w-64">
+        </div>
+
+        <!-- Filter Dropdown -->
+        <select id="status-filter"
+          class="text-sm bg-gray-100 border-transparent rounded-lg px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none">
+          <option value="all">All Status</option>
+          <option value="new">🔵 New</option>
+          <option value="contacted">🟡 Contacted</option>
+          <option value="follow_up">🟠 Follow Up</option>
+          <option value="resolved">🟢 Resolved</option>
+        </select>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="flex-1 overflow-y-auto p-4 md:p-8">
+      <div class="max-w-7xl mx-auto">
+        <!-- Stats Bar -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center">
+                <i class="fas fa-envelope text-blue-500"></i>
+              </div>
+              <div>
+                <p class="text-2xl font-bold text-gray-900" id="stat-new">0</p>
+                <p class="text-xs text-gray-500">New</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-yellow-50 rounded-full flex items-center justify-center">
+                <i class="fas fa-phone text-yellow-500"></i>
+              </div>
+              <div>
+                <p class="text-2xl font-bold text-gray-900" id="stat-contacted">0</p>
+                <p class="text-xs text-gray-500">Contacted</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-orange-50 rounded-full flex items-center justify-center">
+                <i class="fas fa-clock text-orange-500"></i>
+              </div>
+              <div>
+                <p class="text-2xl font-bold text-gray-900" id="stat-followup">0</p>
+                <p class="text-xs text-gray-500">Follow Up</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-green-50 rounded-full flex items-center justify-center">
+                <i class="fas fa-check-circle text-green-500"></i>
+              </div>
+              <div>
+                <p class="text-2xl font-bold text-gray-900" id="stat-resolved">0</p>
+                <p class="text-xs text-gray-500">Resolved</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Request Cards Container -->
+        <div id="requests-container" class="space-y-4">
+          <!-- Injected by JS -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="hidden">
+          <div class="bg-white rounded-2xl p-10 text-center border border-gray-100 shadow-sm mt-4">
+            <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-inbox text-3xl text-blue-400"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">No Call Requests</h3>
+            <p class="text-gray-500">There are no call requests matching your current filters.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Overlay for mobile sidebar -->
+  <div id="sidebar-overlay" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-40 hidden md:hidden"></div>
+
+  <!-- Reply Modal -->
+  <div id="reply-modal"
+    class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg modal-fade overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+        <div>
+          <h3 class="text-lg font-bold text-gray-900">Reply via Email</h3>
+          <p id="reply-to-info" class="text-gray-500 text-sm"></p>
+        </div>
+        <button id="close-reply-modal"
+          class="text-gray-400 hover:bg-gray-200 hover:text-gray-600 p-2 rounded-full transition">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      <div class="p-6">
+        <input type="hidden" id="reply-request-id">
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-1">Original Message</label>
+          <div id="reply-original-msg"
+            class="bg-gray-50 rounded-xl p-3 text-sm text-gray-600 border border-gray-100 italic max-h-24 overflow-y-auto">
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-1">Your Reply</label>
+          <textarea id="reply-message" rows="4"
+            class="w-full border border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 bg-gray-50 resize-none p-3"
+            placeholder="Type your reply to the patient..."></textarea>
+        </div>
+        <div class="flex justify-end gap-3">
+          <button id="cancel-reply-btn"
+            class="px-5 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition">Cancel</button>
+          <button id="send-reply-btn"
+            class="px-5 py-2.5 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition shadow-lg shadow-blue-200 flex items-center gap-2">
+            <i class="fas fa-paper-plane"></i> Send Reply
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Logic -->
+  <script>
+    const allRequests = <% - JSON.stringify(callRequests) %>;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      setupSidebar();
+      renderRequests();
+      updateStats();
+
+      document.getElementById('search-input').addEventListener('input', renderRequests);
+      document.getElementById('status-filter').addEventListener('change', renderRequests);
+
+      // Reply modal
+      document.getElementById('close-reply-modal').addEventListener('click', closeReplyModal);
+      document.getElementById('cancel-reply-btn').addEventListener('click', closeReplyModal);
+      document.getElementById('send-reply-btn').addEventListener('click', handleSendReply);
+    });
+
+    function getFilteredRequests() {
+      const query = (document.getElementById('search-input').value || '').toLowerCase();
+      const statusFilter = document.getElementById('status-filter').value;
+
+      return allRequests.filter(req => {
+        const matchesSearch = !query ||
+          (req.name || '').toLowerCase().includes(query) ||
+          (req.phone || '').includes(query) ||
+          (req.email || '').toLowerCase().includes(query);
+        const matchesStatus = statusFilter === 'all' || req.status === statusFilter;
+        return matchesSearch && matchesStatus;
+      });
+    }
+
+    function updateStats() {
+      const counts = { new: 0, contacted: 0, follow_up: 0, resolved: 0 };
+      allRequests.forEach(r => { if (counts[r.status] !== undefined) counts[r.status]++; });
+      document.getElementById('stat-new').textContent = counts.new;
+      document.getElementById('stat-contacted').textContent = counts.contacted;
+      document.getElementById('stat-followup').textContent = counts.follow_up;
+      document.getElementById('stat-resolved').textContent = counts.resolved;
+      document.getElementById('total-count').textContent = `(${allRequests.length} total)`;
+    }
+
+    function getStatusBadge(status) {
+      const map = {
+        'new': { color: 'bg-blue-100 text-blue-700 border-blue-200', icon: 'fa-circle', label: 'New' },
+        'contacted': { color: 'bg-yellow-100 text-yellow-700 border-yellow-200', icon: 'fa-phone', label: 'Contacted' },
+        'follow_up': { color: 'bg-orange-100 text-orange-700 border-orange-200', icon: 'fa-clock', label: 'Follow Up' },
+        'resolved': { color: 'bg-green-100 text-green-700 border-green-200', icon: 'fa-check-circle', label: 'Resolved' }
+      };
+      const s = map[status] || map['new'];
+      return `<span class="px-3 py-1 text-xs font-semibold rounded-full border ${s.color} uppercase tracking-wide inline-flex items-center gap-1"><i class="fas ${s.icon} text-[10px]"></i> ${s.label}</span>`;
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return 'N/A';
+      try {
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + ' ' +
+          d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+      } catch { return 'N/A'; }
+    }
+
+    function renderRequests() {
+      const container = document.getElementById('requests-container');
+      const emptyState = document.getElementById('empty-state');
+      const filtered = getFilteredRequests();
+
+      if (filtered.length === 0) {
+        container.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+      emptyState.classList.add('hidden');
+
+      container.innerHTML = filtered.map(req => {
+        const phone = req.phone || '';
+        const cleanPhone = phone.replace(/[^0-9]/g, '');
+        const waLink = `https://wa.me/${cleanPhone}?text=Hi%20${encodeURIComponent(req.name || '')},%20this%20is%20Movement%20Science%20Physiotherapy.%20We%20received%20your%20enquiry%20and%20wanted%20to%20follow%20up...`;
+
+        return `
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition" data-id="${req.id}">
+          <div class="flex flex-col lg:flex-row gap-4 justify-between">
+            <!-- Info -->
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-3 mb-2 flex-wrap">
+                <h3 class="text-lg font-bold text-gray-900">${req.name || 'Unknown'}</h3>
+                ${getStatusBadge(req.status || 'new')}
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-600 mt-3">
+                <p class="flex items-center gap-2"><i class="fas fa-phone-alt text-gray-400 w-4"></i> <a href="tel:${phone}" class="hover:text-blue-600">${phone || 'N/A'}</a></p>
+                <p class="flex items-center gap-2"><i class="fas fa-envelope text-gray-400 w-4"></i> <span class="truncate">${req.email || 'No email'}</span></p>
+                <p class="flex items-center gap-2 sm:col-span-2"><i class="fas fa-clock text-gray-400 w-4"></i> ${formatDate(req.created_at)}</p>
+              </div>
+              ${req.message ? `<div class="mt-3 bg-gray-50 rounded-xl p-3 text-sm text-gray-600 border border-gray-100"><i class="fas fa-comment-dots text-gray-400 mr-1"></i> ${req.message}</div>` : ''}
+            </div>
+
+            <!-- Actions -->
+            <div class="flex flex-wrap lg:flex-col gap-2 shrink-0 w-full lg:w-auto mt-3 lg:mt-0 pt-3 lg:pt-0 border-t lg:border-none border-gray-100">
+              ${req.email ? `<button onclick="openReplyModal(${req.id}, '${(req.name || '').replace(/'/g, "\\'")}', '${(req.email || '').replace(/'/g, "\\'")}', '${(req.message || '').replace(/'/g, "\\'").replace(/\n/g, ' ')}')"
+                class="flex-1 lg:flex-none flex justify-center items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2.5 rounded-xl hover:bg-blue-100 transition text-sm font-medium border border-blue-100">
+                <i class="fas fa-reply"></i> Reply Email
+              </button>` : ''}
+              <a href="${waLink}" target="_blank"
+                class="flex-1 lg:flex-none flex justify-center items-center gap-2 bg-green-50 text-green-700 px-4 py-2.5 rounded-xl hover:bg-green-100 transition text-sm font-medium border border-green-100">
+                <i class="fab fa-whatsapp text-lg"></i> WhatsApp
+              </a>
+              <a href="tel:${phone}"
+                class="flex-1 lg:flex-none flex justify-center items-center gap-2 bg-gray-100 text-gray-700 px-4 py-2.5 rounded-xl hover:bg-gray-200 transition text-sm font-medium">
+                <i class="fas fa-phone"></i> Call
+              </a>
+
+              <!-- Status Dropdown -->
+              <select onchange="updateStatus(${req.id}, this.value)" class="text-sm bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 focus:ring-blue-500 outline-none">
+                <option value="new" ${req.status === 'new' ? 'selected' : ''}>🔵 New</option>
+                <option value="contacted" ${req.status === 'contacted' ? 'selected' : ''}>🟡 Contacted</option>
+                <option value="follow_up" ${req.status === 'follow_up' ? 'selected' : ''}>🟠 Follow Up</option>
+                <option value="resolved" ${req.status === 'resolved' ? 'selected' : ''}>🟢 Resolved</option>
+              </select>
+
+              <button onclick="deleteRequest(${req.id})"
+                class="flex-1 lg:flex-none flex justify-center items-center gap-2 bg-red-50 text-red-600 px-4 py-2.5 rounded-xl hover:bg-red-100 transition text-sm font-medium border border-red-100">
+                <i class="fas fa-trash-alt"></i> Delete
+              </button>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    // --- Actions ---
+    async function updateStatus(id, newStatus) {
+      try {
+        const res = await fetch(`/admin/call/status/${id}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ status: newStatus })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+
+        // Update local data
+        const req = allRequests.find(r => r.id === id);
+        if (req) req.status = newStatus;
+        updateStats();
+
+        Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: data.message, showConfirmButton: false, timer: 1500 });
+      } catch (err) {
+        Swal.fire('Error', err.message, 'error');
+      }
+    }
+
+    async function deleteRequest(id) {
+      const result = await Swal.fire({
+        title: 'Delete Request?',
+        text: 'This action cannot be undone.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, Delete'
+      });
+
+      if (!result.isConfirmed) return;
+
+      try {
+        const res = await fetch(`/admin/call/delete/${id}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+
+        // Remove from local data
+        const idx = allRequests.findIndex(r => r.id === id);
+        if (idx !== -1) allRequests.splice(idx, 1);
+        renderRequests();
+        updateStats();
+
+        Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Deleted!', showConfirmButton: false, timer: 1500 });
+      } catch (err) {
+        Swal.fire('Error', err.message, 'error');
+      }
+    }
+
+    // --- Reply Modal ---
+    function openReplyModal(id, name, email, originalMsg) {
+      document.getElementById('reply-request-id').value = id;
+      document.getElementById('reply-to-info').textContent = `To: ${name} (${email})`;
+      document.getElementById('reply-original-msg').textContent = originalMsg || 'No message provided';
+      document.getElementById('reply-message').value = '';
+      const modal = document.getElementById('reply-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeReplyModal() {
+      const modal = document.getElementById('reply-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    async function handleSendReply() {
+      const id = document.getElementById('reply-request-id').value;
+      const message = document.getElementById('reply-message').value.trim();
+
+      if (!message) {
+        Swal.fire('Required', 'Please type a reply message.', 'warning');
+        return;
+      }
+
+      const btn = document.getElementById('send-reply-btn');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Sending...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(`/admin/call/reply/${id}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ message })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+
+        // Update local status
+        const req = allRequests.find(r => r.id == id);
+        if (req && req.status === 'new') req.status = 'contacted';
+        renderRequests();
+        updateStats();
+
+        closeReplyModal();
+        Swal.fire({ icon: 'success', title: 'Reply Sent!', text: 'Email sent to the patient successfully.', timer: 2000, showConfirmButton: false });
+      } catch (err) {
+        Swal.fire('Error', err.message, 'error');
+      } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
+    }
+
+    // --- Sidebar Mobile ---
+    function setupSidebar() {
+      const btn = document.getElementById('mobile-menu-btn');
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      const closeBtn = document.getElementById('close-sidebar-btn');
+
+      const toggle = () => {
+        sidebar.classList.toggle('-translate-x-full');
+        overlay.classList.toggle('hidden');
+      };
+
+      btn.addEventListener('click', toggle);
+      closeBtn.addEventListener('click', toggle);
+      overlay.addEventListener('click', toggle);
+    }
+  </script>
 </body>
 
 </html>
