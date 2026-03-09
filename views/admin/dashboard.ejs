@@ -1,553 +1,904 @@
-<!-- admin/dashboard.ejs -->
-
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Appointments Dashboard</title>
+  <title>Physiotherapist Dashboard | Movement Science</title>
 
-  <link rel="stylesheet" href="css/imagetext.css">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/aura.css">
-  <link rel="stylesheet" href="css/nav.css">
-  <link rel="stylesheet" href="css/footer.css">
-
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <!-- External Resources -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
     body {
-      background: #f4f6f9;
-      font-family: Poppins, sans-serif
+      font-family: 'Poppins', sans-serif;
+      background-color: #f3f4f6;
     }
 
-    .dashboard-header {
-      font-size: 26px;
-      font-weight: 600;
-      margin: 20px 0
+    .hero-gradient {
+      background: linear-gradient(135deg, #011d3b 0%, #023974 100%);
     }
 
-    .admin-toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 15px
+    /* Hide scrollbar for clean look */
+    ::-webkit-scrollbar {
+      width: 6px;
     }
 
-    .admin-toolbar button {
-      background: #2563eb;
-      color: #fff;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      gap: 6px
+    ::-webkit-scrollbar-track {
+      background: transparent;
     }
 
-    .admin-toolbar button.secondary {
-      background: #6b7280
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
     }
 
-    .filter-bar {
-      background: #fff;
-      padding: 12px;
-      border-radius: 10px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, .06)
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
     }
 
-    .filter-bar input,
-    .filter-bar button {
-      padding: 8px 12px;
-      border-radius: 6px;
-      border: 1px solid #ddd
+    /* Modal Animation */
+    .modal-fade {
+      animation: fadeIn 0.2s ease-out;
     }
 
-    .search-box {
-      flex: 1
-    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
 
-    .appointments-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 18px;
-      margin-top: 20px
-    }
-
-    .appointment-card {
-      background: #fff;
-      padding: 16px;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, .07)
-    }
-
-    .appointment-card h6 {
-      font-weight: 600;
-      margin-bottom: 6px
-    }
-
-    .appointment-card p {
-      font-size: 14px;
-      margin: 0;
-      color: #4b5563
-    }
-
-    .appointment-actions {
-      margin-top: 10px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px
-    }
-
-    .appointment-actions input {
-      flex: 1;
-      padding: 6px 8px;
-      border-radius: 6px;
-      border: 1px solid #ddd
-    }
-
-    .appointment-actions button {
-      border: none;
-      border-radius: 6px;
-      padding: 6px 10px;
-      font-size: 13px;
-      color: #fff
-    }
-
-    .approve-btn {
-      background: #16a34a
-    }
-
-    .delete-btn {
-      background: #dc2626
-    }
-
-    .whatsapp-btn {
-      background: #22c55e
-    }
-
-    .pagination-bar {
-      text-align: center;
-      margin: 25px 0
-    }
-
-    .pagination-bar button {
-      margin: 0 4px;
-      padding: 6px 12px;
-      border-radius: 6px;
-      border: none;
-      background: #e5e7eb
-    }
-
-    .pagination-bar button.active {
-      background: #2563eb;
-      color: #fff
-    }
-
-    .toast-container {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 9999
-    }
-
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, .45);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-    }
-
-    .modal-box {
-      background: #fff;
-      width: 90%;
-      max-width: 420px;
-      padding: 20px;
-      border-radius: 12px;
-    }
-
-    .modal-box input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-    }
-
-    #patientSuggestions {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      max-height: 220px;
-      overflow-y: auto;
-    }
-
-    #patientSuggestions li {
-      padding: 8px;
-      cursor: pointer;
-      border-bottom: 1px solid #eee;
-    }
-
-    #patientSuggestions li:hover {
-      background: #f1f5f9;
-    }
-
-    .secondary-btn {
-      margin-top: 10px;
-      background: #6b7280;
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 6px;
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
   </style>
 </head>
 
-<body>
+<body class="text-gray-800 antialiased h-screen flex flex-col md:flex-row overflow-hidden">
 
-  <nav class="navbar navbar-expand-lg navbar-light">
-    <div class="name">
-      <h5>MOVEMENT SCIENCE</h5>
+  <!-- Mobile Top Navigation -->
+  <div class="md:hidden bg-[#011d3b] text-white p-4 flex justify-between items-center shadow-md z-40">
+    <div class="flex items-center gap-3">
+      <img src="/images/logo.png" alt="Logo" class="h-8 w-auto filter brightness-0 invert">
+      <h1 class="font-bold text-lg tracking-tight">PT Dashboard</h1>
     </div>
-  </nav>
-
-  <div class="container-fluid">
-    <div class="dashboard-header">Admin Dashboard</div>
-
-    <!-- ADMIN TOOLBAR -->
-    <div class="admin-toolbar">
-      <button id="logout-btn" class="secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
-      <a href="/admin/call"><button><i class="fas fa-phone"></i> Calls</button></a>
-      <button id="see-history-btn"><i class="fas fa-history"></i> History</button>
-      <a href="/appointmentsall"><button><i class="fas fa-check-circle"></i> Approved</button></a>
-      <a href="/admin/live-chat-queries"><button><i class="fas fa-comments"></i> Live Chat</button></a>
-    </div>
-
-    <!-- FILTER + SEARCH -->
-    <div class="filter-bar">
-      <form action="/admin/dashboard" method="GET" style="display:flex;gap:10px">
-        <input type="date" name="date" value="<%= filterDate %>">
-        <button type="submit">Filter</button>
-        <button type="button" id="clear-filter">Clear</button>
-      </form>
-      <input type="text" id="searchInput" class="search-box" placeholder="Search name / phone / email">
-    </div>
-
-    <!-- Patient History Modal -->
-    <div id="patientModal" class="modal-overlay">
-      <div class="modal-box">
-        <h5>Select Patient</h5>
-
-        <input type="text" id="patientSearch" placeholder="Search by name or phone" autocomplete="off" />
-
-        <ul id="patientSuggestions"></ul>
-
-        <button id="closePatientModal" class="secondary-btn">Close</button>
-      </div>
-    </div>
-
-
-    <!-- APPOINTMENTS -->
-    <div class="appointments-grid" id="appointmentsGrid">
-      <% appointments.forEach(appointment=>{ %>
-        <div class="appointment-card searchable">
-          <h6>
-            <%= appointment.name %>
-          </h6>
-          <p><strong>Date:</strong>
-            <%= appointment.date.toString().slice(0, 10) %>
-          </p>
-          <p><strong>Slot:</strong>
-            <%= appointment.slot %>
-          </p>
-          <p><strong>Phone:</strong>
-            <%= appointment.phone %>
-          </p>
-          <p><strong>Email:</strong>
-            <%= appointment.email %>
-          </p>
-          <p><strong>City:</strong>
-            <%= appointment.city %>
-          </p>
-          <p><strong>Address:</strong>
-            <%= appointment.address %>
-          </p>
-
-          <div class="appointment-actions">
-            <input type="text" id="remarks-<%= appointment.id %>" placeholder="Remarks">
-            <button class="approve-btn" data-appointment-id="<%= appointment.id %>">Approve</button>
-            <button class="delete-btn" data-appointment-id="<%= appointment.id %>">Delete</button>
-            <button class="whatsapp-btn" data-phone-number="<%= appointment.phone %>">WhatsApp</button>
-          </div>
-        </div>
-        <% }) %>
-    </div>
-
-    <div class="pagination-bar" id="pagination"></div>
+    <button id="mobile-menu-btn" class="p-2 bg-white/10 rounded-lg hover:bg-white/20 transition">
+      <i class="fas fa-bars text-xl"></i>
+    </button>
   </div>
 
-  <!-- TOAST -->
-  <div class="toast-container"></div>
+  <!-- Sidebar Navigation -->
+  <aside id="sidebar"
+    class="bg-[#011d3b] text-white w-64 flex-shrink-0 fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition duration-200 ease-in-out z-50 flex flex-col shadow-2xl md:shadow-none">
+    <div class="p-6 flex items-center gap-3 hidden md:flex border-b border-white/10">
+      <img src="/images/logo.png" alt="Logo" class="h-10 w-auto filter brightness-0 invert">
+      <span class="font-bold text-xl tracking-tight leading-tight">Movement<br>Science</span>
+    </div>
 
+    <div class="md:hidden flex justify-end p-4 border-b border-white/10">
+      <button id="close-sidebar-btn" class="p-2 text-gray-300 hover:text-white transition">
+        <i class="fas fa-times text-xl"></i>
+      </button>
+    </div>
+
+    <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+      <button id="tab-today"
+        class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-600 text-white font-medium transition shadow-sm">
+        <i class="fas fa-calendar-day w-5 text-center"></i>
+        Today's Itinerary
+      </button>
+      <button id="tab-all"
+        class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-white/10 hover:text-white font-medium transition">
+        <i class="fas fa-list w-5 text-center"></i>
+        All Appointments
+      </button>
+      <button id="tab-calendar"
+        class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-white/10 hover:text-white font-medium transition">
+        <i class="fas fa-calendar-alt w-5 text-center"></i>
+        Calendar View
+      </button>
+      <a href="/admin/call"
+        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-white/10 hover:text-white font-medium transition">
+        <i class="fas fa-phone-alt w-5 text-center"></i>
+        Call Requests
+      </a>
+    </nav>
+
+    <div class="p-4 border-t border-white/10">
+      <button id="logout-btn"
+        class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white rounded-xl font-medium transition duration-200">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="flex-1 flex flex-col h-screen overflow-hidden bg-gray-50 relative z-0">
+    <!-- Top Bar -->
+    <header
+      class="bg-white shadow-sm border-b border-gray-100 p-4 md:px-8 flex justify-between items-center z-10 shrink-0">
+      <h2 id="current-tab-title" class="text-2xl font-bold text-gray-800">Today's Itinerary</h2>
+
+      <div class="flex items-center gap-4">
+        <!-- Search Box -->
+        <div class="relative hidden sm:block">
+          <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+          <input type="text" id="global-search" placeholder="Search phone or name..."
+            class="pl-10 pr-4 py-2 bg-gray-100 border-transparent rounded-full text-sm focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 transition outline-none w-64">
+        </div>
+
+        <!-- Notification Bell -->
+        <button id="notif-btn" class="relative p-2 text-gray-500 hover:bg-gray-100 rounded-full transition">
+          <i class="fas fa-bell text-xl"></i>
+          <span id="notif-badge"
+            class="absolute top-0 right-0 w-3 h-3 bg-red-500 border-2 border-white rounded-full hidden"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Dynamic Content Container -->
+    <div id="content-area" class="flex-1 overflow-y-auto p-4 md:p-8">
+      <!-- Loader -->
+      <div id="loader" class="flex justify-center items-center h-full">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+
+      <!-- Tab: Today's Appointments -->
+      <div id="view-today" class="tab-view hidden max-w-5xl mx-auto space-y-6">
+        <!-- Javascript will inject cards here -->
+      </div>
+
+      <!-- Tab: All Appointments (List/Table) -->
+      <div id="view-all" class="tab-view hidden max-w-7xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-gray-50 border-b border-gray-100 text-gray-500 text-sm uppercase tracking-wider">
+                  <th class="p-4 font-semibold">Patient</th>
+                  <th class="p-4 font-semibold">Date & Time</th>
+                  <th class="p-4 font-semibold">Location</th>
+                  <th class="p-4 font-semibold">Status</th>
+                  <th class="p-4 font-semibold text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="all-appointments-tbody" class="divide-y divide-gray-100">
+                <!-- Injected rows -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Calendar -->
+      <div id="view-calendar"
+        class="tab-view hidden bg-white p-6 rounded-2xl shadow-sm border border-gray-100 h-full flex flex-col">
+        <div id="calendar" class="flex-1"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Overlay for mobile sidebar -->
+  <div id="sidebar-overlay" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-40 hidden md:hidden"></div>
+
+  <!-- MODAL: Patient History & Clinical Notes (Trail) -->
+  <div id="patient-modal"
+    class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col modal-fade overflow-hidden">
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50 shrink-0">
+        <div class="flex items-center gap-4">
+          <div
+            class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xl">
+            <i class="fas fa-user-injured"></i>
+          </div>
+          <div>
+            <h3 id="modal-patient-name" class="text-xl font-bold text-gray-900">Patient Name</h3>
+            <p id="modal-patient-phone" class="text-gray-500 text-sm flex items-center gap-1">
+              <i class="fas fa-phone-alt h-3 w-3"></i> <span>+Phone</span>
+            </p>
+          </div>
+        </div>
+        <button onclick="closeModal()"
+          class="text-gray-400 hover:bg-gray-200 hover:text-gray-600 p-2 rounded-full transition">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body: Split View -->
+      <div class="flex-1 overflow-y-auto flex flex-col md:flex-row bg-white">
+
+        <!-- Left: History Trail -->
+        <div class="w-full md:w-5/12 border-r border-gray-100 p-6 overflow-y-auto bg-gray-50/50">
+          <h4 class="font-bold text-gray-700 mb-4 flex items-center justify-between">
+            <span><i class="fas fa-history mr-2 text-blue-500"></i> Clinical Trail</span>
+            <span id="visit-count-badge"
+              class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full font-semibold">0 Visits</span>
+          </h4>
+
+          <div id="history-timeline"
+            class="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
+            <!-- Javascript injects timeline items here -->
+          </div>
+        </div>
+
+        <!-- Right: Active Session Editor -->
+        <div class="w-full md:w-7/12 p-6 flex flex-col h-full bg-white">
+          <h4 class="font-bold text-gray-900 mb-4 text-lg border-b pb-2">Active Session: <span id="active-session-date"
+              class="font-normal text-blue-600">Selecting...</span></h4>
+
+          <form id="clinical-notes-form" class="flex-1 flex flex-col gap-4">
+            <input type="hidden" id="active-appointment-id">
+
+            <!-- Status Toggle -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Session Status</label>
+              <div class="flex bg-gray-100 p-1 rounded-lg">
+                <label class="flex-1 cursor-pointer">
+                  <input type="radio" name="status" value="scheduled" class="peer sr-only" checked>
+                  <div
+                    class="text-center py-2 rounded-md peer-checked:bg-white peer-checked:shadow-sm peer-checked:text-blue-600 peer-checked:font-semibold text-gray-500 transition text-sm">
+                    Scheduled</div>
+                </label>
+                <label class="flex-1 cursor-pointer">
+                  <input type="radio" name="status" value="completed" class="peer sr-only">
+                  <div
+                    class="text-center py-2 rounded-md peer-checked:bg-white peer-checked:shadow-sm peer-checked:text-green-600 peer-checked:font-semibold text-gray-500 transition text-sm">
+                    Completed</div>
+                </label>
+                <label class="flex-1 cursor-pointer">
+                  <input type="radio" name="status" value="cancelled" class="peer sr-only">
+                  <div
+                    class="text-center py-2 rounded-md peer-checked:bg-white peer-checked:shadow-sm peer-checked:text-red-600 peer-checked:font-semibold text-gray-500 transition text-sm">
+                    Cancelled</div>
+                </label>
+              </div>
+            </div>
+
+            <!-- SOAP Notes -->
+            <div class="flex-1 flex flex-col gap-3 overflow-y-auto pr-2">
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Subjective (Patient's Report)</label>
+                <textarea id="note-s" rows="2"
+                  class="w-full border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 bg-gray-50 resize-none"
+                  placeholder="How is the patient feeling? Pain levels?"></textarea>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Objective (Observations &
+                  Treatment)</label>
+                <textarea id="note-o" rows="3"
+                  class="w-full border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 bg-gray-50 resize-none"
+                  placeholder="ROM, tests performed, manual therapy applied..."></textarea>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Assessment & Plan (Next Steps)</label>
+                <textarea id="note-ap" rows="2"
+                  class="w-full border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 bg-gray-50 resize-none"
+                  placeholder="Progress evaluation, exercises prescribed for next time..."></textarea>
+              </div>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="mt-4 pt-4 border-t flex justify-end gap-3 shrink-0">
+              <button type="button" onclick="closeModal()"
+                class="px-5 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition">Cancel</button>
+              <button type="submit"
+                class="px-5 py-2.5 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition shadow-lg shadow-blue-200 flex items-center gap-2">
+                <i class="fas fa-save"></i> Save Clinical Record
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Logic -->
   <script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-      document.getElementById('clear-filter').addEventListener('click', function () {
-        // Clear filter logic here
-        console.log('Clear Filter button clicked');
-        // Example: Reset input fields
-        document.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
-        // Example: Reset select elements
-        document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
-        window.location.href = '/admin/dashboard';
+    // --- State Management ---
+    let allAppointments = [];
+    let calendarInstance = null;
+
+    // --- Initialization ---
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchAppointments();
+      setupSidebarMobile();
+      setupSearch();
+      setupWebSocketNotifications();
+
+      // Tab Switching Listeners
+      document.getElementById('tab-today').addEventListener('click', () => switchTab('today'));
+      document.getElementById('tab-all').addEventListener('click', () => switchTab('all'));
+      document.getElementById('tab-calendar').addEventListener('click', () => switchTab('calendar'));
+
+      // Logout
+      document.getElementById('logout-btn').addEventListener('click', () => {
+        window.location.href = '/admin/logout';
       });
+
+      // Form Submit for Notes
+      document.getElementById('clinical-notes-form').addEventListener('submit', handleNotesSave);
     });
 
-    document.querySelectorAll('.whatsapp-btn').forEach(button => {
-      button.addEventListener('click', function () {
-        const phoneNumber = this.dataset.phoneNumber;
-        const message = encodeURIComponent('we hope that you like our service review us at '); // Customize your default message here
+    // --- Data Fetching ---
+    async function fetchAppointments() {
+      showLoader(true);
+      try {
+        const response = await fetch('/admin/api/appointments');
+        if (!response.ok) throw new Error('Failed to fetch data');
+        allAppointments = await response.json();
 
-        const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
+        // Initialize default tab
+        switchTab('today');
 
-        window.open(whatsappUrl, '_blank');
+      } catch (error) {
+        console.error('Data fetch error:', error);
+        Swal.fire('Error', 'Failed to load appointments. Please refresh.', 'error');
+      } finally {
+        showLoader(false);
+      }
+    }
+
+    // --- UI Tab Switching ---
+    function switchTab(tabId) {
+      // Update Active Buttons
+      const btns = document.querySelectorAll('.nav-btn');
+      btns.forEach(btn => {
+        btn.classList.remove('bg-blue-600', 'text-white', 'shadow-sm');
+        btn.classList.add('text-gray-300', 'hover:bg-white/10', 'hover:text-white');
       });
-    });
+      const activeBtn = document.getElementById(`tab-${tabId}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('text-gray-300', 'hover:bg-white/10', 'hover:text-white');
+        activeBtn.classList.add('bg-blue-600', 'text-white', 'shadow-sm');
+      }
 
-    const modal = document.getElementById('patientModal');
-    const openBtn = document.getElementById('see-history-btn');
-    const closeBtn = document.getElementById('closePatientModal');
-    const searchInput = document.getElementById('patientSearch');
-    const list = document.getElementById('patientSuggestions');
+      // Update Views
+      const views = document.querySelectorAll('.tab-view');
+      views.forEach(view => view.classList.add('hidden'));
+      const activeView = document.getElementById(`view-${tabId}`);
+      if (activeView) {
+        activeView.classList.remove('hidden');
+      }
 
-    openBtn.addEventListener('click', () => {
-      modal.style.display = 'flex';
-      searchInput.value = '';
-      list.innerHTML = '';
-      searchInput.focus();
-    });
+      // Set Title & Render Content
+      if (tabId === 'today') {
+        document.getElementById('current-tab-title').textContent = "Today's Itinerary";
+        renderTodayView();
+      } else if (tabId === 'all') {
+        document.getElementById('current-tab-title').textContent = "All Appointments";
+        renderAllView();
+      } else if (tabId === 'calendar') {
+        document.getElementById('current-tab-title').textContent = "Calendar View";
+        renderCalendar();
+      }
 
-    closeBtn.addEventListener('click', () => {
-      modal.style.display = 'none';
-    });
+      // Close mobile sidebar if open
+      if (window.innerWidth < 768 && typeof toggleSidebar === 'function') {
+        toggleSidebar();
+      }
+    }
 
-    let controller;
+    // --- View Renderers ---
+    function renderTodayView(filterQuery = '') {
+      const container = document.getElementById('view-today');
+      container.innerHTML = '';
 
-    searchInput.addEventListener('input', async () => {
-      const q = searchInput.value.trim();
-      if (!q) {
-        list.innerHTML = '';
+      // Get today's local date string (YYYY-MM-DD)
+      const todayStr = new Date().toISOString().split('T')[0];
+
+      let todaysList = allAppointments.filter(app => {
+        // Ensure date exists and handle DB datetime formats
+        const appDate = app.date ? (typeof app.date === 'string' ? app.date.split('T')[0] : new Date(app.date).toISOString().split('T')[0]) : '';
+        return appDate === todayStr;
+      });
+
+      if (filterQuery) {
+        const q = filterQuery.toLowerCase();
+        todaysList = todaysList.filter(a => a.name.toLowerCase().includes(q) || a.phone.includes(q));
+      }
+
+      if (todaysList.length === 0) {
+        container.innerHTML = `
+                    <div class="bg-white rounded-2xl p-10 text-center border border-gray-100 shadow-sm mt-8">
+                        <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-mug-hot text-3xl text-blue-400"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">No Appointments Today!</h3>
+                        <p class="text-gray-500">Your itinerary is clear for today based on current filters.</p>
+                    </div>`;
         return;
       }
 
-      if (controller) controller.abort();
-      controller = new AbortController();
+      // Sort by slot time
+      todaysList.sort((a, b) => a.slot.localeCompare(b.slot));
 
-      const res = await fetch(`/admin/patient-search?q=${encodeURIComponent(q)}`, {
-        signal: controller.signal
+      todaysList.forEach(app => {
+        const isCompleted = app.status === 'completed';
+        const statusColor = isCompleted ? 'bg-green-100 text-green-700 border-green-200' :
+          (app.status === 'cancelled' ? 'bg-red-100 text-red-700 border-red-200' : 'bg-blue-100 text-blue-700 border-blue-200');
+        const statusIcon = isCompleted ? 'fa-check-circle' : (app.status === 'cancelled' ? 'fa-times-circle' : 'fa-clock');
+
+        // Maps Link
+        const mapQuery = encodeURIComponent(`${app.address}, ${app.city}`);
+        const navLink = `https://www.google.com/maps/dir/?api=1&destination=${mapQuery}`;
+
+        const cardHtml = `
+                    <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition">
+                        <div class="flex flex-col md:flex-row gap-6 justify-between items-start md:items-center">
+                            
+                            <!-- Patient Info -->
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <h3 class="text-xl font-bold text-gray-900">${app.name}</h3>
+                                    <span class="px-3 py-1 text-xs font-semibold rounded-full border ${statusColor} uppercase tracking-wide flex items-center gap-1">
+                                        <i class="fas ${statusIcon}"></i> ${app.status || 'Scheduled'}
+                                    </span>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-6 text-sm text-gray-600 mt-4">
+                                    <p class="flex items-center gap-2 font-medium text-blue-800 bg-blue-50 py-1.5 px-3 rounded-lg inline-block w-max">
+                                        <i class="fas fa-clock text-blue-500 w-4"></i> ${app.slot}
+                                    </p>
+                                    <p class="flex items-start gap-2 pt-1">
+                                        <i class="fas fa-map-marker-alt text-gray-400 w-4 mt-1"></i> 
+                                        <span>${app.address}, <br><span class="text-gray-400">${app.city}</span></span>
+                                    </p>
+                                    <p class="flex items-center gap-2 pt-1">
+                                        <i class="fas fa-phone-alt text-gray-400 w-4"></i>
+                                        <a href="tel:${app.phone}" class="hover:text-blue-600 transition">${app.phone}</a>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="flex flex-wrap md:flex-col gap-3 shrink-0 w-full md:w-auto mt-4 md:mt-0 pt-4 md:pt-0 border-t md:border-none border-gray-100">
+                                <a href="${navLink}" target="_blank" class="flex-1 md:flex-none flex justify-center items-center gap-2 bg-gray-900 text-white px-5 py-3 rounded-xl hover:bg-black transition font-medium shadow-md shadow-gray-200">
+                                    <i class="fas fa-location-arrow"></i> Navigate
+                                </a>
+                                <button onclick='openClinicalModal(${JSON.stringify(app).replace(/'/g, "&#39;")})' class="flex-1 md:flex-none flex justify-center items-center gap-2 bg-blue-50 text-blue-700 px-5 py-3 rounded-xl hover:bg-blue-100 transition font-medium border border-blue-100">
+                                    <i class="fas fa-notes-medical"></i> Update Notes
+                                </button>
+                                <a href="https://wa.me/${app.phone.replace(/[^0-9]/g, '')}?text=Hi%20${encodeURIComponent(app.name)},%20this%20is%20Movement%20Science%20Physiotherapy..." target="_blank" class="flex-1 md:flex-none flex justify-center items-center gap-2 bg-transparent text-green-600 border border-green-200 px-5 py-3 rounded-xl hover:bg-green-50 transition font-medium">
+                                    <i class="fab fa-whatsapp text-lg"></i> Send Msg
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+        container.insertAdjacentHTML('beforeend', cardHtml);
       });
-
-      const data = await res.json();
-      list.innerHTML = '';
-
-      data.forEach(p => {
-        const li = document.createElement('li');
-        li.textContent = `${p.name} (${p.phone})`;
-
-        li.onclick = () => loadHistory(p.name);
-        list.appendChild(li);
-      });
-    });
-
-    function loadHistory(name) {
-      fetch('/admin/patient-history', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name })
-      })
-        .then(res => res.text())
-        .then(html => {
-          document.open();
-          document.write(html);
-          document.close();
-        });
     }
 
+    function renderAllView(filterQuery = '') {
+      const tbody = document.getElementById('all-appointments-tbody');
+      tbody.innerHTML = '';
 
-    document.getElementById('logout-btn').addEventListener('click', function () {
-      window.location.href = '/admin/logout';
-    });
+      let list = allAppointments;
+      if (filterQuery) {
+        const q = filterQuery.toLowerCase();
+        list = list.filter(a => a.name.toLowerCase().includes(q) || a.phone.includes(q));
+      }
 
-    document.querySelectorAll('.approve-btn').forEach(button => {
-      button.addEventListener('click', async function () {
-        const appointmentId = this.dataset.appointmentId;
-        const remarksInput = document.getElementById(`remarks-${appointmentId}`);
-        const remarks = remarksInput.value;
+      if (list.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="p-12 text-center">
+              <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <i class="fas fa-inbox text-2xl text-gray-400"></i>
+              </div>
+              <h3 class="text-lg font-medium text-gray-900 mb-1">No Appointments Found</h3>
+              <p class="text-gray-500 text-sm">There are currently no appointments in the system.</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
 
-        try {
-          const response = await fetch(`/admin/approve-appointment/${appointmentId}`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            credentials: 'same-origin',
-            body: JSON.stringify({
-              remarks
-            })
-          });
+      list.forEach(app => {
+        const appDate = app.date ? (typeof app.date === 'string' ? app.date.split('T')[0] : new Date(app.date).toISOString().split('T')[0]) : 'N/A';
 
-          if (response.ok) {
-            const data = await response.json();
-            alert(data.message); // Show success message or handle response
-            window.location.href = '/admin/dashboard';
-            // Optionally update UI or redirect
-          } else {
-            const errorText = await response.text();
-            throw new Error(errorText);
-          }
-        } catch (error) {
-          console.error('Error approving appointment:', error);
-          alert('Failed to approve appointment. Please try again.');
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-gray-50 transition';
+        tr.innerHTML = `
+                    <td class="p-4">
+                        <div class="font-bold text-gray-900">${app.name}</div>
+                        <div class="text-sm text-gray-500">${app.phone}</div>
+                    </td>
+                    <td class="p-4">
+                        <div class="text-gray-900">${appDate}</div>
+                        <div class="text-sm font-medium text-blue-600">${app.slot}</div>
+                    </td>
+                    <td class="p-4">
+                        <div class="truncate max-w-[200px]" title="${app.address}">${app.address}</div>
+                        <div class="text-xs text-gray-400">${app.city}</div>
+                    </td>
+                    <td class="p-4">
+                        <span class="px-2.5 py-1 text-xs font-semibold rounded-full border ${app.status === 'completed' ? 'bg-green-50 text-green-700 border-green-200' : (app.status === 'cancelled' ? 'bg-red-50 text-red-700 border-red-200' : 'bg-blue-50 text-blue-700 border-blue-200')} uppercase">
+                            ${app.status || 'Scheduled'}
+                        </span>
+                    </td>
+                    <td class="p-4 text-right flex justify-end gap-2">
+                        <button onclick='handleApprove(${app.id})' class="text-green-600 hover:text-green-800 bg-green-50 hover:bg-green-100 px-3 py-1.5 rounded-lg text-sm font-medium transition" title="Approve Request">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button onclick='handleDelete(${app.id})' class="text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg text-sm font-medium transition" title="Cancel/Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button onclick='openClinicalModal(${JSON.stringify(app).replace(/'/g, "&#39;")})' class="text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg text-sm font-medium transition" title="View Record">
+                            <i class="fas fa-file-medical"></i>
+                        </button>
+                    </td>
+                `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderCalendar() {
+      if (calendarInstance) {
+        calendarInstance.render();
+        return;
+      }
+
+      const events = allAppointments.map(app => {
+        const appDate = app.date ? (typeof app.date === 'string' ? app.date.split('T')[0] : new Date(app.date).toISOString().split('T')[0]) : null;
+        if (!appDate) return null;
+
+        // Crude time parsing from slot (e.g. "10:00 AM - 11:00 AM")
+        let startTimeStr = (app.slot || '').split('-')[0].trim();
+        let startIso = appDate; // Default to all-day if parse fails
+
+        // Optional: try to parse time for better calendar rendering
+
+        return {
+          id: app.id,
+          title: `${app.name} (${app.city})`,
+          start: appDate, // FullCalendar handles YYYY-MM-DD
+          backgroundColor: app.status === 'completed' ? '#16a34a' : (app.status === 'cancelled' ? '#dc2626' : '#2563eb'),
+          borderColor: 'transparent',
+          extendedProps: app
+        };
+      }).filter(Boolean);
+
+      const calendarEl = document.getElementById('calendar');
+      calendarInstance = new FullCalendar.Calendar(calendarEl, {
+        initialView: window.innerWidth < 768 ? 'listWeek' : 'dayGridMonth',
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: window.innerWidth < 768 ? '' : 'dayGridMonth,timeGridWeek,listWeek'
+        },
+        events: events,
+        height: '100%',
+        eventClick: function (info) {
+          openClinicalModal(info.event.extendedProps);
         }
       });
-    });
-    // Event listener for delete buttons
-    document.querySelectorAll('.delete-btn').forEach(button => {
-      button.addEventListener('click', async function () {
-        const appointmentId = this.dataset.appointmentId;
+      calendarInstance.render();
+    }
 
+    // --- Clinical Trail Modal (SOAP) ---
+    async function openClinicalModal(appointment) {
+      const modal = document.getElementById('patient-modal');
+      const form = document.getElementById('clinical-notes-form');
+
+      // Set Headers
+      document.getElementById('modal-patient-name').textContent = appointment.name;
+      document.getElementById('modal-patient-phone').textContent = appointment.phone;
+      document.getElementById('active-appointment-id').value = appointment.id;
+
+      const appDateStr = appointment.date ? (typeof appointment.date === 'string' ? appointment.date.split('T')[0] : new Date(appointment.date).toISOString().split('T')[0]) : 'Unknown Date';
+      document.getElementById('active-session-date').textContent = `${appDateStr} | ${appointment.slot}`;
+
+      // Populate Active Form
+      const statusRadios = form.elements['status'];
+      statusRadios.value = appointment.status || 'scheduled';
+
+      let notesObj = { s: '', o: '', ap: '' };
+      if (appointment.clinical_notes) {
         try {
-          const response = await fetch(`/admin/delete-appointment/${appointmentId}`, {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json'
+          notesObj = typeof appointment.clinical_notes === 'string' ? JSON.parse(appointment.clinical_notes) : appointment.clinical_notes;
+        } catch (e) { }
+      }
+      document.getElementById('note-s').value = notesObj.s || '';
+      document.getElementById('note-o').value = notesObj.o || '';
+      document.getElementById('note-ap').value = notesObj.ap || '';
+
+      // Fetch & Render History Trail
+      await buildHistoryTrail(appointment.phone, appointment.id);
+
+      // Show Modal
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden'; // Prevent bg scrolling
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('patient-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    async function buildHistoryTrail(phone, currentAppointmentId) {
+      const timelineContainer = document.getElementById('history-timeline');
+      const badge = document.getElementById('visit-count-badge');
+
+      timelineContainer.innerHTML = '<div class="text-center text-gray-400 py-4"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+
+      try {
+        const response = await fetch(`/admin/api/patient/${encodeURIComponent(phone)}/history`);
+        if (!response.ok) throw new Error('Fetch failed');
+        const history = await response.json();
+
+        badge.textContent = `${history.length} Visit(s)`;
+        timelineContainer.innerHTML = '';
+
+        if (history.length <= 1) { // 1 is the current appointment
+          timelineContainer.innerHTML = '<div class="text-sm text-gray-500 italic pl-10 border-l-2 border-dashed border-gray-200 ml-4 py-4">No past visits recorded for this phone number.</div>';
+          return;
+        }
+
+        history.forEach((visit, index) => {
+          const isCompleted = visit.status === 'completed';
+          if (!isCompleted && visit.id !== currentAppointmentId) return; // Only show completed past visits or the current one
+
+          const vDate = visit.date ? (typeof visit.date === 'string' ? visit.date.split('T')[0] : new Date(visit.date).toISOString().split('T')[0]) : 'Date';
+          const isActive = visit.id === currentAppointmentId;
+
+          let notesStr = "No clinical notes recorded.";
+          if (visit.clinical_notes) {
+            try {
+              const n = typeof visit.clinical_notes === 'string' ? JSON.parse(visit.clinical_notes) : visit.clinical_notes;
+              const parts = [];
+              if (n.s) parts.push(`<p><strong>S:</strong> ${n.s}</p>`);
+              if (n.o) parts.push(`<p><strong>O:</strong> ${n.o}</p>`);
+              if (n.ap) parts.push(`<p><strong>A/P:</strong> ${n.ap}</p>`);
+              if (parts.length > 0) notesStr = parts.join('');
+            } catch (e) { }
+          }
+
+          const dotColor = isActive ? 'bg-blue-500 border-4 border-blue-100 shadow-blue-500/30' : 'bg-gray-300 border-4 border-white';
+          const cardStyle = isActive ? 'border-blue-200 bg-white shadow-md' : 'border-gray-100 bg-gray-50';
+
+          const itemHtml = `
+                        <div class="relative pl-12 py-2">
+                            <!-- Timeline Dot -->
+                            <div class="absolute left-0 top-6 ml-[-4px] md:ml-[16px] w-4 h-4 rounded-full ${dotColor} shadow-sm z-10 transition-colors duration-200"></div>
+                            
+                            <!-- Content Card -->
+                            <div class="rounded-2xl p-4 border ${cardStyle}">
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="font-bold text-gray-900">${vDate}</span>
+                                    ${isActive ? '<span class="text-xs bg-blue-100 text-blue-700 px-2 rounded font-semibold">Editing Now</span>' : ''}
+                                </div>
+                                <div class="text-sm text-gray-600 prose prose-sm leading-snug">
+                                    ${notesStr}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+          timelineContainer.insertAdjacentHTML('beforeend', itemHtml);
+        });
+
+      } catch (error) {
+        console.error('History fetch error', error);
+        timelineContainer.innerHTML = '<div class="text-red-500 text-sm">Failed to load history.</div>';
+      }
+    }
+
+    async function handleNotesSave(e) {
+      e.preventDefault();
+      const id = document.getElementById('active-appointment-id').value;
+      const status = document.querySelector('input[name="status"]:checked').value;
+
+      const clinical_notes = {
+        s: document.getElementById('note-s').value.trim(),
+        o: document.getElementById('note-o').value.trim(),
+        ap: document.getElementById('note-ap').value.trim()
+      };
+
+      const btn = e.target.querySelector('button[type="submit"]');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Saving...';
+      btn.disabled = true;
+
+      try {
+        const response = await fetch(`/admin/api/appointment/${id}/notes`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status, clinical_notes })
+        });
+
+        if (!response.ok) throw new Error('Save failed');
+
+        Swal.fire({
+          title: 'Saved!',
+          text: 'Clinical record updated successfully.',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false
+        });
+
+        // Refresh data
+        await fetchAppointments();
+
+        // Keep modal open but update trail (rebuild)
+        const phone = document.getElementById('modal-patient-phone').textContent.replace('+', '').trim(); // clean UI phone
+        await buildHistoryTrail(phone, id);
+
+      } catch (error) {
+        Swal.fire('Error', 'Failed to save notes. Try again.', 'error');
+      } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
+    }
+
+    async function handleApprove(id) {
+      Swal.fire({
+        title: 'Approve Appointment?',
+        text: "This will move the appointment to approved and send a confirmation email to the patient.",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#16a34a',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, Approve'
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            showLoader(true);
+            const res = await fetch('/admin/approve', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id })
+            });
+            if (!res.ok) throw new Error('Action failed');
+            Swal.fire('Approved!', 'The appointment has been confirmed and the patient notified.', 'success');
+            fetchAppointments();
+          } catch (e) {
+            Swal.fire('Error', 'Failed to approve. Try again.', 'error');
+          } finally {
+            showLoader(false);
+          }
+        }
+      });
+    }
+
+    async function handleDelete(id) {
+      Swal.fire({
+        title: 'Cancel Request?',
+        text: "This will permanently delete the request and notify the patient via email.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, Cancel it'
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            showLoader(true);
+            const res = await fetch('/admin/delete', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id })
+            });
+            if (!res.ok) throw new Error('Action failed');
+            Swal.fire('Deleted!', 'The request has been removed and the patient notified.', 'success');
+            fetchAppointments();
+          } catch (e) {
+            Swal.fire('Error', 'Failed to delete. Try again.', 'error');
+          } finally {
+            showLoader(false);
+          }
+        }
+      });
+    }
+
+    // --- Helpers & UI Interactivity ---
+    function showLoader(show) {
+      document.getElementById('loader').classList.toggle('hidden', !show);
+    }
+
+    let toggleSidebar; // Declare globally for switchTab to use
+
+    function setupSidebarMobile() {
+      const btn = document.getElementById('mobile-menu-btn');
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      const closeBtn = document.getElementById('close-sidebar-btn');
+
+      toggleSidebar = function () {
+        const isClosed = sidebar.classList.contains('-translate-x-full');
+        if (isClosed) {
+          sidebar.classList.remove('-translate-x-full');
+          overlay.classList.remove('hidden');
+        } else {
+          sidebar.classList.add('-translate-x-full');
+          overlay.classList.add('hidden');
+        }
+      };
+
+      btn.addEventListener('click', toggleSidebar);
+      closeBtn.addEventListener('click', toggleSidebar);
+      overlay.addEventListener('click', toggleSidebar);
+    }
+
+    function setupSearch() {
+      document.getElementById('global-search').addEventListener('input', (e) => {
+        const val = e.target.value;
+        // Currently active tab logic
+        const isTodayStr = !document.getElementById('view-today').classList.contains('hidden');
+        if (isTodayStr) {
+          renderTodayView(val);
+        } else {
+          renderAllView(val);
+        }
+      });
+    }
+
+    function setupWebSocketNotifications() {
+      // Request Perms
+      if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+        Notification.requestPermission();
+      }
+
+      const connectWS = () => {
+        // Use wss based on window location
+        const prot = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const wsUrl = `${prot}//${window.location.host}`;
+
+        console.log("Connecting WS to:", wsUrl);
+        const ws = new WebSocket(wsUrl);
+
+        ws.onmessage = e => {
+          const m = JSON.parse(e.data);
+
+          // Native Notification
+          if (Notification.permission === 'granted') {
+            const notif = new Notification(m.title, { body: m.body, icon: '/images/logo.png' });
+            notif.onclick = () => { window.focus(); fetchAppointments(); };
+          }
+
+          // Toast Overlay
+          const Toast = Swal.mixin({
+            toast: true, position: 'top-end', showConfirmButton: false, timer: 5000,
+            timerProgressBar: true, didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
             }
           });
+          Toast.fire({ icon: 'info', title: m.title, text: m.body });
 
-          if (response.ok) {
-            const data = await response.json();
-            alert(data.message); // Show success message or handle response
-            // Optionally update UI or redirect
-          } else {
-            const errorText = await response.text();
-            throw new Error(errorText);
-          }
-        } catch (error) {
-          console.error('Error deleting appointment:', error);
-          alert('Failed to delete appointment. Please try again.');
-        }
-      });
-    });
+          // Wake up effect on bell
+          const badge = document.getElementById('notif-badge');
+          badge.classList.remove('hidden');
+          setTimeout(() => badge.classList.add('hidden'), 5000);
 
-    // Request notification permission on page load 
-    document.addEventListener('DOMContentLoaded', () => {
-      if (Notification.permission !== 'granted') {
-        Notification.requestPermission().then(permission => {
-          if (permission === 'granted') {
-            console.log('Notification permission granted.');
-          } else {
-            console.log('Notification permission denied.');
-          }
-        });
-      }
-    });
+          // Auto-refresh data
+          fetchAppointments();
+        };
 
-    // Establish WebSocket connection
-    const socket = new WebSocket('wss://localhost:8000');
+        ws.onclose = () => {
+          console.log("WS closed, retrying in 3s...");
+          setTimeout(connectWS, 3000);
+        };
 
-    socket.onopen = () => {
-      console.log('WebSocket connection established');
-    };
-    socket.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      console.log(message);
-
-      // Show browser notification
-
-      if (Notification.permission === 'granted') {
-        new Notification(message.title, {
-          body: message.body,
-        });
-      } else {
-        alert(`${message.title}: ${message.body}`);
-      }
-    };
-
-    socket.onclose = () => {
-      console.log('WebSocket connection closed');
-    };
-
-    socket.onerror = (error) => {
-      console.error('WebSocket error:', error);
-    };
-
-  </script>
-
-  <script>
-    function showToast(msg, type = "info") {
-      const toast = $(`
-  <div class="toast" data-delay="3000">
-    <div class="toast-body bg-${type} text-white">${msg}</div>
-  </div>`);
-      $(".toast-container").append(toast);
-      toast.toast("show").on("hidden.bs.toast", () => toast.remove());
-    }
-
-    /* SEARCH */
-    $("#searchInput").on("keyup", function () {
-      const v = $(this).val().toLowerCase();
-      $(".searchable").each(function () {
-        $(this).toggle($(this).text().toLowerCase().includes(v));
-      });
-    });
-
-    /* PAGINATION */
-    const cards = $(".searchable"); let perPage = 6; let page = 1;
-    function render() {
-      cards.hide();
-      cards.slice((page - 1) * perPage, page * perPage).show();
-    }
-    function pager() {
-      let pages = Math.ceil(cards.length / perPage); let html = "";
-      for (let i = 1; i <= pages; i++) html += `<button class="${i == page ? 'active' : ''}" onclick="page=${i};render()">${i}</button>`;
-      $("#pagination").html(html);
-    }
-    pager(); render();
-
-    /* CLEAR FILTER */
-    $("#clear-filter").click(() => location.href = "/admin/dashboard");
-
-    /* LOGOUT */
-    $("#logout-btn").click(() => location.href = "/admin/logout");
-
-    /* WEBSOCKET (SINGLE + MOBILE SAFE) */
-    let ws;
-    function connectWS() {
-      ws = new WebSocket("wss://localhost:8000");
-      ws.onmessage = e => {
-        const m = JSON.parse(e.data);
-        showToast(m.title + ": " + m.body, "primary");
+        ws.onerror = (err) => {
+          console.error('WS Error');
+        };
       };
-      ws.onclose = () => setTimeout(connectWS, 3000);
-    }
-    connectWS();
-  </script>
 
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+      connectWS();
+    }
+  </script>
 </body>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<!-- Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<!-- Bootstrap JS -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </html>

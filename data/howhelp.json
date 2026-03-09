@@ -1,0 +1,234 @@
+{
+    "recovery": {
+        "slug": "recovery",
+        "title": "Recovery After Hospital Stay",
+        "metaTitle": "Recovery After Hospital Stay | Movement Science Physiotherapy",
+        "metaDescription": "Transition smoothly from hospital to home with specialist physiotherapy support. Regain independence and strength after surgery or illness.",
+        "keywords": [
+            "physiotherapy after hospital",
+            "post-surgery recovery",
+            "rehabilitation at home",
+            "Movement Science physiotherapy"
+        ],
+        "intro": "After staying in hospital for a considerable length of time, the thought of returning home can trigger anxiety. It is normal to worry about how you will manage without the support of hospital staff. Physiotherapy plays a huge part in helping you on a speedy route to recovery.",
+        "image": "/images/mcenter.jpg",
+        "contentSections": [
+            {
+                "heading": "Preparing for Discharge",
+                "body": "Before leaving the hospital, it is important to have a clear discharge plan. This plan should include information about medications, follow-up appointments, and any necessary medical equipment. Communicating with healthcare providers to understand the recovery process and expected timeline is essential."
+            },
+            {
+                "heading": "Managing Medications",
+                "body": "Proper medication management is crucial for recovery. Ensure that you understand the dosage, timing, and potential side effects of any prescribed medications. Setting reminders and keeping a medication schedule can help avoid missed doses and ensure adherence to the treatment plan."
+            },
+            {
+                "heading": "Our top tips to help you progress at home",
+                "body": "Assess your capabilities and plan you a personalised physiotherapy programme to help you reach your goals. Discuss your lifestyle and advise on how to achieve normality. Look for any muscle weakness, joint stiffness, or balance issues and work on addressing them. Assess your abilities to sit, stand, walk, and climb the stairs in your own home. Review walking aids and check that they are suitable for you."
+            }
+        ]
+    },
+    "jointpain": {
+        "slug": "jointpain",
+        "title": "Joint and Muscular Pain",
+        "metaTitle": "Expert Joint and Muscular Pain Treatment | Movement Science",
+        "metaDescription": "Effective management and treatment for back, neck, and joint pain. Personalised physiotherapy plans to help you live pain-free.",
+        "keywords": [
+            "joint pain treatment",
+            "muscular pain relief",
+            "physiotherapy for back pain",
+            "Movement Science clinic"
+        ],
+        "intro": "Joint and muscular pain can significantly affect one's quality of life, limiting mobility and causing discomfort. Understanding the causes and treatment options for these types of pain is crucial for managing symptoms and improving overall well-being.",
+        "image": "https://th.bing.com/th/id/OIP.lTagr2WGP5Wh_VXPv26V3QHaE8?w=297&h=198&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+        "contentSections": [
+            {
+                "heading": "Common Causes",
+                "body": "Joint pain can stem from conditions like osteoarthritis, rheumatoid arthritis, bursitis, or gout. Muscular pain can result from strain, overuse, or tension. Identifying the specific cause is key to effective management."
+            },
+            {
+                "heading": "Treatment Options",
+                "body": "We use a combination of manual therapy, guided exercises, and lifestyle advice. Our goal is to reduce inflammation, improve joint function, and strengthen supporting muscles."
+            }
+        ]
+    },
+    "balance": {
+        "slug": "balance",
+        "title": "Balance and Mobility",
+        "metaTitle": "Improve Balance and Mobility | Movement Science Physiotherapy",
+        "metaDescription": "Specialist physiotherapy to improve balance, prevent falls, and increase mobility in your daily life.",
+        "keywords": [
+            "balance training",
+            "mobility exercises",
+            "falls prevention",
+            "senior physiotherapy"
+        ],
+        "intro": "Maintaining good balance and mobility is essential for independence and safety, especially as we age. Our specialist team helps you identify risks and build confidence in your movement.",
+        "image": "/images/mcenter.jpg",
+        "contentSections": [
+            {
+                "heading": "Our Method",
+                "body": "We conduct thorough balance assessments and design personalised exercise programmes. We look at muscle strength, joint flexibility, and proprioception to create a comprehensive plan."
+            }
+        ]
+    },
+    "muscularweak": {
+        "slug": "muscularweak",
+        "title": "Muscular Weakness",
+        "metaTitle": "Treatment for Muscular Weakness | Movement Science",
+        "metaDescription": "Regain your strength and vitality. We provide specialist physiotherapy for muscle weakness and atrophy.",
+        "keywords": [
+            "muscle weakness",
+            "strengthening exercises",
+            "physiotherapy for atrophy",
+            "Movement Science"
+        ],
+        "intro": "Muscular weakness can be frustrating and limiting. Whether it's due to injury, illness, or aging, our team is here to help you rebuild your strength and confidence.",
+        "image": "https://www.thephysioco.com.au/wp-content/uploads/2018/06/bigstock-Portrait-Of-Physiotherapist-Do-238971859-1024x684.jpg",
+        "contentSections": [
+            {
+                "heading": "Our Approach",
+                "body": "We use progressive resistance training and neuromuscular re-education to help your muscles fire correctly and grow stronger. Each plan is tailored to your current ability level."
+            }
+        ]
+    },
+    "sports": {
+        "slug": "sports",
+        "title": "Sports Injuries",
+        "metaTitle": "Sports Injury Physiotherapy | Movement Science",
+        "metaDescription": "Get back in the game faster. Specialist sports injury rehabilitation for athletes of all levels.",
+        "keywords": [
+            "sports injuries",
+            "rehab for athletes",
+            "sprains and strains",
+            "Movement Science"
+        ],
+        "intro": "Don't let a sports injury keep you on the sidelines. Our specialist sports physiotherapists help you recover quickly and prevent future injuries.",
+        "image": "https://th.bing.com/th/id/OIP.rzi74bdz6_ONpEjL4CIZlwHaE8?rs=1&pid=ImgDetMain",
+        "contentSections": [
+            {
+                "heading": "Expert Rehab",
+                "body": "From acute sprains to chronic overuse injuries, we provide expert diagnosis and evidence-based rehabilitation to ensure a safe and effective return to sport."
+            }
+        ]
+    },
+    "falls": {
+        "slug": "falls",
+        "title": "Falls and Accidents",
+        "metaTitle": "Falls Prevention & Accident Recovery | Movement Science",
+        "metaDescription": "Specialist support after a fall or accident. Improve your balance and rebuild your confidence.",
+        "keywords": [
+            "falls prevention",
+            "accident recovery",
+            "balance training",
+            "Movement Science"
+        ],
+        "intro": "A fall can be a major setback, both physically and emotionally. We provide a supportive environment to help you recover and reduce the risk of future incidents.",
+        "image": "/images/ref566.jpg",
+        "contentSections": [
+            {
+                "heading": "Building Confidence",
+                "body": "After a fall, the fear of falling again can be as limiting as the injury itself. We work on both physical strength and psychological confidence to help you move freely again."
+            }
+        ]
+    },
+    "confidence": {
+        "slug": "confidence",
+        "title": "Building Up Your Confidence",
+        "metaTitle": "Build Confidence in Your Movement | Movement Science",
+        "metaDescription": "Rebuild your physical and mental confidence after injury or illness. Specialist support to help you move freely.",
+        "keywords": [
+            "build confidence",
+            "mobility and mindset",
+            "physical therapy",
+            "Movement Science"
+        ],
+        "intro": "Confidence is key to recovery. Our holistic approach combines physical rehabilitation with psychological support to help you achieve your full potential.",
+        "image": "https://th.bing.com/th/id/OIP.P2ITA6RLX_bd0V7kPpy7eQHaE8?rs=1&pid=ImgDetMain",
+        "contentSections": [
+            {
+                "heading": "Empowering Movement",
+                "body": "We believe that movement is empowerment. Our programmes are designed to give you the tools and the confidence to take back control of your life."
+            }
+        ]
+    },
+    "swelljoints": {
+        "slug": "swelljoints",
+        "title": "Swollen Joints",
+        "metaTitle": "Treatment for Swollen & Painful Joints | Movement Science",
+        "metaDescription": "Relieve joint swelling and inflammation. Specialist physiotherapy for arthritis and acute joint issues.",
+        "keywords": [
+            "swollen joints",
+            "joint inflammation",
+            "arthritis relief",
+            "Movement Science"
+        ],
+        "intro": "Swollen joints can be painful and restrictive. We provide expert care to reduce inflammation, alleviate pain, and restore joint function.",
+        "image": "https://th.bing.com/th/id/OIP._9ycjhVjItHE5jzu-OqD_wHaEK?rs=1&pid=ImgDetMain",
+        "contentSections": [
+            {
+                "heading": "Reducing Inflammation",
+                "body": "Through manual therapy, lymphatic drainage techniques, and bespoke exercise, we target the root cause of swelling to get you moving comfortably again."
+            }
+        ]
+    },
+    "working": {
+        "slug": "working",
+        "title": "Returning To Work",
+        "metaTitle": "Occupational Health & Return to Work | Movement Science",
+        "metaDescription": "Expert support to help you safely and effectively return to work after injury or illness.",
+        "keywords": [
+            "return to work",
+            "occupational health",
+            "work injury rehab",
+            "Movement Science"
+        ],
+        "intro": "Returning to work is a major milestone. We provide the rehabilitation and ergonomic advice you need to ensure a successful and sustainable return.",
+        "image": "/images/m34.jpg",
+        "contentSections": [
+            {
+                "heading": "Work-Ready Rehab",
+                "body": "We simulate work-related tasks and provide ergonomic assessments to prepare your body for the demands of your job, ensuring you go back stronger."
+            }
+        ]
+    },
+    "outdoors": {
+        "slug": "outdoors",
+        "title": "Mobility Outdoors",
+        "metaTitle": "Outdoor Mobility & confidence training | Movement Science",
+        "metaDescription": "Master uneven terrain and outdoor environments. We help you regain the confidence to enjoy the outdoors safely.",
+        "keywords": [
+            "outdoor mobility",
+            "walking on uneven ground",
+            "community access",
+            "Movement Science"
+        ],
+        "intro": "The world isn't flat, and neither is your journey. We help you master steps, slopes, and uneven ground so you can enjoy the outdoors with confidence.",
+        "image": "https://th.bing.com/th/id/OIP.k20IlBwyfn5gTkGx7tX_-wHaE8?rs=1&pid=ImgDetMaing",
+        "contentSections": [
+            {
+                "heading": "Real-World Training",
+                "body": "Our therapy sessions can include real-world outdoor practice. We help you navigate your local community safely, whether it's the park, the shops, or different public spaces."
+            }
+        ]
+    },
+    "mobilediff": {
+        "slug": "mobilediff",
+        "title": "Mobility Difficulties At Home",
+        "metaTitle": "Improve Home Mobility | Movement Science Physiotherapy",
+        "metaDescription": "Specialist support for mobility issues at home. We help you navigate your living space safely and independently.",
+        "keywords": [
+            "home mobility",
+            "physiotherapy at home",
+            "living independently",
+            "Movement Science"
+        ],
+        "intro": "Your home should be a place of safety and comfort. We help you overcome mobility challenges within your living space, from stairs to bathroom safety.",
+        "image": "https://th.bing.com/th/id/OIP.5ff_1dErl0V_AMv7cgAr1QHaE8?rs=1&pid=ImgDetMain",
+        "contentSections": [
+            {
+                "heading": "Home Safety Solutions",
+                "body": "We assess your home environment and provide tailored exercises to improve your safety and independence in daily tasks like getting in and out of bed or climbing stairs."
+            }
+        ]
+    }
+}

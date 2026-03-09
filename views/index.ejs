@@ -320,15 +320,26 @@
             question: question
           })
         })
-          .then(response => response.json())
+          .then(async response => {
+            const data = await response.json();
+            if (!response.ok) {
+              if (data.errors) {
+                const errorMsgs = data.errors.map(err => err.msg).join('\n');
+                throw new Error(errorMsgs);
+              }
+              throw new Error(data.error || 'Failed to submit form');
+            }
+            return data;
+          })
           .then(data => {
             console.log('Form submission successful:', data);
             toggleLiveChat(); // Close the modal after successful submission
-            alert("We will get to you soon");
+            alert("Success: " + (data.message || "We will get to you soon"));
+            document.getElementById('live-chat-form').reset();
           })
           .catch(error => {
             console.error('Error submitting form:', error);
-            // Optionally, show an error message to the user
+            alert("Error:\n" + error.message);
           });
       });
     });
@@ -693,7 +704,7 @@
     <br>
     <a href="/freecall" class="ctcbtn">Schedule A Free Online Call</a>
   </div>
-  
+
   <br><br><br>
 
   <style>
