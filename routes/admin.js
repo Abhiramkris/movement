@@ -106,6 +106,17 @@ router.get('/api/appointments', requireAdmin, async (req, res) => {
     }
 });
 
+// Bulk delete past pending appointments
+router.post('/api/appointments/delete-past', requireAdmin, async (req, res) => {
+    try {
+        const [result] = await db.query('DELETE FROM appointments WHERE date < CURDATE()');
+        res.json({ message: 'Success', deletedCount: result.affectedRows });
+    } catch (err) {
+        console.error('Error deleting past appointments:', err);
+        res.status(500).json({ error: 'Database error while deleting past appointments' });
+    }
+});
+
 // Patient History by Phone (Trail)
 router.get('/api/patient/:phone/history', requireAdmin, async (req, res) => {
     const { phone } = req.params;
@@ -132,6 +143,8 @@ router.post('/api/appointment/:id/notes',
         body('clinical_notes.s').trim().optional({ checkFalsy: true }),
         body('clinical_notes.o').trim().optional({ checkFalsy: true }),
         body('clinical_notes.ap').trim().optional({ checkFalsy: true }),
+        body('date').trim().optional({ checkFalsy: true }),
+        body('slot').trim().optional({ checkFalsy: true }),
         body('status').trim().notEmpty().withMessage('Status is required')
     ],
     async (req, res) => {
@@ -139,32 +152,45 @@ router.post('/api/appointment/:id/notes',
         if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
         const { id: rawId } = req.params;
-        const { clinical_notes, status } = req.body;
+        const { clinical_notes, status, date, slot } = req.body;
         console.log('Update Request:', { rawId, status, hasNotes: !!clinical_notes });
 
         try {
             let tableName = 'approved_appointments';
             let actualId = rawId;
 
-            if (typeof rawId === 'string' && rawId.startsWith('req_')) {
+            if (typeof rawId === 'string' && rawId.includes('req_')) {
                 tableName = 'appointments';
-                actualId = rawId.replace('req_', '');
-            } else if (typeof rawId === 'string' && rawId.startsWith('appt_')) {
+                actualId = rawId.replace(/req_/g, '');
+            } else if (typeof rawId === 'string' && rawId.includes('appt_')) {
                 tableName = 'approved_appointments';
-                actualId = rawId.replace('appt_', '');
+                actualId = rawId.replace(/appt_/g, '');
             }
 
             let updateQuery = `UPDATE ${tableName} SET `;
             const queryParams = [];
             const updates = [];
 
-            if (clinical_notes) {
-                updates.push('clinical_notes = ?');
-                queryParams.push(JSON.stringify(clinical_notes));
+            // Only update clinical_notes and status for approved appointments
+            if (tableName === 'approved_appointments') {
+                if (clinical_notes) {
+                    updates.push('clinical_notes = ?');
+                    queryParams.push(JSON.stringify(clinical_notes));
+                }
+                if (status) {
+                    updates.push('status = ?');
+                    queryParams.push(status);
+                }
             }
-            if (status) {
-                updates.push('status = ?');
-                queryParams.push(status);
+
+            // Both tables support date and slot (for rescheduling)
+            if (date) {
+                updates.push('date = ?');
+                queryParams.push(date);
+            }
+            if (slot) {
+                updates.push('slot = ?');
+                queryParams.push(slot);
             }
 
             if (updates.length === 0) return res.status(400).json({ error: 'No data to update' });
@@ -173,6 +199,21 @@ router.post('/api/appointment/:id/notes',
             queryParams.push(actualId);
 
             await db.query(updateQuery, queryParams);
+
+            // Fetch patient info for notification if date/slot changed
+            if (date || slot) {
+                const [target] = await db.query(`SELECT name, email, date, slot FROM ${tableName} WHERE id = ?`, [actualId]);
+                if (target && target[0] && target[0].email) {
+                    const appt = target[0];
+                    const emailService = require('../utils/email');
+                    emailService.sendStatusUpdate(appt.email, appt.name, appt.date, appt.slot, 'rescheduled', {
+                        id: actualId,
+                        table: tableName,
+                        phone: appt.phone || (target[0].phone) // Ensure phone is passed
+                    }).catch(e => console.error("Reschedule email err:", e));
+                }
+            }
+
             res.json({ message: 'Record updated successfully', type: tableName });
         } catch (err) {
             console.error('Error updating appointment notes:', err);
@@ -186,8 +227,8 @@ router.post('/approve', requireAdmin, async (req, res) => {
     if (!id) return res.status(400).json({ error: 'Missing appointment ID' });
 
     // Handle prefixed IDs from UI
-    if (typeof id === 'string' && id.startsWith('req_')) {
-        id = id.replace('req_', '');
+    if (typeof id === 'string' && id.includes('req_')) {
+        id = id.replace(/req_/g, '');
     }
 
     try {
@@ -204,8 +245,11 @@ router.post('/approve', requireAdmin, async (req, res) => {
 
         // Trigger Email (Non-blocking)
         const emailService = require('../utils/email');
-        emailService.sendStatusUpdate(appt.email, appt.name, appt.date, appt.slot, 'approved')
-            .catch(e => console.error("Email err:", e));
+        emailService.sendStatusUpdate(appt.email, appt.name, appt.date, appt.slot, 'approved', {
+            id: appt.id,
+            table: 'approved_appointments',
+            phone: appt.phone
+        }).catch(e => console.error("Email err:", e));
 
         res.json({ message: 'Approved successfully' });
     } catch (err) {
@@ -223,12 +267,12 @@ router.post('/delete', requireAdmin, async (req, res) => {
         let tableName = 'appointments';
         let actualId = id;
 
-        if (typeof id === 'string' && id.startsWith('req_')) {
+        if (typeof id === 'string' && id.includes('req_')) {
             tableName = 'appointments';
-            actualId = id.replace('req_', '');
-        } else if (typeof id === 'string' && id.startsWith('appt_')) {
+            actualId = id.replace(/req_/g, '');
+        } else if (typeof id === 'string' && id.includes('appt_')) {
             tableName = 'approved_appointments';
-            actualId = id.replace('appt_', '');
+            actualId = id.replace(/appt_/g, '');
         }
 
         // Fetch to get email/name for notification before delete
@@ -698,6 +742,94 @@ router.post('/api/notifications/groups/:id/delete', requireAdmin, async (req, re
         res.json({ success: true, message: 'Group deleted' });
     } catch (err) {
         console.error('Error deleting group:', err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+/**
+ * RESCHEDULE REQUESTS ADMIN API
+ */
+
+// Fetch all pending reschedule requests
+router.get('/api/reschedule-requests', requireAdmin, async (req, res) => {
+    try {
+        const [requests] = await db.query(
+            "SELECT * FROM reschedule_requests WHERE status = 'pending' ORDER BY created_at DESC"
+        );
+        res.json(requests);
+    } catch (err) {
+        const fs = require('fs');
+        fs.appendFileSync('/tmp/admin_error.log', `Error [${new Date().toISOString()}]: ${err.stack}\n`);
+        console.error('CRITICAL: Error fetching reschedule requests:', err);
+        res.status(500).json({ error: 'REALLY CRITICAL DB ERROR', details: err.message });
+    }
+});
+
+// Approve a reschedule request
+router.post('/api/reschedule-requests/:id/approve', requireAdmin, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [requestRows] = await db.query('SELECT * FROM reschedule_requests WHERE id = ?', [id]);
+        if (requestRows.length === 0) return res.status(404).json({ error: 'Request not found' });
+
+        const request = requestRows[0];
+        const { appointment_id, appointment_table, requested_date, requested_slot } = request;
+
+        // 1. Update the original appointment
+        await db.query(
+            `UPDATE ${appointment_table} SET date = ?, slot = ? WHERE id = ?`,
+            [requested_date, requested_slot, appointment_id]
+        );
+
+        // 2. Mark request as approved
+        await db.query('UPDATE reschedule_requests SET status = "approved" WHERE id = ?', [id]);
+
+        // 3. Send confirmation email to patient
+        const [apptRows] = await db.query(
+            `SELECT name, email, phone FROM ${appointment_table} WHERE id = ?`,
+            [appointment_id]
+        );
+        if (apptRows.length > 0) {
+            const appt = apptRows[0];
+            const emailService = require('../utils/email');
+            emailService.sendStatusUpdate(appt.email, appt.name, requested_date, requested_slot, 'rescheduled', {
+                id: appointment_id,
+                table: appointment_table,
+                phone: appt.phone
+            }).catch(e => console.error('Error sending reschedule approval email:', e));
+        }
+
+        res.json({ success: true, message: 'Reschedule approved and appointment updated' });
+    } catch (err) {
+        console.error('Error approving reschedule:', err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+// Reject a reschedule request
+router.post('/api/reschedule-requests/:id/reject', requireAdmin, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [requestRows] = await db.query('SELECT * FROM reschedule_requests WHERE id = ?', [id]);
+        if (requestRows.length === 0) return res.status(404).json({ error: 'Request not found' });
+
+        const request = requestRows[0];
+
+        // 1. Mark request as rejected
+        await db.query('UPDATE reschedule_requests SET status = "rejected" WHERE id = ?', [id]);
+
+        // 2. Notify patient (Optional: you could add a specialized email for this)
+        const emailService = require('../utils/email');
+        emailService.sendCustomEmail(
+            request.patient_phone, // Using phone as fallback if email not in request table
+            request.patient_name,
+            'Reschedule Request Update',
+            `Your request to reschedule your appointment to ${request.requested_date} at ${request.requested_slot} could not be accommodated at this time. Please contact us to find another suitable slot.`
+        ).catch(e => console.error('Error sending reject notification:', e));
+
+        res.json({ success: true, message: 'Reschedule request rejected' });
+    } catch (err) {
+        console.error('Error rejecting reschedule:', err);
         res.status(500).json({ error: 'Database error' });
     }
 });

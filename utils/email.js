@@ -1,10 +1,15 @@
 const { Resend } = require('resend');
+const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 dotenv.config();
 
 // Create Resend instance (only if API key exists to prevent crashes in dev without it)
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
-const FROM_EMAIL = 'Movement Science <noreply@movement-science.com>'; // Update this once a domain is verified in Resend
+const FROM_EMAIL = 'Movement Science <noreply@movement-science.com>';
+const CONTACT_PHONE = process.env.CONTACT_PHONE || '+44 7448 547747';
+const CONTACT_EMAIL = 'info@movement-science.com';
+const WEBSITE_URL = process.env.URL_ORIGIN || 'https://movement-science.com';
+const JWT_SECRET = process.env.JWT_SECRET || process.env.SESSION_SECRET || 'movement-science-reschedule-secret';
 
 /**
  * Base professional HTML email template
@@ -49,13 +54,24 @@ const generateEmailHTML = (title, content, actionButton = null) => {
                             </td>
                         </tr>
 
+                        <!-- Contact Details -->
+                        <tr>
+                            <td style="background-color: #011d3b; padding: 24px 30px; text-align: center;">
+                                <p style="margin: 0 0 8px 0; color: #93c5fd; font-size: 13px; font-weight: bold; letter-spacing: 1px;">CONTACT US</p>
+                                <p style="margin: 0 0 6px 0; color: #e2e8f0; font-size: 14px;">📞 <a href="tel:${CONTACT_PHONE.replace(/\s/g, '')}" style="color: #e2e8f0; text-decoration: none;">${CONTACT_PHONE}</a></p>
+                                <p style="margin: 0 0 6px 0; color: #e2e8f0; font-size: 14px;">📧 <a href="mailto:${CONTACT_EMAIL}" style="color: #93c5fd; text-decoration: none;">${CONTACT_EMAIL}</a></p>
+                                <p style="margin: 0 0 6px 0; color: #e2e8f0; font-size: 14px;">🌐 <a href="${WEBSITE_URL}" style="color: #93c5fd; text-decoration: none;">movement-science.com</a></p>
+                                <p style="margin: 8px 0 0 0;"><a href="https://wa.me/${CONTACT_PHONE.replace(/[\s+]/g, '')}" style="color: #25d366; text-decoration: none; font-size: 14px;">💬 WhatsApp Us</a></p>
+                            </td>
+                        </tr>
+
                         <!-- Footer -->
                         <tr>
-                            <td style="background-color: #f8fafc; padding: 20px 30px; text-align: center; border-top: 1px solid #e2e8f0;">
-                                <p style="margin: 0; color: #64748b; font-size: 14px;">
+                            <td style="background-color: #f8fafc; padding: 16px 30px; text-align: center; border-top: 1px solid #e2e8f0;">
+                                <p style="margin: 0; color: #64748b; font-size: 13px;">
                                     &copy; ${new Date().getFullYear()} Movement Science. All rights reserved.
                                 </p>
-                                <p style="margin: 10px 0 0 0; color: #94a3b8; font-size: 12px;">
+                                <p style="margin: 6px 0 0 0; color: #94a3b8; font-size: 11px;">
                                     This is an automated message, please do not reply directly to this email.
                                 </p>
                             </td>
@@ -154,13 +170,30 @@ const sendAdminBookingAlert = async (appointmentData) => {
 /**
  * Send Status Update to Patient (Approved/Cancelled)
  */
-const sendStatusUpdate = async (patientEmail, patientName, date, slot, status) => {
+const sendStatusUpdate = async (patientEmail, patientName, date, slot, status, appointmentMeta = null) => {
     if (!resend) return console.warn('Email skipped: No RESEND_API_KEY');
 
     const isApproved = status === 'approved';
-    const title = isApproved ? 'Appointment Confirmed!' : 'Appointment Cancelled';
-    const statusColor = isApproved ? '#16a34a' : '#dc2626';
+    const isRescheduled = status === 'rescheduled';
+    const title = isApproved ? 'Appointment Confirmed!' : (isRescheduled ? 'Appointment Rescheduled' : 'Appointment Cancelled');
+    const statusColor = isApproved ? '#16a34a' : (isRescheduled ? '#2563eb' : '#dc2626');
     const dateStr = date instanceof Date ? date.toISOString().split('T')[0] : (typeof date === 'string' ? date.split('T')[0] : String(date));
+
+    // Generate reschedule token for approved/rescheduled emails
+    let rescheduleButton = null;
+    if ((isApproved || isRescheduled) && appointmentMeta) {
+        try {
+            const token = jwt.sign({
+                appointmentId: appointmentMeta.id,
+                table: appointmentMeta.table || 'approved_appointments',
+                phone: appointmentMeta.phone
+            }, JWT_SECRET, { expiresIn: '7d' });
+            const rescheduleUrl = `${WEBSITE_URL}/reschedule?token=${token}`;
+            rescheduleButton = { text: 'Request Reschedule', url: rescheduleUrl };
+        } catch (e) {
+            console.error('Failed to generate reschedule token:', e);
+        }
+    }
 
     let content = `<p>Dear ${patientName},</p>`;
 
@@ -172,11 +205,19 @@ const sendStatusUpdate = async (patientEmail, patientName, date, slot, status) =
             </div>
             <p>Our physiotherapist will arrive at your provided location at the scheduled time. If you need to make any changes, please contact us at least 24 hours in advance.</p>
         `;
+    } else if (isRescheduled) {
+        content += `
+            <p>Your physiotherapy appointment has been rescheduled to a new time slot:</p>
+            <div style="background-color: #eff6ff; border-left: 4px solid #2563eb; padding: 15px; margin: 20px 0;">
+                <p style="margin: 0; font-size: 18px;"><strong>${dateStr}</strong> at <strong>${slot}</strong></p>
+            </div>
+            <p>If this new time does not work for you, you can request a reschedule using the button below.</p>
+        `;
     } else {
         content += `
             <p>We regret to inform you that we are unable to fulfill your appointment request for:</p>
             <p style="color: ${statusColor}; font-weight: bold;">${dateStr} at ${slot}</p>
-            <p>Please contact us directly at our phone number or reply to this email to reschedule, and we will do our best to accommodate you.</p>
+            <p>Please contact us directly at <strong>${CONTACT_PHONE}</strong> or email us at <strong>${CONTACT_EMAIL}</strong> to reschedule, and we will do our best to accommodate you.</p>
         `;
     }
 
@@ -185,7 +226,7 @@ const sendStatusUpdate = async (patientEmail, patientName, date, slot, status) =
             from: FROM_EMAIL,
             to: patientEmail,
             subject: `${title} - Movement Science`,
-            html: generateEmailHTML(title, content)
+            html: generateEmailHTML(title, content, rescheduleButton)
         });
         console.log(`Status update (${status}) sent to ${patientEmail}`);
     } catch (error) {
@@ -255,10 +296,30 @@ const sendCustomEmail = async (recipientEmail, recipientName, subject, messageBo
     }
 };
 
+/**
+ * Generate a reschedule JWT token for an appointment
+ */
+const generateRescheduleToken = (appointmentId, table, phone) => {
+    return jwt.sign({ appointmentId, table, phone }, JWT_SECRET, { expiresIn: '7d' });
+};
+
+/**
+ * Verify a reschedule JWT token
+ */
+const verifyRescheduleToken = (token) => {
+    try {
+        return jwt.verify(token, JWT_SECRET);
+    } catch (e) {
+        return null;
+    }
+};
+
 module.exports = {
     sendBookingConfirmation,
     sendAdminBookingAlert,
     sendStatusUpdate,
     sendCallRequestReply,
-    sendCustomEmail
+    sendCustomEmail,
+    generateRescheduleToken,
+    verifyRescheduleToken
 };

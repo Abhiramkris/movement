@@ -214,40 +214,7 @@
     }
   </style>
 
-  <nav class="navbar navbar-expand-lg navbar-light">
-    <a class="navbar-brand" href="/">
-      <img src="/images/logo.png" alt="Logo"> <!-- Replace with your logo URL -->
-    </a>
-    <div class="name">
-      <h5>MOVEMENT SCIENCE</h5>
-    </div>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item active">
-          <a class="nav-link" href="/howhelp/index">How we help <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/services">Services</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/conditions">Conditions</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/faq">FAQ</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/about">About-us</a>
-        </li>
-      </ul>
-      <div class="free-consultation">
-        <a href="/checkslot" class="nav-link">Book Free Consultation</a> <br>
-      </div>
-    </div>
-  </nav>
+  <%- include('header') %>
 
 
   <script>
@@ -348,7 +315,7 @@
 
 
   <section class="showcase">
-    <video autoplay muted loop playsinline poster="/images/hero.jpg">
+    <video autoplay muted loop playsinline>
       <source src="/images/herohero.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
@@ -571,8 +538,8 @@
     <div class="imagetext">
       <div class="image">
         <img
-          src="https://www.thephysioco.com.au/wp-content/uploads/2018/06/bigstock-Portrait-Of-Physiotherapist-Do-238971859-1024x684.jpg"
-          alt="doc">
+          src="/images/about.jpg"
+          alt="Movement Science Physiotherapy">
       </div>
       <div class="subhead3"> <br>
         Movement science has an excellent team of highly qualified physiotherapists working close to you, provide expert
@@ -669,118 +636,80 @@
     }
   </style>
 
-  <!-- ========== INTERACTIVE BODY TREATMENT SECTION ========== -->
+  <!-- ========== TREATMENT SECTION ========== -->
   <section class="treat-section reveal" id="treat-section">
-    <div class="treat-container">
+    <div class="treat-header-row">
+      <span class="treat-label">WHAT WE TREAT</span>
+      <h2 class="treat-main-title">
+        Expert Care,<br><span>Head to Toe</span>
+      </h2>
+      <p class="treat-subtitle">Movement Science provides treatment for all musculoskeletal issues. Our physiotherapists
+        specialize in evidence-based care for every part of your body.</p>
+    </div>
 
-      <!-- LEFT — Info Cards -->
-      <div class="treat-left">
-        <span class="treat-label">WHAT WE TREAT</span>
-        <h2 class="treat-main-title">
-          Expert Care,<br><span>Head to Toe</span>
-        </h2>
-        <p class="treat-subtitle">Movement Science provides treatment for all musculoskeletal issues. Tap a body point
-          to learn more.</p>
-
-        <!-- Rotating Card -->
-        <div class="treat-card-wrapper">
-          <div class="treat-card active" data-point="head">
-            <div class="treat-card-icon" style="background: linear-gradient(135deg, #c084fc, #a855f7);">
-              <i class="fas fa-head-side-brain"></i>
-            </div>
-            <div class="treat-card-body">
-              <h4>Head & Neck</h4>
-              <p>Migraines, cervical pain, TMJ disorders, tension headaches, and postural neck strain.</p>
-            </div>
-          </div>
-          <div class="treat-card" data-point="shoulder">
-            <div class="treat-card-icon" style="background: linear-gradient(135deg, #60a5fa, #3b82f6);">
-              <i class="fas fa-hand-paper"></i>
-            </div>
-            <div class="treat-card-body">
-              <h4>Shoulders & Arms</h4>
-              <p>Frozen shoulder, rotator cuff injuries, tennis elbow, carpal tunnel, and arm weakness.</p>
-            </div>
-          </div>
-          <div class="treat-card" data-point="chest">
-            <div class="treat-card-icon" style="background: linear-gradient(135deg, #34d399, #10b981);">
-              <i class="fas fa-lungs"></i>
-            </div>
-            <div class="treat-card-body">
-              <h4>Spine & Core</h4>
-              <p>Scoliosis, herniated discs, sciatica, core instability, and thoracic stiffness.</p>
-            </div>
-          </div>
-          <div class="treat-card" data-point="hip">
-            <div class="treat-card-icon" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);">
-              <i class="fas fa-bone"></i>
-            </div>
-            <div class="treat-card-body">
-              <h4>Hip & Pelvis</h4>
-              <p>Hip bursitis, labral tears, pelvic floor dysfunction, SI joint pain, and hip replacements.</p>
-            </div>
-          </div>
-          <div class="treat-card" data-point="knee">
-            <div class="treat-card-icon" style="background: linear-gradient(135deg, #fb923c, #f97316);">
-              <i class="fas fa-running"></i>
-            </div>
-            <div class="treat-card-body">
-              <h4>Knees</h4>
-              <p>ACL/MCL injuries, meniscus tears, patellofemoral pain, arthritis, and post-surgical rehab.</p>
-            </div>
-          </div>
-          <div class="treat-card" data-point="ankle">
-            <div class="treat-card-icon" style="background: linear-gradient(135deg, #f87171, #ef4444);">
-              <i class="fas fa-shoe-prints"></i>
-            </div>
-            <div class="treat-card-body">
-              <h4>Ankles & Feet</h4>
-              <p>Plantar fasciitis, ankle sprains, Achilles tendinopathy, flat feet, and stress fractures.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Progress dots -->
-        <div class="treat-progress">
-          <button class="treat-dot active" data-index="0"></button>
-          <button class="treat-dot" data-index="1"></button>
-          <button class="treat-dot" data-index="2"></button>
-          <button class="treat-dot" data-index="3"></button>
-          <button class="treat-dot" data-index="4"></button>
-          <button class="treat-dot" data-index="5"></button>
-        </div>
-      </div>
-
-      <!-- RIGHT — Body Image with Interactive Points -->
+    <div class="treat-layout">
+      <!-- LEFT — Body Image -->
       <div class="treat-visual">
         <div class="treat-bg-shape"></div>
         <img src="/images/strech.png" alt="Physiotherapy Treatment" class="treat-image">
+      </div>
 
-        <!-- Interactive body point buttons -->
-        <button class="body-point active" data-point="head" style="top: 8%; left: 55%;">
-          <span class="point-pulse"></span>
-          <span class="point-core" style="background: #a855f7;"></span>
-        </button>
-        <button class="body-point" data-point="shoulder" style="top: 22%; left: 52%;">
-          <span class="point-pulse"></span>
-          <span class="point-core" style="background: #3b82f6;"></span>
-        </button>
-        <button class="body-point" data-point="chest" style="top: 36%; left: 48%;">
-          <span class="point-pulse"></span>
-          <span class="point-core" style="background: #10b981;"></span>
-        </button>
-        <button class="body-point" data-point="hip" style="top: 50%; left: 44%;">
-          <span class="point-pulse"></span>
-          <span class="point-core" style="background: #f59e0b;"></span>
-        </button>
-        <button class="body-point" data-point="knee" style="top: 64%; left: 38%;">
-          <span class="point-pulse"></span>
-          <span class="point-core" style="background: #f97316;"></span>
-        </button>
-        <button class="body-point" data-point="ankle" style="top: 82%; left: 32%;">
-          <span class="point-pulse"></span>
-          <span class="point-core" style="background: #ef4444;"></span>
-        </button>
+      <!-- RIGHT — All Cards Grid -->
+      <div class="treat-cards-grid">
+        <div class="treat-card-v2">
+          <div class="treat-card-icon" style="background: linear-gradient(135deg, #c084fc, #a855f7);">
+            <i class="fas fa-head-side-brain"></i>
+          </div>
+          <div class="treat-card-body">
+            <h4>Head & Neck</h4>
+            <p>Migraines, cervical pain, TMJ disorders, tension headaches, and postural neck strain.</p>
+          </div>
+        </div>
+        <div class="treat-card-v2">
+          <div class="treat-card-icon" style="background: linear-gradient(135deg, #60a5fa, #3b82f6);">
+            <i class="fas fa-hand-paper"></i>
+          </div>
+          <div class="treat-card-body">
+            <h4>Shoulders & Arms</h4>
+            <p>Frozen shoulder, rotator cuff injuries, tennis elbow, carpal tunnel, and arm weakness.</p>
+          </div>
+        </div>
+        <div class="treat-card-v2">
+          <div class="treat-card-icon" style="background: linear-gradient(135deg, #34d399, #10b981);">
+            <i class="fas fa-lungs"></i>
+          </div>
+          <div class="treat-card-body">
+            <h4>Spine & Core</h4>
+            <p>Scoliosis, herniated discs, sciatica, core instability, and thoracic stiffness.</p>
+          </div>
+        </div>
+        <div class="treat-card-v2">
+          <div class="treat-card-icon" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);">
+            <i class="fas fa-bone"></i>
+          </div>
+          <div class="treat-card-body">
+            <h4>Hip & Pelvis</h4>
+            <p>Hip bursitis, labral tears, pelvic floor dysfunction, SI joint pain, and hip replacements.</p>
+          </div>
+        </div>
+        <div class="treat-card-v2">
+          <div class="treat-card-icon" style="background: linear-gradient(135deg, #fb923c, #f97316);">
+            <i class="fas fa-running"></i>
+          </div>
+          <div class="treat-card-body">
+            <h4>Knees</h4>
+            <p>ACL/MCL injuries, meniscus tears, patellofemoral pain, arthritis, and post-surgical rehab.</p>
+          </div>
+        </div>
+        <div class="treat-card-v2">
+          <div class="treat-card-icon" style="background: linear-gradient(135deg, #f87171, #ef4444);">
+            <i class="fas fa-shoe-prints"></i>
+          </div>
+          <div class="treat-card-body">
+            <h4>Ankles & Feet</h4>
+            <p>Plantar fasciitis, ankle sprains, Achilles tendinopathy, flat feet, and stress fractures.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -799,257 +728,136 @@
   </section>
 
   <style>
-    /* ========== INTERACTIVE BODY TREATMENT SECTION ========== */
+    /* ========== TREATMENT SECTION ========== */
     .treat-section {
-      padding: 80px 0 60px;
+      padding: 100px 0;
       background: #ffffff;
       font-family: 'Poppins', sans-serif;
       overflow: hidden;
     }
 
-    .treat-container {
+    .treat-header-row {
       max-width: 1200px;
-      margin: auto;
+      margin: 0 auto 30px;
       padding: 0 24px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      align-items: center;
-      gap: 60px;
-    }
-
-    /* LEFT */
-    .treat-left {
-      position: relative;
+      text-align: left;
     }
 
     .treat-label {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
-      letter-spacing: 2px;
-      color: #3b82f6;
+      letter-spacing: 2.5px;
+      color: rgb(1, 19, 67);
       text-transform: uppercase;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       display: block;
     }
 
     .treat-main-title {
       font-size: 40px;
-      font-weight: 800;
-      line-height: 1.15;
-      color: #010f49;
+      font-weight: 700;
+      font-style: normal;
+      line-height: 1.2;
+      color: rgb(1, 19, 67);
       margin: 0 0 12px 0;
     }
 
     .treat-main-title span {
-      background: linear-gradient(135deg, #3b82f6, #06b6d4);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: rgb(1, 19, 67);
+      -webkit-text-fill-color: unset;
+      background: none;
     }
 
     .treat-subtitle {
-      font-size: 16px;
-      color: #64748b;
-      line-height: 1.6;
-      margin-bottom: 28px;
-      max-width: 400px;
+      font-size: 25px;
+      color: rgb(51, 56, 68);
+      line-height: 42px;
+      max-width: 800px;
+      font-weight: 400;
     }
 
-    /* Card Wrapper */
-    .treat-card-wrapper {
+    /* Layout: Image left, Cards right */
+    .treat-layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 40px;
+    }
+
+    /* Visual — Large Image */
+    .treat-visual {
       position: relative;
-      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: scale(2);
+      transform-origin: bottom center;
+      min-height: 600px;
     }
 
-    .treat-card {
+    .treat-bg-shape {
       display: none;
+    }
+
+    .treat-image {
+      position: relative;
+      width: 100%;
+      height: auto;
+      z-index: 2;
+    }
+
+    /* Cards Grid */
+    .treat-cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .treat-card-v2 {
+      display: flex;
       align-items: flex-start;
-      gap: 16px;
+      gap: 12px;
       background: #f8fafc;
       border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      padding: 20px;
-      animation: cardSlideIn 0.35s ease-out;
+      border-radius: 14px;
+      padding: 18px;
+      transition: all 0.3s ease;
     }
 
-    .treat-card.active {
-      display: flex;
-    }
-
-    @keyframes cardSlideIn {
-      from {
-        opacity: 0;
-        transform: translateY(12px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .treat-card-v2:hover {
+      background: #ffffff;
+      border-color: #3b82f6;
+      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.12);
+      transform: translateY(-3px);
     }
 
     .treat-card-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
-      font-size: 20px;
+      font-size: 17px;
       flex-shrink: 0;
     }
 
     .treat-card-body h4 {
-      font-size: 17px;
+      font-size: 15px;
       font-weight: 700;
-      color: #1e293b;
-      margin: 0 0 6px;
+      color: rgb(1, 19, 67);
+      margin: 0 0 3px;
     }
 
     .treat-card-body p {
-      font-size: 14px;
-      color: #64748b;
-      line-height: 1.5;
+      font-size: 13px;
+      color: rgb(51, 56, 68);
+      line-height: 1.4;
       margin: 0;
-    }
-
-    /* Progress Dots */
-    .treat-progress {
-      display: flex;
-      gap: 8px;
-      margin-top: 20px;
-    }
-
-    .treat-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      border: none;
-      background: #cbd5e1;
-      cursor: pointer;
-      transition: all 0.3s;
-      padding: 0;
-    }
-
-    .treat-dot.active {
-      width: 28px;
-      border-radius: 5px;
-      background: #3b82f6;
-    }
-
-    /* RIGHT — Visual */
-    .treat-visual {
-      position: relative;
-      height: 560px;
-    }
-
-    .treat-bg-shape {
-      position: absolute;
-      right: -100px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 520px;
-      height: 520px;
-      background: linear-gradient(135deg, #010f4915, #010f4908);
-      border-radius: 50%;
-      z-index: 1;
-    }
-
-    .treat-image {
-      position: absolute;
-      bottom: 0;
-      right: 30px;
-      max-height: 540px;
-      width: auto;
-      z-index: 2;
-    }
-
-    /* Body Point Buttons */
-    .body-point {
-      position: absolute;
-      z-index: 10;
-      width: 40px;
-      height: 40px;
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-    }
-
-    .point-core {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      position: relative;
-      z-index: 2;
-      box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
-      transition: transform 0.3s;
-    }
-
-    .body-point:hover .point-core,
-    .body-point.active .point-core {
-      transform: scale(1.4);
-    }
-
-    .point-pulse {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: inherit;
-      opacity: 0;
-      z-index: 1;
-    }
-
-    .body-point.active .point-pulse {
-      animation: pointPulse 2s ease-out infinite;
-    }
-
-    @keyframes pointPulse {
-      0% {
-        transform: scale(0.5);
-        opacity: 0.5;
-        background: currentColor;
-      }
-
-      100% {
-        transform: scale(2);
-        opacity: 0;
-        background: currentColor;
-      }
-    }
-
-    .body-point.active .point-pulse {
-      color: inherit;
-    }
-
-    /* Each body-point gets pulse color from its core */
-    .body-point[data-point="head"] .point-pulse {
-      background: #a855f7;
-    }
-
-    .body-point[data-point="shoulder"] .point-pulse {
-      background: #3b82f6;
-    }
-
-    .body-point[data-point="chest"] .point-pulse {
-      background: #10b981;
-    }
-
-    .body-point[data-point="hip"] .point-pulse {
-      background: #f59e0b;
-    }
-
-    .body-point[data-point="knee"] .point-pulse {
-      background: #f97316;
-    }
-
-    .body-point[data-point="ankle"] .point-pulse {
-      background: #ef4444;
     }
 
     /* CTA Banner */
@@ -1112,54 +920,48 @@
     /* MOBILE */
     @media (max-width: 900px) {
       .treat-section {
-        padding: 50px 0 40px;
+        padding: 60px 0 40px;
       }
 
-      .treat-container {
-        grid-template-columns: 1fr;
-        gap: 20px;
+      .treat-header-row {
+        text-align: left;
       }
 
       .treat-main-title {
-        font-size: 30px;
+        font-size: 25px;
+      }
+
+      .treat-subtitle {
+        font-size: 20px;
+        line-height: 30px;
+      }
+
+      .treat-layout {
+        grid-template-columns: 1fr;
+        gap: 30px;
       }
 
       .treat-visual {
-        height: 480px;
+        height: 600px;
         order: -1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .treat-bg-shape {
-        width: 400px;
-        height: 400px;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        right: auto;
       }
 
       .treat-image {
-        position: relative;
-        left: auto;
-        right: auto;
-        transform: none;
-        max-height: 460px;
-        margin: 0 auto;
-        display: block;
+        max-height: 400px;
       }
 
-      .body-point {
-        display: none;
+      .treat-bg-shape {
+        width: 350px;
+        height: 350px;
       }
 
-      /* hide on mobile, cards auto-cycle */
+      .treat-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
       .treat-cta-inner {
-        text-align: center;
-        justify-content: center;
+        text-align: left;
         flex-direction: column;
       }
 
@@ -1169,56 +971,7 @@
     }
   </style>
 
-  <script>
-    // Interactive body points + auto-cycling cards
-    (function () {
-      const cards = document.querySelectorAll('.treat-card');
-      const dots = document.querySelectorAll('.treat-dot');
-      const points = document.querySelectorAll('.body-point');
-      const pointNames = ['head', 'shoulder', 'chest', 'hip', 'knee', 'ankle'];
-      let currentIndex = 0;
-      let autoTimer = null;
-
-      function activatePoint(index) {
-        currentIndex = index;
-        // Update cards
-        cards.forEach((c, i) => c.classList.toggle('active', i === index));
-        // Update dots
-        dots.forEach((d, i) => d.classList.toggle('active', i === index));
-        // Update body points
-        points.forEach((p, i) => p.classList.toggle('active', i === index));
-      }
-
-      function startAutoCycle() {
-        stopAutoCycle();
-        autoTimer = setInterval(() => {
-          activatePoint((currentIndex + 1) % pointNames.length);
-        }, 4000);
-      }
-
-      function stopAutoCycle() {
-        if (autoTimer) clearInterval(autoTimer);
-      }
-
-      // Body point clicks
-      points.forEach((p, i) => {
-        p.addEventListener('click', () => {
-          activatePoint(i);
-          startAutoCycle(); // restart timer
-        });
-      });
-
-      // Dot clicks
-      dots.forEach((d) => {
-        d.addEventListener('click', () => {
-          activatePoint(parseInt(d.dataset.index));
-          startAutoCycle();
-        });
-      });
-
-      startAutoCycle();
-    })();
-  </script>
+  <!-- Auto-cycling script removed — all cards are now always visible -->
 
   <script>
     gsap.from(".treat-main-title span", {
@@ -1271,40 +1024,54 @@
 
   <style>
     .impact-section {
-      background: #010f49;
-      padding: 80px 24px;
+      background: #011d3b;
+      /* Premium Dark Blue */
+      padding: 100px 24px;
       color: white;
       font-family: 'Poppins', sans-serif;
       margin: auto;
     }
 
     .impact-section h2 {
-      font-size: 36px;
-      margin-bottom: 50px;
+      font-size: 40px;
+      font-weight: 400;
+      /* Regular for first word */
+      margin-bottom: 60px;
+      color: #93c5fd;
+      /* Soft light blue */
     }
 
     .impact-section h2 span {
-      color: #d6e8f4;
+      font-weight: 800;
+      /* Bold for second phrase */
+      color: #ffffff;
     }
 
     .wave-progress {
-      margin-bottom: 45px;
+      margin-bottom: 50px;
     }
 
     .wave-progress .label {
-      font-size: 56px;
+      font-size: 64px;
       font-weight: 800;
+      line-height: 1;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
     }
 
     .wave-progress .label span {
-      font-size: 24px;
-      font-weight: 500;
+      font-size: 28px;
+      font-weight: 600;
+      color: #93c5fd;
     }
 
     .wave-progress p {
-      margin-top: 8px;
+      margin-top: 12px;
       font-size: 18px;
-      color: #d1d5db;
+      font-weight: 500;
+      color: #e5e7eb;
+      letter-spacing: 0.5px;
     }
 
     /* TRACK */
@@ -1324,9 +1091,10 @@
       top: 0;
       height: 100%;
       width: 0%;
-      background: #6fb3ff;
+      background: linear-gradient(90deg, #3b82f6, #60a5fa, #93c5fd);
       border-radius: 10px;
       overflow: hidden;
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
     }
 
     /* WAVE LAYER */
@@ -1802,164 +1570,7 @@
     </div>
   </div>
 
-  <footer class="footer-area footer--light">
-    <div class="footer-big">
-      <!-- start .container -->
-      <div class="container">
-        <div class="row">
-          <div class="col-md-3 col-sm-12">
-            <div class="footer-widget">
-              <div class="widget-about">
-                <img src="http://placehold.it/250x80" alt="" class="img-fluid">
-                <p>location map here</p>
-                <ul class="contact-details">
-                  <li>
-                    <span class="icon-earphones"></span> Call Us:
-                    <a href="tel:+44 07930167674">+44 07930167674</a>
-                  </li>
-                  <li>
-                    <span class="icon-envelope-open"></span>
-                    <a href="mailto:info@movement-science.com">info@movement-science.com</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <!-- Ends: .footer-widget -->
-          </div>
-          <!-- end /.col-md-4 -->
-          <div class="col-md-3 col-sm-4">
-            <div class="footer-widget">
-              <div class="footer-menu footer-menu--1">
-                <h4 class="footer-widget-title">Popular Category</h4>
-                <ul>
-                  <li>
-                    <a href="/admin/login">Admin login</a>
-                  </li>
-                  <li>
-                    <a href="howhelp/index">How we help</a>
-                  </li>
-                  <li>
-                    <a href="/services">Services</a>
-                  </li>
-                  <li>
-                    <a href="/conditions">Conditions we treat</a>
-                  </li>
-                  <li>
-                    <a href="/faq">FAQ's</a>
-                  </li>
-                </ul>
-              </div>
-              <!-- end /.footer-menu -->
-            </div>
-            <!-- Ends: .footer-widget -->
-          </div>
-          <!-- end /.col-md-3 -->
-
-          <div class="col-md-3 col-sm-4">
-            <div class="footer-widget">
-              <div class="footer-menu">
-                <h4 class="footer-widget-title">Our Company</h4>
-                <ul>
-                  <li>
-                    <a href="#">About Us</a>
-                  </li>
-                  <li>
-                    <a href="/callus">Sechedule a call</a>
-                  </li>
-                  <li>
-                    <a href="/checkslot">Book-appointment</a>
-                  </li>
-                  <li>
-                    <a href="#">Testimonials</a>
-                  </li>
-                  <li>
-                    <a href="tel:+44 07930167674">Contact Us</a>
-                  </li>
-                  <li>
-                    <a href="/faq">Plan &amp; Pricing</a>
-                  </li>
-                  <li>
-                    <a href="/error">Blog</a>
-                  </li>
-                </ul>
-              </div>
-              <!-- end /.footer-menu -->
-            </div>
-            <!-- Ends: .footer-widget -->
-          </div>
-          <!-- end /.col-lg-3 -->
-
-          <div class="col-md-3 col-sm-4">
-            <div class="footer-widget">
-              <div class="footer-menu no-padding">
-                <h4 class="footer-widget-title">Help Support</h4>
-                <ul>
-                  <li>
-                    <a href="/contactus">Support Forum</a>
-                  </li>
-                  <li>
-                    <a href="/error">Terms &amp; Conditions</a>
-                  </li>
-                  <li>
-                    <a href="#">Support Policy</a>
-                  </li>
-                  <li>
-                    <a href="/faq">FAQs</a>
-                  </li> <br>
-                  <div class="social-icons">
-                    <style>
-                      .social-icons a {
-                        color: #023974;
-                        margin: 0 10px;
-                        text-decoration: none;
-                        font-size: 24px;
-                      }
-
-                      .social-icons a:hover {
-                        color: #ddd;
-                      }
-                    </style>
-                    <a href="https://www.facebook.com/movement.science.2024?mibextid=ZbWKwL" target="_blank"
-                      class="fab fa-facebook-f"></a>
-                    <a href="https://x.com/movesscience" target="_blank" class="fab fa-twitter"></a>
-                    <a href="https://www.instagram.com/movementsscience?igsh=MXJ5cXRzazNiYXNhYQ==" target="_blank"
-                      class="fab fa-instagram"></a>
-                  </div>
-                </ul>
-              </div>
-              <!-- end /.footer-menu -->
-            </div>
-            <!-- Ends: .footer-widget -->
-          </div>
-          <!-- Ends: .col-lg-3 -->
-
-        </div>
-        <!-- end /.row -->
-      </div>
-      <!-- end /.container -->
-    </div>
-    <!-- end /.footer-big -->
-
-    <div class="mini-footer">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="copyright-text">
-              <p>© 2024
-                <a href="/">Movement science</a>. All rights reserved. Created by
-                <a
-                  href="https://www.instagram.com/movementsscience?igsh=MXJ5cXRzazNiYXNhYQ==/crem.create?igsh=ZjFscW1kZjhtNTBw">crem.create</a>
-              </p>
-            </div>
-
-            <div class="go_top">
-              <span class="icon-arrow-up"></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </footer>
+  <%- include('footer') %>
 
 </body>
 

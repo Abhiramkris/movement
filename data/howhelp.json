@@ -10,20 +10,20 @@
             "rehabilitation at home",
             "Movement Science physiotherapy"
         ],
-        "intro": "After staying in hospital for a considerable length of time, the thought of returning home can trigger anxiety. It is normal to worry about how you will manage without the support of hospital staff. Physiotherapy plays a huge part in helping you on a speedy route to recovery.",
-        "image": "/images/mcenter.jpg",
+        "intro": "After a hospital stay, returning home can feel overwhelming. Physiotherapy is essential for overcoming 'post-hospital syndrome'—addressing muscle weakness, fatigue, and reduced confidence to help you regain your independence quickly and safely.",
+        "image": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=2070",
         "contentSections": [
             {
-                "heading": "Preparing for Discharge",
-                "body": "Before leaving the hospital, it is important to have a clear discharge plan. This plan should include information about medications, follow-up appointments, and any necessary medical equipment. Communicating with healthcare providers to understand the recovery process and expected timeline is essential."
+                "heading": "The Phased Recovery Process",
+                "body": "Your recovery follows a structured path. In the early phase (days to 1 week), we focus on pain management and gentle movement. During the healing phase (2-4 weeks), we introduce outpatient techniques to decrease stiffness. The movement phase (4-12 weeks) ramps up activity, leading to the intensive strengthening phase (12+ weeks) to restore full power."
             },
             {
-                "heading": "Managing Medications",
-                "body": "Proper medication management is crucial for recovery. Ensure that you understand the dosage, timing, and potential side effects of any prescribed medications. Setting reminders and keeping a medication schedule can help avoid missed doses and ensure adherence to the treatment plan."
+                "heading": "Personalised Home Assessment",
+                "body": "Our physiotherapists perform an initial assessment in your home to evaluate your strength, balance, and walking ability. We also assess your home environment for fall risks and collaborate with you to set achievable recovery goals, ensuring your path to normality is clear and supported."
             },
             {
-                "heading": "Our top tips to help you progress at home",
-                "body": "Assess your capabilities and plan you a personalised physiotherapy programme to help you reach your goals. Discuss your lifestyle and advise on how to achieve normality. Look for any muscle weakness, joint stiffness, or balance issues and work on addressing them. Assess your abilities to sit, stand, walk, and climb the stairs in your own home. Review walking aids and check that they are suitable for you."
+                "heading": "Nutrition, Hydration, and Rest",
+                "body": "Healing requires more than just movement. A balanced diet rich in essential nutrients and proper hydration (8+ glasses of water) are vital for fighting swelling and replenishing energy. Coupled with 7-9 hours of quality sleep, these factors form the bedrock of your body's repair process."
             }
         ]
     },
@@ -38,16 +38,20 @@
             "physiotherapy for back pain",
             "Movement Science clinic"
         ],
-        "intro": "Joint and muscular pain can significantly affect one's quality of life, limiting mobility and causing discomfort. Understanding the causes and treatment options for these types of pain is crucial for managing symptoms and improving overall well-being.",
-        "image": "https://th.bing.com/th/id/OIP.lTagr2WGP5Wh_VXPv26V3QHaE8?w=297&h=198&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+        "intro": "Joint and muscular pain can stem from arthritis, acute injuries, or mechanical stress. Our expert physiotherapy treats the root cause, combining manual therapy with evidence-based exercises to restore comfort and mobility.",
+        "image": "https://images.unsplash.com/photo-1597452485669-2c7bb5fef90d?auto=format&fit=crop&q=80&w=2069",
         "contentSections": [
             {
-                "heading": "Common Causes",
-                "body": "Joint pain can stem from conditions like osteoarthritis, rheumatoid arthritis, bursitis, or gout. Muscular pain can result from strain, overuse, or tension. Identifying the specific cause is key to effective management."
+                "heading": "Understanding the Root Cause",
+                "body": "Joint pain is often linked to osteoarthritis, bursitis, or repetitive mechanical stress, while muscular pain may arise from tension, strains, or underlying inflammatory conditions. We provide a detailed diagnosis to differentiate between acute trauma and chronic wear-and-tear."
             },
             {
-                "heading": "Treatment Options",
-                "body": "We use a combination of manual therapy, guided exercises, and lifestyle advice. Our goal is to reduce inflammation, improve joint function, and strengthen supporting muscles."
+                "heading": "Specialised Manual Therapy",
+                "body": "We utilise advanced hands-on techniques including Soft Tissue Mobilisation (STM), Myofascial Release, and Trigger Point Therapy to release deep-seated tension. Joint mobilisation and 'Muscle Energy Techniques' (METs) are also used to lengthen shortened muscles and normalise joint mechanics."
+            },
+            {
+                "heading": "Lifestyle and Ergonomic Strategy",
+                "body": "Recovery doesn't stop at the clinic. We provide guidance on body mechanics and posture to prevent re-injury. Whether it's adjusting your workspace or modifying your daily activities, we ensure your environment supports a pain-free life."
             }
         ]
     },
@@ -62,12 +66,20 @@
             "falls prevention",
             "senior physiotherapy"
         ],
-        "intro": "Maintaining good balance and mobility is essential for independence and safety, especially as we age. Our specialist team helps you identify risks and build confidence in your movement.",
-        "image": "/images/mcenter.jpg",
+        "intro": "As we age, maintaining stability becomes vital for independence. Our balance and mobility programmes focus on neuro-recalibration and physical strengthening to keep you upright and confident in every step.",
+        "image": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=2070",
         "contentSections": [
             {
-                "heading": "Our Method",
-                "body": "We conduct thorough balance assessments and design personalised exercise programmes. We look at muscle strength, joint flexibility, and proprioception to create a comprehensive plan."
+                "heading": "Balance-Enhancing Techniques",
+                "body": "Our therapy includes proven exercises like Tandem Walking (heel-to-toe), Single-Leg Stands, and Weight Shifts. These techniques retrain your body's weight distribution and proprioception—your sense of where your limbs are in space—to significantly reduce fall risks."
+            },
+            {
+                "heading": "Building Core and Lower Body Strength",
+                "body": "Mobility is powered by strength. We incorporate chair squats, wall push-ups, and heel raises to fortify your 'foundation' muscles. These exercises are designed to be performed safely at home, gradually building the power needed for daily tasks like standing from a chair."
+            },
+            {
+                "heading": "Tai Chi and Aerobic Health",
+                "body": "Beyond traditional exercises, we recommend gentle movements like Tai Chi for graceful, controlled stability. Brisk walking and swimming also help improve overall endurance and circulation, which indirectly support better balance."
             }
         ]
     },
@@ -82,12 +94,20 @@
             "physiotherapy for atrophy",
             "Movement Science"
         ],
-        "intro": "Muscular weakness can be frustrating and limiting. Whether it's due to injury, illness, or aging, our team is here to help you rebuild your strength and confidence.",
-        "image": "https://www.thephysioco.com.au/wp-content/uploads/2018/06/bigstock-Portrait-Of-Physiotherapist-Do-238971859-1024x684.jpg",
+        "intro": "Muscular weakness can result from aging (Sarcopenia), inactivity, or chronic illness. Our core mission is to help you reverse muscle atrophy through progressive, science-based strengthening programmes.",
+        "image": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=2020",
         "contentSections": [
             {
-                "heading": "Our Approach",
-                "body": "We use progressive resistance training and neuromuscular re-education to help your muscles fire correctly and grow stronger. Each plan is tailored to your current ability level."
+                "heading": "Progressive Resistance Training (PRT)",
+                "body": "PRT is the gold standard for rebuilding muscle. We use the 'overload principle'—gradually increasing weight, resistance, or intensity—to challenge your muscles as they get stronger. Our programmes follow clinical guidelines (8-12 repetitions over 1-3 sets) to ensure optimal growth without overstrain."
+            },
+            {
+                "heading": "Identifying Internal Causes",
+                "body": "Muscle weakness isn't always just about 'size.' It can be linked to neurological issues like pinched nerves, nutritional deficiencies, or even medication side effects. We look beyond the surface to ensure your treatment plan addresses the true driver of your weakness."
+            },
+            {
+                "heading": "Functional Strength for Life",
+                "body": "We don't just build muscle for the sake of it; we focus on functional strength. Our exercises mimic real-life movements, such as the power needed to climb stairs, carry groceries, or push open heavy doors, ensuring your gains translate to a better life."
             }
         ]
     },
@@ -102,12 +122,20 @@
             "sprains and strains",
             "Movement Science"
         ],
-        "intro": "Don't let a sports injury keep you on the sidelines. Our specialist sports physiotherapists help you recover quickly and prevent future injuries.",
-        "image": "https://th.bing.com/th/id/OIP.rzi74bdz6_ONpEjL4CIZlwHaE8?rs=1&pid=ImgDetMain",
+        "intro": "From elite athletes to weekend warriors, sports injuries require a specialized approach. We implement structured, evidence-based rehabilitation to return you to peak performance while minimizing re-injury risk.",
+        "image": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=2070",
         "contentSections": [
             {
-                "heading": "Expert Rehab",
-                "body": "From acute sprains to chronic overuse injuries, we provide expert diagnosis and evidence-based rehabilitation to ensure a safe and effective return to sport."
+                "heading": "The 5-Stage Rehab Model",
+                "body": "Our sports rehab follows a strict progression: 1. Acute Phase (Pain/Inflammation Management using POLICE protocol), 2. Mobility Phase (Restoring full range of motion), 3. Strengthening Phase (Remodeling tissue), 4. Coordination Phase (Functional restoration), and 5. Return-to-Sport Phase (Sport-specific agility and drills)."
+            },
+            {
+                "heading": "Advanced Therapeutic Modalities",
+                "body": "We go beyond basic exercises, utilising advanced modalities like Cryotherapy (to reduce swelling), Electrical Stimulation (NMES) for muscle activation, and Proprioceptive Training (using balance boards) to ensure your joints remain stable under high-impact conditions."
+            },
+            {
+                "heading": "Performance Enhancement",
+                "body": "Our goal isn't just to fix the injury; it's to make you a better athlete. We include biomechanical analysis to identify gait or movement flaws and create custom strength and conditioning programmes that build resilience against future setbacks."
             }
         ]
     },
@@ -122,12 +150,20 @@
             "balance training",
             "Movement Science"
         ],
-        "intro": "A fall can be a major setback, both physically and emotionally. We provide a supportive environment to help you recover and reduce the risk of future incidents.",
-        "image": "/images/ref566.jpg",
+        "intro": "A fall is more than just a physical event; it's a major psychological hurdle. Our expert-led recovery programmes address the trauma of falls and accidents, focusing on building physical resilience and mental confidence.",
+        "image": "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&q=80&w=2070",
         "contentSections": [
             {
-                "heading": "Building Confidence",
-                "body": "After a fall, the fear of falling again can be as limiting as the injury itself. We work on both physical strength and psychological confidence to help you move freely again."
+                "heading": "Breaking the 'Fear of Falling' Cycle",
+                "body": "The fear of falling again often leads to reduced activity, which in turn causes muscle weakness and further increases fall risk. We break this cycle through gradual exposure to movement and confidence-building exercises in the safety of your own environment."
+            },
+            {
+                "heading": "Identifying Mechanical Triggers",
+                "body": "We look at why the fall happened. Was it a vestibular (inner ear) issue, poor lighting, or a specific muscular imbalance? By identifying the root cause, we can provide targeted interventions—such as balance recalibration or home modification advice—to prevent future incidents."
+            },
+            {
+                "heading": "Safety and Reaction Training",
+                "body": "Falling is sometimes unavoidable, but injury doesn't have to be. We train patients in 'safe landing' techniques and reactive balance drills that improve your ability to quickly catch yourself if you trip, significantly lowering the risk of fractures."
             }
         ]
     },
@@ -142,12 +178,20 @@
             "physical therapy",
             "Movement Science"
         ],
-        "intro": "Confidence is key to recovery. Our holistic approach combines physical rehabilitation with psychological support to help you achieve your full potential.",
-        "image": "https://th.bing.com/th/id/OIP.P2ITA6RLX_bd0V7kPpy7eQHaE8?rs=1&pid=ImgDetMain",
+        "intro": "Physical recovery and mental confidence are two sides of the same coin. We believe that true healing happens when you feel safe, capable, and empowered to move through the world on your own terms.",
+        "image": "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=2080",
         "contentSections": [
             {
-                "heading": "Empowering Movement",
-                "body": "We believe that movement is empowerment. Our programmes are designed to give you the tools and the confidence to take back control of your life."
+                "heading": "The Mental Side of Mobility",
+                "body": "Long-term pain or injury can create 'learned non-use' and a deep-seated hesitation to move. Our physiotherapists use encouraging, goal-oriented therapy to help you rediscover your body's capabilities, celebrating small wins that lead to big milestones."
+            },
+            {
+                "heading": "Empowered Independence",
+                "body": "Confidence grows from competence. We provide you with the tools and techniques to manage your condition independently. When you understand how to move safely and efficiently, the world feels smaller and more accessible."
+            },
+            {
+                "heading": "A Supportive Environment",
+                "body": "We create a high-trust partnership between therapist and patient. By listening to your concerns and moving at a pace that feels right for you, we ensure that every session builds not just strength, but the self-belief needed for long-term health."
             }
         ]
     },
@@ -162,12 +206,20 @@
             "arthritis relief",
             "Movement Science"
         ],
-        "intro": "Swollen joints can be painful and restrictive. We provide expert care to reduce inflammation, alleviate pain, and restore joint function.",
-        "image": "https://th.bing.com/th/id/OIP._9ycjhVjItHE5jzu-OqD_wHaEK?rs=1&pid=ImgDetMain",
+        "intro": "Inflammation is the body's natural response to injury or arthritis, but when it becomes chronic, it limits life. We use advanced clinical modalities to reduce joint swelling and restore smooth, pain-free movement.",
+        "image": "https://images.unsplash.com/photo-1519823551278-64ac9233dad1?auto=format&fit=crop&q=80&w=2070",
         "contentSections": [
             {
-                "heading": "Reducing Inflammation",
-                "body": "Through manual therapy, lymphatic drainage techniques, and bespoke exercise, we target the root cause of swelling to get you moving comfortably again."
+                "heading": "Advanced Clinical Modalities",
+                "body": "To target deep inflammation, we utilise therapeutic technologies such as Ultrasound (which increases circulation) and TENS (for non-invasive pain relief). These are combined with Iontophoresis to help deliver anti-inflammatory benefits directly to the affected tissues."
+            },
+            {
+                "heading": "The Power of Hydrotherapy",
+                "body": "Water-based therapy is incredibly effective for swollen joints. The buoyancy of water reduces the load on your joints by up to 90%, allowing you to perform strengthening exercises that would be too painful on land, while the water pressure naturally helps reduce swelling (oedema)."
+            },
+            {
+                "heading": "Arthritis Management",
+                "body": "For those with rheumatoid or osteoarthritis, we provide long-term joint protection strategies. This includes education on pacing your activities, using ergonomic aids, and performing gentle range-of-motion exercises that keep joints lubricated without causing flare-ups."
             }
         ]
     },
@@ -182,12 +234,20 @@
             "work injury rehab",
             "Movement Science"
         ],
-        "intro": "Returning to work is a major milestone. We provide the rehabilitation and ergonomic advice you need to ensure a successful and sustainable return.",
-        "image": "/images/m34.jpg",
+        "intro": "Your job's demands are unique. Our 'Return to Work' programmes are job-specific, focusing on the ergonomics, stamina, and functional strength you need to excel in your professional environment without risking re-injury.",
+        "image": "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=2070",
         "contentSections": [
             {
-                "heading": "Work-Ready Rehab",
-                "body": "We simulate work-related tasks and provide ergonomic assessments to prepare your body for the demands of your job, ensuring you go back stronger."
+                "heading": "Ergonomic Optimisation",
+                "body": "Whether you sit at a desk or operate heavy machinery, your posture matters. We provide custom ergonomic assessments to ensure your workspace is set up to support your musculoskeletal health, reducing the risk of repetitive strain and chronic fatigue."
+            },
+            {
+                "heading": "Work-Ready Functional Training",
+                "body": "We simulate real-world job tasks in a controlled environment. By practicing lifting, reaching, or sustained sitting under the guidance of a physiotherapist, you build the specific endurance required for your 9-to-5, ensuring a sustainable and successful return."
+            },
+            {
+                "heading": "Phased Re-Integration",
+                "body": "A successful return to work is often gradual. We advise on light duties and modified schedules, serving as a bridge between your recovery and full professional capacity. We work with you to communicate these needs effectively to your employer."
             }
         ]
     },
@@ -202,12 +262,20 @@
             "community access",
             "Movement Science"
         ],
-        "intro": "The world isn't flat, and neither is your journey. We help you master steps, slopes, and uneven ground so you can enjoy the outdoors with confidence.",
-        "image": "https://th.bing.com/th/id/OIP.k20IlBwyfn5gTkGx7tX_-wHaE8?rs=1&pid=ImgDetMaing",
+        "intro": "The world outside isn't a flat clinic floor. Our outdoor mobility training prepares you for the unpredictability of real-world terrain—from steep curbs and uneven pavements to grassy slopes and busy shopping centres.",
+        "image": "https://images.unsplash.com/photo-1469474099711-423a0fd05ce8?auto=format&fit=crop&q=80&w=2070",
         "contentSections": [
             {
-                "heading": "Real-World Training",
-                "body": "Our therapy sessions can include real-world outdoor practice. We help you navigate your local community safely, whether it's the park, the shops, or different public spaces."
+                "heading": "Navigating Uneven Terrain",
+                "body": "We practice techniques for safely managing 'real-world' challenges. This includes proper foot placement on slopes, strategies for crossing busy roads, and building the ankle stability needed for gravel paths or grassy parks."
+            },
+            {
+                "heading": "Adaptive Outdoor Solutions",
+                "body": "For those with more complex needs, we provide guidance on specialized outdoor mobility aids—such as all-terrain walkers or ergonomic canes. We ensure your equipment is perfectly fitted for the specific environments you want to revisit."
+            },
+            {
+                "heading": "Community Access Training",
+                "body": "Regaining your outdoor mobility is about more than just walking; it's about reconnecting with your community. Our sessions can involve visits to your local shops or favorite parks, building the confidence you need to enjoy life beyond your front door."
             }
         ]
     },
@@ -222,12 +290,20 @@
             "living independently",
             "Movement Science"
         ],
-        "intro": "Your home should be a place of safety and comfort. We help you overcome mobility challenges within your living space, from stairs to bathroom safety.",
-        "image": "https://th.bing.com/th/id/OIP.5ff_1dErl0V_AMv7cgAr1QHaE8?rs=1&pid=ImgDetMain",
+        "intro": "Your home should be your sanctuary, not a series of obstacles. We specialize in helping you master the specific challenges of your living space, ensuring you can move between rooms, levels, and amenities with ease.",
+        "image": "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=2070",
         "contentSections": [
             {
-                "heading": "Home Safety Solutions",
-                "body": "We assess your home environment and provide tailored exercises to improve your safety and independence in daily tasks like getting in and out of bed or climbing stairs."
+                "heading": "Home Safety Modifications",
+                "body": "We conduct a thorough 'Hazard Audit' of your home, advising on essential modifications like grab bars in bathrooms, handrail placement on stairs, and identifying trip hazards like loose rugs or poor lighting that could lead to accidents."
+            },
+            {
+                "heading": "Specialised Transfer Training",
+                "body": "Independence starts with basic movements. We train you in the safest, most efficient ways to transfer—getting in and out of bed, on and off the toilet, and safely using the shower—using specialized techniques that minimize strain on your joints."
+            },
+            {
+                "heading": "Adapting Your Living Space",
+                "body": "We help you re-organize your environment to find 'the path of least resistance.' By placing frequently used items within easy reach and optimizing your furniture layout, we help you conserve energy and maximize your daily independence."
             }
         ]
     }

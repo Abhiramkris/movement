@@ -6,6 +6,7 @@ const db = require('../config/db');
 const client = require('../config/twilio');
 const { otpLimiter } = require('../middleware/rateLimiter');
 const fs = require('fs');
+const { verifyRescheduleToken } = require('../utils/email');
 
 // Load How Help Data
 const getHowHelpData = () => {
@@ -182,6 +183,127 @@ router.post('/save-chat-query',
     }
 );
 
+router.get('/reschedule', async (req, res) => {
+    const { token } = req.query;
+    if (!token) return res.status(400).render('error', { message: 'Invalid or missing reschedule token' });
+
+    const decoded = verifyRescheduleToken(token);
+    if (!decoded) return res.status(400).render('error', { message: 'Reschedule link has expired or is invalid' });
+
+    try {
+        const [results] = await db.query(
+            `SELECT name, date, slot, phone FROM ${decoded.table} WHERE id = ?`,
+            [decoded.appointmentId]
+        );
+
+        if (results.length === 0) return res.status(404).render('error', { message: 'Appointment not found' });
+
+        const appt = results[0];
+        res.render('reschedule', {
+            appt,
+            token,
+            error: null
+        });
+    } catch (err) {
+        console.error('Error fetching appointment for reschedule:', err);
+        res.status(500).render('error', { message: 'System error' });
+    }
+});
+
+router.post('/reschedule',
+    otpLimiter,
+    [
+        body('token').notEmpty(),
+        body('requested_date').isISO8601().withMessage('Invalid date'),
+        body('requested_slot').notEmpty().withMessage('Slot is required'),
+        body('reason').trim().escape()
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
+        const { token, requested_date, requested_slot, reason } = req.body;
+        const decoded = verifyRescheduleToken(token);
+        if (!decoded) return res.status(400).json({ error: 'Invalid or expired token' });
+
+        try {
+            // Send OTP to the phone in the token
+            await client.verify.v2.services(process.env.TWILIO_SERVICE_SID)
+                .verifications.create({
+                    to: decoded.phone,
+                    channel: 'sms'
+                });
+
+            req.session.reschedule_data = {
+                appointment_id: decoded.appointmentId,
+                appointment_table: decoded.table,
+                patient_phone: decoded.phone,
+                requested_date,
+                requested_slot,
+                reason,
+                token
+            };
+            req.session.reschedule_otp_requested = true;
+
+            res.json({ success: true, message: 'OTP sent to your registered phone' });
+        } catch (err) {
+            console.error('Failed to send reschedule OTP:', err);
+            res.status(500).json({ error: 'Failed to send OTP. Please try again later.' });
+        }
+    }
+);
+
+router.post('/reschedule/verify',
+    [
+        body('otp').trim().isLength({ min: 4, max: 10 }).withMessage('Invalid OTP')
+    ],
+    async (req, res) => {
+        const { otp } = req.body;
+        const data = req.session.reschedule_data;
+
+        if (!req.session.reschedule_otp_requested || !data) {
+            return res.status(400).json({ error: 'Session expired or OTP not requested' });
+        }
+
+        try {
+            const verification_check = await client.verify.v2.services(process.env.TWILIO_SERVICE_SID)
+                .verificationChecks
+                .create({ to: data.patient_phone, code: otp });
+
+            if (verification_check.status === 'approved') {
+                // Fetch current details to save history
+                const [cur] = await db.query(
+                    `SELECT name, date, slot FROM ${data.appointment_table} WHERE id = ?`,
+                    [data.appointment_id]
+                );
+
+                if (cur.length > 0) {
+                    await db.query(`
+                        INSERT INTO reschedule_requests 
+                        (appointment_id, appointment_table, patient_name, patient_phone, \`current_date\`, \`current_slot\`, requested_date, requested_slot, reason)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                        [data.appointment_id, data.appointment_table, cur[0].name, data.patient_phone, cur[0].date, cur[0].slot, data.requested_date, data.requested_slot, data.reason]
+                    );
+                }
+
+                delete req.session.reschedule_data;
+                delete req.session.reschedule_otp_requested;
+
+                res.json({ success: true, redirect: '/reschedule-success' });
+            } else {
+                res.status(400).json({ error: 'Invalid OTP' });
+            }
+        } catch (error) {
+            console.error('Reschedule verification error:', error);
+            res.status(500).json({ error: 'Failed to verify OTP' });
+        }
+    }
+);
+
+router.get('/reschedule-success', (req, res) => {
+    res.render('add', { message: 'Your reschedule request has been submitted and is under review.' });
+});
+
 // Other Public Routes
 router.get('/services', (req, res) => {
     res.render('services/index3');
@@ -204,6 +326,9 @@ router.get('/services/:slug', (req, res) => {
 router.get('/about', (req, res) => res.render('about'));
 router.get('/faq', (req, res) => res.render('faq'));
 router.get('/conditions', (req, res) => res.render('conditions'));
+router.get('/freecall', (req, res) => res.render('freecall'));
+router.get('/callus', (req, res) => res.redirect('/freecall'));
+router.get('/contactus', (req, res) => res.redirect('/freecall'));
 router.get('/error', (req, res) => res.render('error'));
 
 module.exports = router;

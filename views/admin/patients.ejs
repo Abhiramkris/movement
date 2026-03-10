@@ -234,7 +234,7 @@
             <div class="p-5 border-b border-gray-100 flex items-center justify-between shrink-0">
                 <div>
                     <h3 class="text-lg font-bold text-gray-800" id="modal-name">Patient</h3>
-                    <p class="text-sm text-gray-400" id="modal-phone"></p>
+                    <p class="text-sm text-gray-400" id="modal-phone">v2.1</p>
                 </div>
                 <button onclick="closeDetailModal()"
                     class="text-gray-400 hover:bg-gray-200 hover:text-gray-600 p-2 rounded-full transition">
@@ -253,8 +253,9 @@
     <% if (typeof needsGroupingPreference !=='undefined' && needsGroupingPreference) { %>
         <div id="conflict-resolver-modal"
             class="fixed inset-0 bg-gray-900/70 backdrop-blur-sm z-[200] flex items-center justify-center p-4">
-            <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden modal-fade">
-                <div class="p-6 border-b border-gray-100 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
+            <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden modal-fade mx-2">
+                <div
+                    class="p-5 sm:p-6 border-b border-gray-100 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
                     <h3 class="text-xl font-bold flex items-center gap-2"><i class="fas fa-sitemap"></i> Patient
                         Grouping Rule</h3>
                     <p class="text-sm text-blue-100 mt-1">How should the system identify unique patients?</p>
@@ -396,79 +397,149 @@
                         const res = await fetch(`/admin/api/patients/${encodeURIComponent(phone)}/detail`);
                         const data = await res.json();
 
-                        const allAppts = [...(data.appointments || []), ...(data.pending || [])];
-                        const name = allAppts[0]?.name || data.calls?.[0]?.name || 'Patient';
+                        const appointments = data.appointments || [];
+                        const pending = data.pending || [];
+                        const calls = data.calls || [];
+
+                        const name = appointments[0]?.name || pending[0]?.name || calls[0]?.name || 'Patient';
                         document.getElementById('modal-name').textContent = name;
-                        document.getElementById('modal-phone').textContent = phone;
+                        document.getElementById('modal-phone').textContent = phone + ' | v2.1';
 
                         let html = '';
 
-                        // Approved appointments
-                        if (data.appointments?.length) {
-                            html += `<h4 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i> Approved Appointments (${data.appointments.length})</h4>`;
-                            html += '<div class="space-y-2 mb-6">';
-                            data.appointments.forEach(a => {
+                        // Summary Stats
+                        if (appointments.length > 0) {
+                            const lastVisit = new Date(appointments[0].date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+                            html += `
+                                <div class="grid grid-cols-2 gap-4 mb-8">
+                                    <div class="bg-blue-50 border border-blue-100 rounded-2xl p-4 text-center">
+                                        <div class="text-xs text-blue-500 font-bold uppercase tracking-wider mb-1">Total Sessions</div>
+                                        <div class="text-2xl font-black text-blue-700">${appointments.length}</div>
+                                    </div>
+                                    <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-4 text-center">
+                                        <div class="text-xs text-indigo-500 font-bold uppercase tracking-wider mb-1">Last Visit</div>
+                                        <div class="text-lg font-bold text-indigo-700">${lastVisit}</div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+
+                        // Clinical Timeline
+                        if (appointments.length > 0) {
+                            html += `<h4 class="font-bold text-gray-900 mb-5 flex items-center gap-2 text-lg">
+                                <i class="fas fa-notes-medical text-blue-500"></i> Session History
+                            </h4>`;
+
+                            html += '<div class="space-y-0 relative before:content-[\'\'] before:absolute before:left-5 before:top-2 before:bottom-2 before:w-0.5 before:bg-gray-100">';
+
+                            appointments.forEach((a, idx) => {
                                 const d = new Date(a.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-                                html += `<div class="bg-green-50 border border-green-100 rounded-xl p-3 flex justify-between items-center">
-              <div>
-                <div class="font-medium text-sm text-gray-800">${d} — ${a.slot || ''}</div>
-                <div class="text-xs text-gray-500">${a.status || 'approved'}</div>
-              </div>
-              <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-md">${a.status || 'Approved'}</span>
-            </div>`;
+                                const isLatest = idx === 0;
+
+                                // Parse notes
+                                let notesObj = null;
+                                if (a.clinical_notes) {
+                                    try {
+                                        notesObj = typeof a.clinical_notes === 'string' ? JSON.parse(a.clinical_notes) : a.clinical_notes;
+                                    } catch (e) { }
+                                }
+
+                                const statusColor = a.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700';
+
+                                html += `
+                                    <div class="relative pl-12 pb-8">
+                                        <div class="absolute left-3 top-1.5 w-4 h-4 rounded-full border-4 border-white ${isLatest ? 'bg-blue-600 shadow-lg shadow-blue-200 size-5 -left-[2px]' : 'bg-gray-300'} z-10 transition-all"></div>
+                                        
+                                        <div class="bg-white border ${isLatest ? 'border-blue-200 ring-4 ring-blue-50' : 'border-gray-100'} rounded-2xl p-5 transition-all hover:shadow-md">
+                                            <div class="flex justify-between items-start mb-4">
+                                                <div>
+                                                    <div class="font-bold text-gray-900">${d}</div>
+                                                    <div class="text-xs text-gray-400 font-medium">${a.slot || ''}</div>
+                                                </div>
+                                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-tighter ${statusColor}">${a.status || 'Scheduled'}</span>
+                                            </div>
+
+                                            ${notesObj ? `
+                                                <div class="grid grid-cols-1 gap-3">
+                                                    ${notesObj.s ? `
+                                                        <div class="bg-gray-50/50 rounded-xl p-3 border border-gray-100">
+                                                            <div class="text-[10px] uppercase font-black text-gray-400 mb-1 tracking-widest">Subjective</div>
+                                                            <div class="text-xs text-gray-700 leading-relaxed">${notesObj.s}</div>
+                                                        </div>
+                                                    ` : ''}
+                                                    ${notesObj.o ? `
+                                                        <div class="bg-gray-50/50 rounded-xl p-3 border border-gray-100">
+                                                            <div class="text-[10px] uppercase font-black text-gray-400 mb-1 tracking-widest">Objective</div>
+                                                            <div class="text-xs text-gray-700 leading-relaxed">${notesObj.o}</div>
+                                                        </div>
+                                                    ` : ''}
+                                                    ${notesObj.ap ? `
+                                                        <div class="bg-blue-50/30 rounded-xl p-3 border border-blue-50">
+                                                            <div class="text-[10px] uppercase font-black text-blue-400 mb-1 tracking-widest">Assessment / Plan</div>
+                                                            <div class="text-xs text-blue-800 leading-relaxed font-medium">${notesObj.ap}</div>
+                                                        </div>
+                                                    ` : ''}
+                                                </div>
+                                            ` : `
+                                                <div class="text-xs text-gray-400 italic">No clinical notes recorded for this session.</div>
+                                            `}
+                                        </div>
+                                    </div>
+                                `;
                             });
                             html += '</div>';
                         }
 
-                        // Pending
-                        if (data.pending?.length) {
-                            html += `<h4 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><i class="fas fa-clock text-amber-500"></i> Pending (${data.pending.length})</h4>`;
+                        // Pending appointments (if any)
+                        if (pending.length > 0) {
+                            html += `<h4 class="font-bold text-gray-800 mt-4 mb-3 flex items-center gap-2"><i class="fas fa-hourglass-half text-amber-500"></i> Upcoming Requests</h4>`;
                             html += '<div class="space-y-2 mb-6">';
-                            data.pending.forEach(a => {
+                            pending.forEach(a => {
                                 const d = new Date(a.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-                                html += `<div class="bg-amber-50 border border-amber-100 rounded-xl p-3">
-              <div class="font-medium text-sm text-gray-800">${d} — ${a.slot || ''}</div>
-            </div>`;
+                                html += `<div class="bg-amber-50 border border-amber-100 rounded-xl p-3 flex justify-between items-center">
+                                    <div class="text-sm font-semibold text-amber-800">${d} — ${a.slot || ''}</div>
+                                    <span class="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">Pending</span>
+                                </div>`;
                             });
                             html += '</div>';
                         }
 
-                        // Call requests
-                        if (data.calls?.length) {
-                            html += `<h4 class="font-bold text-gray-700 mb-3 flex items-center gap-2"><i class="fas fa-phone text-blue-500"></i> Call Requests (${data.calls.length})</h4>`;
+                        // Call requests (simplified)
+                        if (calls.length > 0) {
+                            html += `<h4 class="font-bold text-gray-800 mt-4 mb-3 flex items-center gap-2"><i class="fas fa-phone-alt text-gray-400"></i> Enquiry History</h4>`;
                             html += '<div class="space-y-2 mb-6">';
-                            data.calls.forEach(c => {
-                                const statusColors = { new: 'blue', contacted: 'green', follow_up: 'amber', resolved: 'gray' };
-                                const color = statusColors[c.status] || 'gray';
-                                html += `<div class="bg-${color}-50 border border-${color}-100 rounded-xl p-3 flex justify-between items-center">
-              <div class="text-sm text-gray-800">${c.email || c.phone}</div>
-              <span class="text-xs bg-${color}-100 text-${color}-700 px-2 py-1 rounded-md">${c.status || 'new'}</span>
-            </div>`;
+                            calls.forEach(c => {
+                                const d = new Date(c.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+                                html += `<div class="bg-gray-50 border border-gray-100 rounded-xl p-3 flex justify-between items-center">
+                                    <div class="text-xs text-gray-600">${d}: ${c.subject || 'Callback Enquiry'}</div>
+                                    <span class="text-[10px] text-gray-400 px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter border border-gray-200">${c.status || 'new'}</span>
+                                </div>`;
                             });
                             html += '</div>';
                         }
 
                         if (!html) {
-                            html = '<div class="text-center py-10 text-gray-400"><i class="fas fa-folder-open text-3xl mb-2"></i><p>No records found</p></div>';
+                            html = '<div class="text-center py-16 text-gray-400"><i class="fas fa-folder-open text-5xl mb-3 opacity-20"></i><p class="font-medium">No medical records found for this patient.</p></div>';
                         }
 
-                        // Quick actions
-                        const email = allAppts[0]?.email || data.calls?.[0]?.email;
-                        html += `<div class="border-t border-gray-100 pt-4 mt-4 flex gap-2 flex-wrap">
-          <a href="tel:${phone}" class="inline-flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600 transition">
-            <i class="fas fa-phone"></i> Call
-          </a>
-          <a href="https://wa.me/${phone.replace(/[^0-9]/g, '')}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm font-medium hover:bg-emerald-600 transition">
-            <i class="fab fa-whatsapp"></i> WhatsApp
-          </a>
-          ${email ? `<a href="/admin/notifications?email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition">
-            <i class="fas fa-envelope"></i> Email
-          </a>` : ''}
-        </div>`;
+                        // Bottom Actions
+                        const email = appointments[0]?.email || pending[0]?.email || calls[0]?.email;
+                        html += `
+                        <div class="sticky bottom-0 bg-white pt-4 pb-2 border-t border-gray-100 mt-8 flex gap-3 flex-wrap">
+                          <a href="tel:${phone}" class="flex-1 min-w-[120px] inline-flex items-center justify-center gap-2 px-4 py-3 bg-gray-900 text-white rounded-xl text-sm font-bold hover:bg-black transition shadow-lg shadow-gray-200">
+                            <i class="fas fa-phone"></i> Call Patient
+                          </a>
+                          <a href="https://wa.me/${phone.replace(/[^0-9]/g, '')}" target="_blank" class="flex-1 min-w-[120px] inline-flex items-center justify-center gap-2 px-4 py-3 bg-emerald-500 text-white rounded-xl text-sm font-bold hover:bg-emerald-600 transition shadow-lg shadow-emerald-100">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                          </a>
+                          ${email ? `<a href="/admin/notifications?email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}" class="flex-1 min-w-[120px] inline-flex items-center justify-center gap-2 px-4 py-3 bg-blue-50 text-blue-600 rounded-xl text-sm font-bold hover:bg-blue-100 transition border border-blue-100">
+                            <i class="fas fa-envelope"></i> Send Email
+                          </a>` : ''}
+                        </div>`;
 
                         body.innerHTML = html;
                     } catch (err) {
-                        body.innerHTML = '<div class="text-center py-10 text-red-500"><i class="fas fa-exclamation-circle text-3xl mb-2"></i><p>Error loading patient details</p></div>';
+                        body.innerHTML = '<div class="text-center py-20 text-red-500"><i class="fas fa-exclamation-circle text-4xl mb-3 opacity-20"></i><p class="font-bold">Error loading patient records.</p><p class="text-xs text-gray-400 mt-1">Please check your connection and try again.</p></div>';
                     }
                 }
 

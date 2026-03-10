@@ -58,6 +58,24 @@
         transform: scale(1);
       }
     }
+
+    /* FullCalendar Mobile Adjustments */
+    @media (max-width: 768px) {
+      .fc .fc-toolbar.fc-header-toolbar {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .fc .fc-toolbar-chunk {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+      }
+
+      .fc .fc-toolbar-title {
+        font-size: 1.25rem !important;
+      }
+    }
   </style>
 </head>
 
@@ -89,10 +107,10 @@
     </div>
 
     <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-      <button id="tab-today"
+      <button id="tab-approved"
         class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-600 text-white font-medium transition shadow-sm">
-        <i class="fas fa-calendar-day w-5 text-center"></i>
-        Today's Itinerary
+        <i class="fas fa-calendar-check w-5 text-center"></i>
+        Approved Appointments
       </button>
       <button id="tab-all"
         class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-white/10 hover:text-white font-medium transition">
@@ -119,6 +137,11 @@
         <i class="fas fa-bell w-5 text-center"></i>
         Notification Center
       </a>
+      <button id="tab-reschedule"
+        class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-white/10 hover:text-white font-medium transition">
+        <i class="fas fa-clock-rotate-left w-5 text-center"></i>
+        Reschedule Requests
+      </button>
     </nav>
 
     <div class="p-4 border-t border-white/10">
@@ -134,7 +157,7 @@
     <!-- Top Bar -->
     <header
       class="bg-white shadow-sm border-b border-gray-100 p-4 md:px-8 flex justify-between items-center z-10 shrink-0">
-      <h2 id="current-tab-title" class="text-2xl font-bold text-gray-800">Today's Itinerary</h2>
+      <h2 id="current-tab-title" class="text-2xl font-bold text-gray-800">Approved Appointments</h2>
 
       <div class="flex items-center gap-4">
         <!-- Search Box -->
@@ -160,13 +183,49 @@
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
 
-      <!-- Tab: Today's Appointments -->
-      <div id="view-today" class="tab-view hidden max-w-5xl mx-auto space-y-6">
-        <!-- Javascript will inject cards here -->
+      <!-- Tab: Approved Appointments -->
+      <div id="view-approved" class="tab-view max-w-5xl mx-auto space-y-6">
+        <!-- Date Filters -->
+        <div class="flex overflow-x-auto gap-2 pb-2 -mx-4 px-4 md:mx-0 md:px-0 no-scrollbar"
+          id="date-filters-container">
+          <!-- JS injects date filter buttons here -->
+        </div>
+
+        <div id="approved-cards-container" class="space-y-6">
+          <!-- Javascript will inject cards here -->
+        </div>
       </div>
 
       <!-- Tab: All Appointments (List/Table) -->
-      <div id="view-all" class="tab-view hidden max-w-7xl mx-auto">
+      <div id="view-all" class="tab-view hidden max-w-7xl mx-auto space-y-6">
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-2 gap-3 sm:gap-4">
+          <div
+            class="bg-indigo-50 border border-indigo-100 rounded-2xl p-5 flex items-center justify-between shadow-sm">
+            <div>
+              <h3 class="text-indigo-800 font-semibold mb-1">Future Appointments</h3>
+              <p class="text-sm text-indigo-600">Pending approval for upcoming dates.</p>
+            </div>
+            <div class="text-3xl font-bold text-indigo-700" id="future-count">0</div>
+          </div>
+          <div
+            class="bg-rose-50 border border-rose-100 rounded-2xl p-5 flex items-center justify-between shadow-sm relative overflow-hidden">
+            <div class="z-10">
+              <h3 class="text-rose-800 font-semibold mb-1">Past Appointments</h3>
+              <p class="text-sm text-rose-600">Unapproved requests from past dates.</p>
+            </div>
+            <div class="z-10 flex items-center gap-4">
+              <div class="text-3xl font-bold text-rose-700" id="past-count">0</div>
+              <button onclick="deleteAllPastPending()" id="delete-past-btn"
+                class="hidden bg-rose-600 hover:bg-rose-700 text-white p-2 rounded-lg shadow transition"
+                title="Delete all past pending records">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+            <i class="fas fa-history absolute -right-4 -bottom-4 text-6xl text-rose-500/10"></i>
+          </div>
+        </div>
+
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
@@ -191,6 +250,34 @@
       <div id="view-calendar"
         class="tab-view hidden bg-white p-6 rounded-2xl shadow-sm border border-gray-100 h-full flex flex-col">
         <div id="calendar" class="flex-1"></div>
+      </div>
+
+      <!-- Tab: Reschedule Requests -->
+      <div id="view-reschedule" class="tab-view hidden max-w-7xl mx-auto space-y-6">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+            <h3 class="text-xl font-bold text-gray-800">Pending Reschedule Requests</h3>
+            <button onclick="fetchRescheduleRequests()" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+              <i class="fas fa-sync-alt mr-1"></i> Refresh
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-gray-50 border-b border-gray-100 text-gray-500 text-sm uppercase tracking-wider">
+                  <th class="p-4 font-semibold">Patient</th>
+                  <th class="p-4 font-semibold">Current Details</th>
+                  <th class="p-4 font-semibold">Requested Details</th>
+                  <th class="p-4 font-semibold">Reason</th>
+                  <th class="p-4 font-semibold text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="reschedule-requests-tbody" class="divide-y divide-gray-100">
+                <!-- Injected rows -->
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </main>
@@ -315,6 +402,7 @@
     // --- State Management ---
     let allAppointments = [];
     let calendarInstance = null;
+    let selectedApprovedDate = new Date().toISOString().split('T')[0];
 
     // --- Initialization ---
     document.addEventListener('DOMContentLoaded', () => {
@@ -322,11 +410,13 @@
       setupSidebarMobile();
       setupSearch();
       setupWebSocketNotifications();
+      renderDateFilters();
 
       // Tab Switching Listeners
-      document.getElementById('tab-today').addEventListener('click', () => switchTab('today'));
+      document.getElementById('tab-approved').addEventListener('click', () => switchTab('approved'));
       document.getElementById('tab-all').addEventListener('click', () => switchTab('all'));
       document.getElementById('tab-calendar').addEventListener('click', () => switchTab('calendar'));
+      document.getElementById('tab-reschedule').addEventListener('click', () => switchTab('reschedule'));
 
       // Logout
       document.getElementById('logout-btn').addEventListener('click', () => {
@@ -345,9 +435,9 @@
         if (!response.ok) throw new Error('Failed to fetch data');
         allAppointments = await response.json();
 
-        // Re-render current tab instead of force switching to today
+        // Re-render current tab instead of force switching
         const currentTabBtn = document.querySelector('.nav-btn.bg-blue-600');
-        const currentTab = currentTabBtn ? currentTabBtn.id.replace('tab-', '') : 'today';
+        const currentTab = currentTabBtn ? currentTabBtn.id.replace('tab-', '') : 'approved';
         switchTab(currentTab);
 
       } catch (error) {
@@ -356,6 +446,55 @@
       } finally {
         showLoader(false);
       }
+    }
+
+    // --- Date Filter Logic ---
+    function renderDateFilters() {
+      const container = document.getElementById('date-filters-container');
+      if (!container) return;
+
+      container.innerHTML = '';
+      const today = new Date();
+
+      // Generate next 4 dates
+      for (let i = 0; i < 4; i++) {
+        const d = new Date(today);
+        d.setDate(today.getDate() + i);
+        const dateStr = d.toISOString().split('T')[0];
+
+        let label = 'Today';
+        if (i === 1) label = 'Tomorrow';
+        else if (i > 1) label = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+
+        const isSelected = selectedApprovedDate === dateStr;
+        const btnClass = isSelected
+          ? 'bg-blue-600 text-white shadow-md border-blue-600'
+          : 'bg-white text-gray-600 hover:bg-gray-50 border-gray-200';
+
+        const btnHtml = `
+                <button onclick="setDateFilter('${dateStr}')" class="whitespace-nowrap px-4 py-2 rounded-xl text-sm font-medium border transition-all ${btnClass}">
+                    ${label}
+                </button>
+            `;
+        container.insertAdjacentHTML('beforeend', btnHtml);
+      }
+
+      // Add Calendar Picker Button
+      const calendarBtnHtml = `
+            <div class="relative">
+                <button onclick="document.getElementById('hidden-date-picker').showPicker()" class="whitespace-nowrap px-4 py-2 rounded-xl text-sm font-medium border bg-white text-gray-600 hover:bg-gray-50 border-gray-200 transition-all flex items-center gap-2">
+                    <i class="fas fa-calendar-alt text-blue-500"></i> More
+                </button>
+                <input type="date" id="hidden-date-picker" class="absolute inset-0 opacity-0 pointer-events-none" onchange="setDateFilter(this.value)">
+            </div>
+        `;
+      container.insertAdjacentHTML('beforeend', calendarBtnHtml);
+    }
+
+    function setDateFilter(dateStr) {
+      selectedApprovedDate = dateStr;
+      renderDateFilters(); // re-render filters to update active state
+      renderApprovedView(); // re-render list
     }
 
     // --- UI Tab Switching ---
@@ -381,15 +520,18 @@
       }
 
       // Set Title & Render Content
-      if (tabId === 'today') {
-        document.getElementById('current-tab-title').textContent = "Today's Itinerary";
-        renderTodayView();
+      if (tabId === 'approved') {
+        document.getElementById('current-tab-title').textContent = "Approved Appointments";
+        renderApprovedView();
       } else if (tabId === 'all') {
         document.getElementById('current-tab-title').textContent = "All Appointments";
         renderAllView();
       } else if (tabId === 'calendar') {
         document.getElementById('current-tab-title').textContent = "Calendar View";
         renderCalendar();
+      } else if (tabId === 'reschedule') {
+        document.getElementById('current-tab-title').textContent = "Reschedule Requests";
+        fetchRescheduleRequests();
       }
 
       // Close mobile sidebar if open
@@ -399,40 +541,41 @@
     }
 
     // --- View Renderers ---
-    function renderTodayView(filterQuery = '') {
-      const container = document.getElementById('view-today');
+    function renderApprovedView(filterQuery = '') {
+      const activeNav = document.getElementById('view-approved');
+      if (activeNav?.classList.contains('hidden')) return;
+
+      const container = document.getElementById('approved-cards-container');
+      if (!container) return;
       container.innerHTML = '';
 
-      // Get today's local date string (YYYY-MM-DD)
-      const todayStr = new Date().toISOString().split('T')[0];
-
-      let todaysList = allAppointments.filter(app => {
-        // Ensure date exists and handle DB datetime formats
+      // Only show items that are NOT pending (so they are approved), and match the selected date
+      let approvedList = allAppointments.filter(app => {
         const appDate = app.date ? (typeof app.date === 'string' ? app.date.split('T')[0] : new Date(app.date).toISOString().split('T')[0]) : '';
-        return appDate === todayStr;
+        return app.status !== 'pending' && appDate === selectedApprovedDate;
       });
 
       if (filterQuery) {
         const q = filterQuery.toLowerCase();
-        todaysList = todaysList.filter(a => a.name.toLowerCase().includes(q) || a.phone.includes(q));
+        approvedList = approvedList.filter(a => a.name.toLowerCase().includes(q) || a.phone.includes(q));
       }
 
-      if (todaysList.length === 0) {
+      if (approvedList.length === 0) {
         container.innerHTML = `
-                    <div class="bg-white rounded-2xl p-10 text-center border border-gray-100 shadow-sm mt-8">
+                    <div class="bg-white rounded-2xl p-10 text-center border border-gray-100 shadow-sm mt-4">
                         <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-mug-hot text-3xl text-blue-400"></i>
+                            <i class="fas fa-check-double text-3xl text-blue-400"></i>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-2">No Appointments Today!</h3>
-                        <p class="text-gray-500">Your itinerary is clear for today based on current filters.</p>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">No Approved Appointments Found</h3>
+                        <p class="text-gray-500">There are no approved sessions for the selected date.</p>
                     </div>`;
         return;
       }
 
       // Sort by slot time
-      todaysList.sort((a, b) => a.slot.localeCompare(b.slot));
+      approvedList.sort((a, b) => a.slot.localeCompare(b.slot));
 
-      todaysList.forEach(app => {
+      approvedList.forEach(app => {
         const isCompleted = app.status === 'completed';
         const statusColor = isCompleted ? 'bg-green-100 text-green-700 border-green-200' :
           (app.status === 'cancelled' ? 'bg-red-100 text-red-700 border-red-200' : 'bg-blue-100 text-blue-700 border-blue-200');
@@ -475,9 +618,14 @@
                                 <a href="${navLink}" target="_blank" class="flex-1 md:flex-none flex justify-center items-center gap-2 bg-gray-900 text-white px-5 py-3 rounded-xl hover:bg-black transition font-medium shadow-md shadow-gray-200">
                                     <i class="fas fa-location-arrow"></i> Navigate
                                 </a>
-                                <button onclick='openClinicalModal(${JSON.stringify(app).replace(/'/g, "&#39;")})' class="flex-1 md:flex-none flex justify-center items-center gap-2 bg-blue-50 text-blue-700 px-5 py-3 rounded-xl hover:bg-blue-100 transition font-medium border border-blue-100">
-                                    <i class="fas fa-notes-medical"></i> Update Notes
-                                </button>
+                                <div class="flex gap-2 w-full">
+                                    <button onclick='openClinicalModal(${JSON.stringify(app).replace(/'/g, "&#39;")})' class="flex-1 flex justify-center items-center gap-2 bg-blue-50 text-blue-700 px-4 py-3 rounded-xl hover:bg-blue-100 transition font-medium border border-blue-100" title="Clinical Notes">
+                                        <i class="fas fa-notes-medical"></i> Notes
+                                    </button>
+                                    <button onclick='handleReschedule("${app.id}", "${app.date.split('T')[0]}", "${app.slot}")' class="bg-amber-50 text-amber-700 px-4 py-3 rounded-xl hover:bg-amber-100 transition font-medium border border-amber-100" title="Reschedule">
+                                        <i class="fas fa-clock"></i>
+                                    </button>
+                                </div>
                                 <a href="https://wa.me/${app.phone.replace(/[^0-9]/g, '')}?text=Hi%20${encodeURIComponent(app.name)},%20this%20is%20Movement%20Science%20Physiotherapy..." target="_blank" class="flex-1 md:flex-none flex justify-center items-center gap-2 bg-transparent text-green-600 border border-green-200 px-5 py-3 rounded-xl hover:bg-green-50 transition font-medium">
                                     <i class="fab fa-whatsapp text-lg"></i> Send Msg
                                 </a>
@@ -491,9 +639,32 @@
 
     function renderAllView(filterQuery = '') {
       const tbody = document.getElementById('all-appointments-tbody');
+      if (!tbody) return;
       tbody.innerHTML = '';
 
-      let list = allAppointments;
+      const todayStr = new Date().toISOString().split('T')[0];
+
+      // Calculate Stats (only for pending requests)
+      let pendingList = allAppointments.filter(app => app.status === 'pending');
+
+      let futureCount = 0;
+      let pastCount = 0;
+
+      pendingList.forEach(app => {
+        const appDate = app.date ? (typeof app.date === 'string' ? app.date.split('T')[0] : new Date(app.date).toISOString().split('T')[0]) : 'N/A';
+        if (appDate >= todayStr) futureCount++;
+        else pastCount++;
+      });
+
+      document.getElementById('future-count').textContent = futureCount;
+      document.getElementById('past-count').textContent = pastCount;
+
+      const deleteBtn = document.getElementById('delete-past-btn');
+      if (pastCount > 0) deleteBtn.classList.remove('hidden');
+      else deleteBtn.classList.add('hidden');
+
+      // Filter for rendering pending items in table
+      let list = pendingList;
       if (filterQuery) {
         const q = filterQuery.toLowerCase();
         list = list.filter(a => a.name.toLowerCase().includes(q) || a.phone.includes(q));
@@ -506,26 +677,35 @@
               <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3">
                   <i class="fas fa-inbox text-2xl text-gray-400"></i>
               </div>
-              <h3 class="text-lg font-medium text-gray-900 mb-1">No Appointments Found</h3>
-              <p class="text-gray-500 text-sm">There are currently no appointments in the system.</p>
+              <h3 class="text-lg font-medium text-gray-900 mb-1">No Pending Requests Found</h3>
+              <p class="text-gray-500 text-sm">All incoming requests have been processed.</p>
             </td>
           </tr>
         `;
         return;
       }
 
+      // Sort pending list (oldest first, to process backlog)
+      list.sort((a, b) => {
+        const ad = a.date ? (typeof a.date === 'string' ? a.date.split('T')[0] : new Date(a.date).toISOString().split('T')[0]) : '9999';
+        const bd = b.date ? (typeof b.date === 'string' ? b.date.split('T')[0] : new Date(b.date).toISOString().split('T')[0]) : '9999';
+        return ad.localeCompare(bd);
+      });
+
       list.forEach(app => {
         const appDate = app.date ? (typeof app.date === 'string' ? app.date.split('T')[0] : new Date(app.date).toISOString().split('T')[0]) : 'N/A';
+        const isPast = appDate < todayStr;
+        const rowClass = isPast ? 'bg-rose-50/30' : 'hover:bg-gray-50 transition';
 
         const tr = document.createElement('tr');
-        tr.className = 'hover:bg-gray-50 transition';
+        tr.className = rowClass;
         tr.innerHTML = `
                     <td class="p-4">
                         <div class="font-bold text-gray-900">${app.name}</div>
                         <div class="text-sm text-gray-500">${app.phone}</div>
                     </td>
                     <td class="p-4">
-                        <div class="text-gray-900">${appDate}</div>
+                        <div class="text-gray-900 ${isPast ? 'text-red-500 font-medium' : ''}">${appDate} ${isPast ? '<i class="fas fa-exclamation-circle" title="Past Date"></i>' : ''}</div>
                         <div class="text-sm font-medium text-blue-600">${app.slot}</div>
                     </td>
                     <td class="p-4">
@@ -533,24 +713,240 @@
                         <div class="text-xs text-gray-400">${app.city}</div>
                     </td>
                     <td class="p-4">
-                        <span class="px-2.5 py-1 text-xs font-semibold rounded-full border ${app.status === 'completed' ? 'bg-green-50 text-green-700 border-green-200' : (app.status === 'cancelled' ? 'bg-red-50 text-red-700 border-red-200' : 'bg-blue-50 text-blue-700 border-blue-200')} uppercase">
-                            ${app.status || 'Scheduled'}
+                        <span class="px-2.5 py-1 text-xs font-semibold rounded-full border bg-yellow-50 text-yellow-700 border-yellow-200 uppercase">
+                            Pending
                         </span>
                     </td>
                     <td class="p-4 text-right flex justify-end gap-2">
                         <button onclick='handleApprove("${app.id}")' class="text-green-600 hover:text-green-800 bg-green-50 hover:bg-green-100 px-3 py-1.5 rounded-lg text-sm font-medium transition" title="Approve Request">
                             <i class="fas fa-check"></i>
                         </button>
+                        <button onclick='handleReschedule("${app.id}", "${appDate}", "${app.slot}")' class="text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg text-sm font-medium transition" title="Change Date/Time">
+                            <i class="fas fa-clock"></i>
+                        </button>
                         <button onclick='handleDelete("${app.id}")' class="text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg text-sm font-medium transition" title="Cancel/Delete">
                             <i class="fas fa-trash"></i>
-                        </button>
-                        <button onclick='openClinicalModal(${JSON.stringify(app).replace(/'/g, "&#39;")})' class="text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg text-sm font-medium transition" title="View Record">
-                            <i class="fas fa-file-medical"></i>
                         </button>
                     </td>
                 `;
         tbody.appendChild(tr);
       });
+    }
+
+    async function fetchRescheduleRequests() {
+      const tbody = document.getElementById('reschedule-requests-tbody');
+      if (!tbody) return;
+
+      showLoader(true);
+      try {
+        const res = await fetch('/admin/api/reschedule-requests');
+        if (!res.ok) throw new Error('Failed to fetch reschedule requests');
+        const requests = await res.json();
+
+        renderRescheduleRequests(requests);
+      } catch (err) {
+        console.error(err);
+        Swal.fire('Error', 'Failed to load reschedule requests', 'error');
+      } finally {
+        showLoader(false);
+      }
+    }
+
+    function renderRescheduleRequests(requests) {
+      const tbody = document.getElementById('reschedule-requests-tbody');
+      tbody.innerHTML = '';
+
+      if (requests.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="p-12 text-center text-gray-500 font-medium">
+              <i class="fas fa-calendar-check text-4xl mb-3 block opacity-20"></i>
+              No pending reschedule requests.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      requests.forEach(req => {
+        const curDate = req.current_date ? (typeof req.current_date === 'string' ? req.current_date.split('T')[0] : new Date(req.current_date).toISOString().split('T')[0]) : 'N/A';
+        const reqDate = req.requested_date ? (typeof req.requested_date === 'string' ? req.requested_date.split('T')[0] : new Date(req.requested_date).toISOString().split('T')[0]) : 'N/A';
+
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-gray-50 transition';
+        tr.innerHTML = `
+          <td class="p-4 border-b">
+            <div class="font-bold text-gray-900">${req.patient_name}</div>
+            <div class="text-sm text-gray-500">${req.patient_phone}</div>
+          </td>
+          <td class="p-4 border-b text-sm">
+            <div class="text-gray-400">Date: ${curDate}</div>
+            <div class="text-gray-400">Slot: ${req.current_slot}</div>
+          </td>
+          <td class="p-4 border-b text-sm">
+            <div class="text-blue-600 font-bold">New Date: ${reqDate}</div>
+            <div class="text-blue-600 font-bold">New Slot: ${req.requested_slot}</div>
+          </td>
+          <td class="p-4 border-b">
+            <div class="text-xs text-gray-600 italic line-clamp-2" title="${req.reason || ''}">${req.reason || '-'}</div>
+          </td>
+          <td class="p-4 border-b text-right">
+            <div class="flex justify-end gap-2">
+              <button onclick="handleApproveReschedule(${req.id})" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition flex items-center gap-1 shadow-sm">
+                <i class="fas fa-check"></i> Approve
+              </button>
+              <button onclick="handleRejectReschedule(${req.id})" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1.5 rounded-lg text-sm font-medium transition flex items-center gap-1">
+                <i class="fas fa-times"></i> Reject
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function handleApproveReschedule(id) {
+      const result = await Swal.fire({
+        title: 'Approve Reschedule?',
+        text: "The appointment will be updated to the new date and slot, and the patient will be notified.",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#10b981',
+        confirmButtonText: 'Yes, Approve It'
+      });
+
+      if (result.isConfirmed) {
+        showLoader(true);
+        try {
+          const res = await fetch(`/admin/api/reschedule-requests/${id}/approve`, { method: 'POST' });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Failed to approve');
+
+          Swal.fire('Approved!', 'The appointment has been rescheduled.', 'success');
+          fetchRescheduleRequests();
+          fetchAppointments(); // Refresh main list too
+        } catch (err) {
+          Swal.fire('Error', err.message, 'error');
+        } finally {
+          showLoader(false);
+        }
+      }
+    }
+
+    async function handleRejectReschedule(id) {
+      const result = await Swal.fire({
+        title: 'Reject Request?',
+        text: "The patient will be notified that their request could not be accommodated.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        confirmButtonText: 'Yes, Reject It'
+      });
+
+      if (result.isConfirmed) {
+        showLoader(true);
+        try {
+          const res = await fetch(`/admin/api/reschedule-requests/${id}/reject`, { method: 'POST' });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Failed to reject');
+
+          Swal.fire('Rejected', 'The request has been marked as rejected.', 'success');
+          fetchRescheduleRequests();
+        } catch (err) {
+          Swal.fire('Error', err.message, 'error');
+        } finally {
+          showLoader(false);
+        }
+      }
+    }
+
+    async function deleteAllPastPending() {
+      Swal.fire({
+        title: 'Delete All Past Requests?',
+        text: "This will permanently delete all unapproved requests for past dates. This action cannot be undone.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#e11d48', // rose-600
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, Delete All'
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            showLoader(true);
+            const res = await fetch('/admin/api/appointments/delete-past', {
+              method: 'POST'
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Action failed');
+            Swal.fire('Deleted!', `Successfully cleared ${data.deletedCount} past request(s).`, 'success');
+            fetchAppointments();
+          } catch (e) {
+            Swal.fire('Error', 'Failed to delete past requests.', 'error');
+          } finally {
+            showLoader(false);
+          }
+        }
+      });
+    }
+
+    async function handleReschedule(id, currentDate, currentSlot) {
+      const { value: formValues } = await Swal.fire({
+        title: 'Reschedule Appointment',
+        html: `
+                <div class="text-left space-y-4 py-2">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 mb-1">Select New Date</label>
+                        <input id="swal-date" type="date" class="w-full px-4 py-2 border rounded-xl" value="${currentDate}">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 mb-1">Select New Time Slot</label>
+                        <select id="swal-slot" class="w-full px-4 py-2 border rounded-xl">
+                            <option value="10:00 AM - 11:00 AM" ${currentSlot === '10:00 AM - 11:00 AM' ? 'selected' : ''}>10:00 AM - 11:00 AM</option>
+                            <option value="11:00 AM - 12:00 PM" ${currentSlot === '11:00 AM - 12:00 PM' ? 'selected' : ''}>11:00 AM - 12:00 PM</option>
+                            <option value="12:00 PM - 01:00 PM" ${currentSlot === '12:00 PM - 01:00 PM' ? 'selected' : ''}>12:00 PM - 01:00 PM</option>
+                            <option value="04:00 PM - 05:00 PM" ${currentSlot === '04:00 PM - 05:00 PM' ? 'selected' : ''}>04:00 PM - 05:00 PM</option>
+                            <option value="05:00 PM - 06:00 PM" ${currentSlot === '05:00 PM - 06:00 PM' ? 'selected' : ''}>05:00 PM - 06:00 PM</option>
+                            <option value="06:00 PM - 07:00 PM" ${currentSlot === '06:00 PM - 07:00 PM' ? 'selected' : ''}>06:00 PM - 07:00 PM</option>
+                        </select>
+                    </div>
+                </div>
+            `,
+        focusConfirm: false,
+        showCancelButton: true,
+        confirmButtonText: 'Update Details',
+        preConfirm: () => {
+          return {
+            date: document.getElementById('swal-date').value,
+            slot: document.getElementById('swal-slot').value
+          }
+        }
+      });
+
+      if (formValues) {
+        updateAppointment(id, formValues);
+      }
+    }
+
+    async function updateAppointment(id, data) {
+      showLoader(true);
+      try {
+        const res = await fetch(`/admin/api/appointment/${id}/notes`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            status: id.startsWith('req_') ? 'pending' : 'scheduled', // Keep current status
+            ...data
+          })
+        });
+
+        if (!res.ok) throw new Error('Update failed');
+        Swal.fire('Success', 'Appointment rescheduled successfully.', 'success');
+        fetchAppointments();
+      } catch (e) {
+        Swal.fire('Error', 'Failed to update appointment.', 'error');
+      } finally {
+        showLoader(false);
+      }
     }
 
     function renderCalendar() {
@@ -571,7 +967,7 @@
 
         return {
           id: app.id,
-          title: `${app.name} (${app.city})`,
+          title: `${app.name}(${app.city})`,
           start: appDate, // FullCalendar handles YYYY-MM-DD
           backgroundColor: app.status === 'completed' ? '#16a34a' : (app.status === 'cancelled' ? '#dc2626' : '#2563eb'),
           borderColor: 'transparent',
@@ -681,22 +1077,22 @@
           const cardStyle = isActive ? 'border-blue-200 bg-white shadow-md' : 'border-gray-100 bg-gray-50';
 
           const itemHtml = `
-                        <div class="relative pl-12 py-2">
-                            <!-- Timeline Dot -->
-                            <div class="absolute left-0 top-6 ml-[-4px] md:ml-[16px] w-4 h-4 rounded-full ${dotColor} shadow-sm z-10 transition-colors duration-200"></div>
-                            
-                            <!-- Content Card -->
-                            <div class="rounded-2xl p-4 border ${cardStyle}">
-                                <div class="flex justify-between items-start mb-2">
-                                    <span class="font-bold text-gray-900">${vDate}</span>
-                                    ${isActive ? '<span class="text-xs bg-blue-100 text-blue-700 px-2 rounded font-semibold">Editing Now</span>' : ''}
-                                </div>
-                                <div class="text-sm text-gray-600 prose prose-sm leading-snug">
-                                    ${notesStr}
-                                </div>
-                            </div>
+            <div class="relative pl-12 py-2">
+                             <!--Timeline Dot-->
+                             <div class="absolute left-0 top-6 ml-[-4px] md:ml-[16px] w-4 h-4 rounded-full ${dotColor} shadow-sm z-10 transition-colors duration-200"></div>
+                             
+                             <!--Content Card-->
+            <div class="rounded-2xl p-4 border ${cardStyle}">
+              <div class="flex justify-between items-start mb-2">
+                <span class="font-bold text-gray-900">${vDate}</span>
+                ${isActive ? '<span class="text-xs bg-blue-100 text-blue-700 px-2 rounded font-semibold">Editing Now</span>' : ''}
+              </div>
+              <div class="text-sm text-gray-600 prose prose-sm leading-snug">
+                ${notesStr}
+              </div>
+            </div>
                         </div>
-                    `;
+              `;
           timelineContainer.insertAdjacentHTML('beforeend', itemHtml);
         });
 
@@ -846,10 +1242,9 @@
     function setupSearch() {
       document.getElementById('global-search').addEventListener('input', (e) => {
         const val = e.target.value;
-        // Currently active tab logic
-        const isTodayStr = !document.getElementById('view-today').classList.contains('hidden');
-        if (isTodayStr) {
-          renderTodayView(val);
+        const isApproved = !document.getElementById('view-approved').classList.contains('hidden');
+        if (isApproved) {
+          renderApprovedView(val);
         } else {
           renderAllView(val);
         }

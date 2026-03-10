@@ -23,6 +23,32 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 let clients = [];
 
+// Database Table Initialization
+(async () => {
+    const db = require('./config/db');
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS reschedule_requests (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                appointment_id INT NOT NULL,
+                appointment_table VARCHAR(50) NOT NULL,
+                patient_name VARCHAR(255),
+                patient_phone VARCHAR(20),
+                \`current_date\` DATE,
+                \`current_slot\` VARCHAR(50),
+                requested_date DATE NOT NULL,
+                requested_slot VARCHAR(50) NOT NULL,
+                reason TEXT,
+                status ENUM('pending','approved','rejected') DEFAULT 'pending',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+        console.log('✅ Reschedule requests table initialized');
+    } catch (err) {
+        console.error('❌ Failed to initialize reschedule_requests table:', err);
+    }
+})();
+
 wss.on('connection', ws => {
     clients.push(ws);
     ws.on('close', () => {

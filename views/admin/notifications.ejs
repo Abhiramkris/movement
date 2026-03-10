@@ -255,9 +255,17 @@
                     </div>
 
                     <!-- Existing Groups -->
-                    <div class="bg-white rounded-2xl border border-gray-100 p-6">
-                        <h3 class="font-bold text-gray-800 mb-4">Existing Groups</h3>
-                        <div id="groups-list" class="space-y-3">
+                    <div class="bg-white rounded-2xl border border-gray-100 p-6 flex flex-col h-[500px]">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-bold text-gray-800">Existing Groups</h3>
+                            <div class="relative">
+                                <i
+                                    class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                                <input type="text" id="groups-search" placeholder="Filter groups..."
+                                    class="pl-8 pr-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-100 w-40 sm:w-56">
+                            </div>
+                        </div>
+                        <div id="groups-list" class="space-y-3 overflow-y-auto flex-1 pr-1">
                             <% if (groups.length===0) { %>
                                 <div class="text-center py-8 text-gray-400">
                                     <i class="fas fa-folder-open text-3xl mb-2"></i>
@@ -275,11 +283,12 @@
                                                 </p>
                                             </div>
                                             <div class="flex gap-1.5">
-                                                <button onclick="manageGroup(<%= g.id %>, '<%= g.name %>')"
+                                                <button data-group-id="<%= g.id %>" data-group-name="<%= g.name %>"
+                                                    onclick="manageGroup(this.getAttribute('data-group-id'), this.getAttribute('data-group-name'))"
                                                     class="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition text-xs">
                                                     <i class="fas fa-users-cog"></i>
                                                 </button>
-                                                <button onclick="deleteGroup(<%= g.id %>)"
+                                                <button onclick="deleteGroup('<%= g.id %>')"
                                                     class="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition text-xs">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
@@ -297,9 +306,16 @@
                 </div>
             </div>
 
-            <!-- TAB: History -->
             <div id="tab-history" class="tab-content">
-                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden flex flex-col">
+                    <div class="p-4 border-b border-gray-50 flex flex-wrap items-center justify-between gap-4">
+                        <h3 class="font-bold text-gray-800">Email History</h3>
+                        <div class="relative">
+                            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="text" id="history-search" placeholder="Search by recipient or subject..."
+                                class="pl-10 pr-4 py-2 border border-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 w-full sm:w-80 transition-all">
+                        </div>
+                    </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm">
                             <thead class="bg-gray-50 text-xs font-semibold text-gray-500 uppercase">
@@ -374,13 +390,13 @@
                 </button>
             </div>
             <div class="p-5 border-b border-gray-100">
-                <div class="flex gap-2">
+                <div class="flex flex-col sm:flex-row gap-2">
                     <input type="email" id="add-member-email" placeholder="Email"
-                        class="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-400">
+                        class="w-full sm:flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-400">
                     <input type="text" id="add-member-name" placeholder="Name"
-                        class="w-32 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-400">
+                        class="w-full sm:w-32 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-400">
                     <button onclick="addMember()"
-                        class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition">
+                        class="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition flex items-center justify-center">
                         <i class="fas fa-plus"></i>
                     </button>
                 </div>
@@ -449,10 +465,42 @@
         // Tab switching
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-                btn.classList.add('active');
-                document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active', 'text-blue-600', 'bg-blue-50'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+                btn.classList.add('active', 'text-blue-600', 'bg-blue-50');
+                const tabId = btn.getAttribute('data-tab');
+                document.getElementById(`tab-${tabId}`).classList.add('active');
+            });
+        });
+
+        // Patient Search (Individual Compose)
+        document.getElementById('patient-search')?.addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase();
+            document.querySelectorAll('.patient-item').forEach(item => {
+                const name = item.getAttribute('data-name').toLowerCase();
+                const email = item.getAttribute('data-email').toLowerCase();
+                item.classList.toggle('hidden', !(name.includes(q) || email.includes(q)));
+            });
+        });
+
+        // Groups Search
+        document.getElementById('groups-search')?.addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase();
+            document.querySelectorAll('#groups-list > div').forEach(card => {
+                const name = card.querySelector('h4')?.textContent.toLowerCase() || '';
+                const desc = card.querySelector('p')?.textContent.toLowerCase() || '';
+                card.classList.toggle('hidden', !(name.includes(q) || desc.includes(q)));
+            });
+        });
+
+        // History Search
+        document.getElementById('history-search')?.addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase();
+            document.querySelectorAll('#tab-history tbody tr').forEach(row => {
+                if (row.querySelector('td[colspan]')) return;
+                const text = row.textContent.toLowerCase();
+                row.classList.toggle('hidden', !text.includes(q));
             });
         });
 
@@ -462,15 +510,6 @@
                 document.getElementById('compose-email').value = item.dataset.email;
                 document.getElementById('compose-name').value = item.dataset.name;
                 document.getElementById('compose-email').focus();
-            });
-        });
-
-        // Patient search filter
-        document.getElementById('patient-search')?.addEventListener('input', (e) => {
-            const q = e.target.value.toLowerCase();
-            document.querySelectorAll('.patient-item').forEach(item => {
-                const text = (item.dataset.name + item.dataset.email).toLowerCase();
-                item.style.display = text.includes(q) ? '' : 'none';
             });
         });
 

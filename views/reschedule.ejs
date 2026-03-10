@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Reschedule - Movement Science</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/aura.css">
+    <link rel="stylesheet" href="/css/nav.css">
+    <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+
+        .reschedule-container {
+            max-width: 500px;
+            margin: 60px auto;
+            padding: 40px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #011343;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .appt-summary {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border-left: 4px solid #045edb;
+        }
+
+        .appt-summary p {
+            margin: 0;
+            font-size: 14px;
+            color: #475569;
+        }
+
+        .appt-summary strong {
+            color: #0f172a;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="date"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 15px;
+            transition: border-color 0.2s;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #045edb;
+            outline: none;
+        }
+
+        .slots-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .slot-item input {
+            display: none;
+        }
+
+        .slot-item label {
+            display: block;
+            padding: 10px 5px;
+            text-align: center;
+            background: #fff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+            margin: 0;
+        }
+
+        .slot-item input:checked+label {
+            background: #011343;
+            color: #fff;
+            border-color: #011343;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: #045edb;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-top: 10px;
+        }
+
+        .otp-section {
+            display: none;
+        }
+
+        #otp-input {
+            text-align: center;
+            font-size: 24px;
+            letter-spacing: 8px;
+            font-weight: 700;
+        }
+
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('header') %>
+
+    <div class="reschedule-container">
+        <h1>Request Reschedule</h1>
+
+        <div class="appt-summary">
+            <p>Patient: <strong>
+                    <%= appt.name %>
+                </strong></p>
+            <p>Current: <strong>
+                    <%= appt.date %> @ <%= appt.slot %>
+                </strong></p>
+        </div>
+
+        <!-- Form Phase 1: Request Details -->
+        <div id="request-phase">
+            <form id="rescheduleForm">
+                <input type="hidden" name="token" value="<%= token %>">
+
+                <label>Preferred New Date</label>
+                <input type="date" name="requested_date" id="req_date" required
+                    min="<%= new Date().toISOString().split('T')[0] %>">
+
+                <label>Preferred Time Slot</label>
+                <div class="slots-grid">
+                    <div class="slot-item">
+                        <input type="radio" name="requested_slot" id="s1" value="10:00 AM" required>
+                        <label for="s1">10:00 AM</label>
+                    </div>
+                    <div class="slot-item">
+                        <input type="radio" name="requested_slot" id="s2" value="11:00 AM">
+                        <label for="s2">11:00 AM</label>
+                    </div>
+                    <div class="slot-item">
+                        <input type="radio" name="requested_slot" id="s3" value="12:00 PM">
+                        <label for="s3">12:00 PM</label>
+                    </div>
+                    <div class="slot-item sunday-slot" style="display:none;">
+                        <input type="radio" name="requested_slot" id="s4" value="04:30 PM">
+                        <label for="s4">04:30 PM</label>
+                    </div>
+                    <div class="slot-item sunday-slot" style="display:none;">
+                        <input type="radio" name="requested_slot" id="s5" value="05:00 PM">
+                        <label for="s5">05:00 PM</label>
+                    </div>
+                    <div class="slot-item sunday-slot" style="display:none;">
+                        <input type="radio" name="requested_slot" id="s6" value="06:15 PM">
+                        <label for="s6">06:15 PM</label>
+                    </div>
+                </div>
+
+                <label>Reason (Optional)</label>
+                <textarea name="reason" rows="3" placeholder="e.g. Work conflict, Feeling unwell..."></textarea>
+
+                <button type="submit" class="btn btn-primary" id="submitBtn">Send OTP to Verify</button>
+            </form>
+        </div>
+
+        <!-- Form Phase 2: OTP Verification -->
+        <div id="otp-phase" class="otp-section">
+            <p style="text-align: center; font-size: 14px; color: #64748b; margin-bottom: 20px;">
+                Enter the code sent to your phone ending in <strong>...<%= appt.phone.slice(-4) %></strong>
+            </p>
+            <form id="otpForm">
+                <label>Verification Code</label>
+                <input type="text" id="otp-input" maxlength="6" required autocomplete="one-time-code">
+                <button type="submit" class="btn btn-primary" id="verifyBtn">Submit Request</button>
+                <p style="text-align: center; margin-top: 15px;">
+                    <a href="javascript:location.reload()" style="font-size: 13px; color: #64748b;">Start Over</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const reqDate = document.getElementById('req_date');
+        const sundaySlots = document.querySelectorAll('.sunday-slot');
+
+        reqDate.addEventListener('change', function () {
+            const date = new Date(this.value);
+            if (date.getDay() === 0) {
+                sundaySlots.forEach(s => s.style.display = 'block');
+            } else {
+                sundaySlots.forEach(s => s.style.display = 'none');
+            }
+        });
+
+        document.getElementById('rescheduleForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.classList.add('loading');
+            btn.innerText = 'Sending...';
+
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const res = await fetch('/reschedule', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                if (result.success) {
+                    document.getElementById('request-phase').style.display = 'none';
+                    document.getElementById('otp-phase').style.display = 'block';
+                } else {
+                    alert(result.error || 'Failed to send OTP');
+                }
+            } catch (err) {
+                alert('Connection error');
+            } finally {
+                btn.classList.remove('loading');
+                btn.innerText = 'Send OTP to Verify';
+            }
+        });
+
+        document.getElementById('otpForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('verifyBtn');
+            const otp = document.getElementById('otp-input').value;
+            btn.classList.add('loading');
+            btn.innerText = 'Verifying...';
+
+            try {
+                const res = await fetch('/reschedule/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ otp })
+                });
+                const result = await res.json();
+                if (result.success) {
+                    window.location.href = result.redirect;
+                } else {
+                    alert(result.error || 'Invalid OTP');
+                }
+            } catch (err) {
+                alert('Connection error');
+            } finally {
+                btn.classList.remove('loading');
+                btn.innerText = 'Submit Request';
+            }
+        });
+    </script>
+</body>
+
+</html>

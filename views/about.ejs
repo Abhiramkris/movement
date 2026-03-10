@@ -21,39 +21,7 @@
 </head>
 <body>
 
-  <nav class="navbar navbar-expand-lg navbar-light">
-    <a class="navbar-brand" href="/">
-      <img src="/images/logo.png" alt="Logo"> <!-- Replace with your logo URL -->
-    </a>
-    <div class="name">
-      <h5>MOVEMENT SCIENCE</h5>
-    </div>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item active">
-          <a class="nav-link" href="/howhelp/index">How we help <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/services">Services</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/conditions">Conditions</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/faq">FAQ</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/about">About-us</a>
-        </li>
-      </ul>
-      <div class="free-consultation">
-        <a href="/checkslot" class="nav-link">Book Free Consultation</a>
-      </div>
-    </div>
-  </nav>
+  <%- include('header') %>
   <script>
     $(document).ready(function() {
       $('.navbar-toggler').click(function() {
@@ -63,178 +31,87 @@
   </script>
 
 
-    <div class="responsive-container-block bigContainer">
-        <div class="responsive-container-block Container">
-          <img class="mainImg" src="/images/about.jpg">
-          <div class="allText aboveText">
-            <p class="text-blk headingText">
-             About us
-            </p>
-            <p class="subhead">
-                Akshay is a highly qualified physiotherapist who practiced in India before relocating to the UK  to pursue his Master's degree, which he successfully completed at Salford University. He is a professional physiotherapist registered with HCPC and MCSP, specializing in neurological conditions, cardiorespiratory issues, and musculoskeletal problems, with over years of experience.
-                We offer home visits for those who prefer to receive treatment in the comfort of their own homes. Our primary objective is to deliver expert and professional physiotherapy services tailored to the unique needs of each patient.
-                In our physiotherapy treatments, we identify the root cause of the issue with the goal of alleviating pain, improving movement, enhancing strength, and restoring function. This approach not only helps patients achieve their goals and perform better but also aids in preventing future injuries.
-                In addition to physical treatment and rehabilitation, we provide expert advice and educate our patients to ensure optimal management of their condition from start to finish. We collaborate closely with each individual to comprehend their objectives and establish a plan to achieve them.
-            </p>
-          </div>
-        </div>
-       
-      </div>
-      <footer class="footer-area footer--light">
-        <div class="footer-big">
-          <!-- start .container -->
-          <div class="container">
-            <div class="row">
-              <div class="col-md-3 col-sm-12">
-                <div class="footer-widget">
-                  <div class="widget-about">
-                    <img src="http://placehold.it/250x80" alt="" class="img-fluid">
-                    <p>location map here</p>
-                    <ul class="contact-details">
-                      <li>
-                        <span class="icon-earphones"></span> Call Us:
-                        <a href="tel:+44 07930167674">+44 07930167674</a>
-                      </li>
-                      <li>
-                        <span class="icon-envelope-open"></span>
-                        <a href="mailto:info@movement-science.com">info@movement-science.com</a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <!-- Ends: .footer-widget -->
-              </div>
-              <!-- end /.col-md-4 -->
-              <div class="col-md-3 col-sm-4">
-                <div class="footer-widget">
-                  <div class="footer-menu footer-menu--1">
-                    <h4 class="footer-widget-title">Popular Category</h4>
-                    <ul>
-                      <li>
-                        <a href="/admin/login">Admin login</a>
-                      </li>
-                      <li>
-                        <a href="howhelp/index">How we help</a>
-                      </li>
-                      <li>
-                        <a href="/services">Services</a>
-                      </li>
-                      <li>
-                        <a href="/conditions">Conditions we treat</a>
-                      </li>
-                      <li>
-                        <a href="/faq">FAQ's</a>
-                      </li>
-                    </ul>
-                  </div>
-                  <!-- end /.footer-menu -->
-                </div>
-                <!-- Ends: .footer-widget -->
-              </div>
-              <!-- end /.col-md-3 -->
-    
-              <div class="col-md-3 col-sm-4">
-                <div class="footer-widget">
-                  <div class="footer-menu">
-                    <h4 class="footer-widget-title">Our Company</h4>
-                    <ul>
-                      <li>
-                        <a href="#">About Us</a>
-                      </li>
-                      <li>
-                        <a href="/callus">Sechedule a call</a>
-                      </li>
-                      <li>
-                        <a href="/checkslot">Book-appointment</a>
-                      </li>
-                      <li>
-                        <a href="#">Testimonials</a>
-                      </li>
-                      <li>
-                        <a href="tel:+44 07930167674">Contact Us</a>
-                      </li>
-                      <li>
-                        <a href="/faq">Plan &amp; Pricing</a>
-                      </li>
-                      <li>
-                        <a href="/error">Blog</a>
-                      </li>
-                    </ul>
-                  </div>
-                  <!-- end /.footer-menu -->
-                </div>
-                <!-- Ends: .footer-widget -->
-              </div>
-              <!-- end /.col-lg-3 -->
-    
-              <div class="col-md-3 col-sm-4">
-                <div class="footer-widget">
-                  <div class="footer-menu no-padding">
-                    <h4 class="footer-widget-title">Help Support</h4>
-                    <ul>
-                      <li>
-                        <a href="/contactus">Support Forum</a>
-                      </li>
-                      <li>
-                        <a href="/error">Terms &amp; Conditions</a>
-                      </li>
-                      <li>
-                        <a href="#">Support Policy</a>
-                      </li>
-                      <li>
-                        <a href="/faq">FAQs</a>
-                      </li> <br>
-                      <div class="social-icons">
-                        <style>
-                          .social-icons a {
-                            color: #023974;
-                            margin: 0 10px;
-                            text-decoration: none;
-                            font-size: 24px;
-                          }
-    
-                          .social-icons a:hover {
-                            color: #ddd;
-                          }
-                        </style>
-                        <a href="https://www.facebook.com/movement.science.2024?mibextid=ZbWKwL" target="_blank" class="fab fa-facebook-f"></a>
-                        <a href="https://x.com/movesscience" target="_blank" class="fab fa-twitter"></a>
-                        <a href="https://www.instagram.com/movementsscience?igsh=MXJ5cXRzazNiYXNhYQ==" target="_blank" class="fab fa-instagram"></a>
-                      </div>
-                    </ul>
-                  </div>
-                  <!-- end /.footer-menu -->
-                </div>
-                <!-- Ends: .footer-widget -->
-              </div>
-              <!-- Ends: .col-lg-3 -->
-    
+    <!-- Hero Section -->
+    <div class="relative bg-[#011d3b] text-white py-24 overflow-hidden">
+        <div class="container mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center gap-12">
+            <div class="md:w-1/2">
+                <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">Empowering Your <span class="text-blue-400">Movement</span></h1>
+                <p class="text-lg text-blue-100 leading-relaxed mb-8">At Movement Science, we don't just treat symptoms; we restore lives. Our expert-led physiotherapy is rooted in science and delivered with compassion, helping you regain the freedom to move without pain.</p>
             </div>
-            <!-- end /.row -->
-          </div>
-          <!-- end /.container -->
-        </div>
-        <!-- end /.footer-big -->
-    
-        <div class="mini-footer">
-          <div class="container">
-            <div class="row">
-              <div class="col-md-12">
-                <div class="copyright-text">
-                  <p>© 2024
-                    <a href="/">Movemnet science</a>. All rights reserved. Created by
-                    <a href="https://www.instagram.com/movementsscience?igsh=MXJ5cXRzazNiYXNhYQ==/crem.create?igsh=ZjFscW1kZjhtNTBw">crem.create</a>
-                  </p>
-                </div>
-    
-                <div class="go_top">
-                  <span class="icon-arrow-up"></span>
-                </div>
-              </div>
+            <div class="md:w-1/2">
+                <img src="https://images.unsplash.com/photo-1576091160550-2173dad99901?auto=format&fit=crop&q=80&w=2070" alt="Physiotherapy session" class="rounded-3xl shadow-2xl border-4 border-white/10">
             </div>
-          </div>
         </div>
-      </footer>
+        <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="bg-white py-20">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <div class="grid md:grid-cols-2 gap-16 items-start">
+                <div>
+                    <h2 class="text-3xl font-bold text-[#011d3b] mb-6">Meet Akshay: Our Lead Specialist</h2>
+                    <p class="text-gray-700 leading-relaxed mb-6">
+                        Akshay is a highly qualified physiotherapist who practiced in India before relocating to the UK to pursue his Master's degree at Salford University. He is a professional physiotherapist registered with HCPC and MCSP, specializing in neurological conditions, cardiorespiratory issues, and musculoskeletal problems, with over 10+ years of clinical experience.
+                    </p>
+                    <p class="text-gray-700 leading-relaxed mb-6">
+                        Under Akshay's leadership, Movement Science offers specialized home visits for those who prefer treatment in the comfort of their own homes. Our primary objective is to deliver expert and professional physiotherapy services tailored to the unique needs of each patient.
+                    </p>
+                    <div class="flex gap-4">
+                        <div class="bg-blue-50 p-4 rounded-2xl flex-1 border border-blue-100">
+                            <h4 class="font-bold text-blue-700 mb-1">10+ Years</h4>
+                            <p class="text-sm text-blue-600">Clinical Experience</p>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-2xl flex-1 border border-blue-100">
+                            <h4 class="font-bold text-blue-700 mb-1">Master's</h4>
+                            <p class="text-sm text-blue-600">Salford University</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-8">
+                    <div class="bg-gray-50 p-8 rounded-3xl border border-gray-100">
+                        <h3 class="text-2xl font-bold text-[#011d3b] mb-4">Our Mission</h3>
+                        <p class="text-gray-600">To provide accessible, high-quality, and evidence-based physiotherapy that empowers individuals to overcome physical barriers and achieve their full potential for health and independence.</p>
+                    </div>
+                    <div class="bg-gray-50 p-8 rounded-3xl border border-gray-100">
+                        <h3 class="text-2xl font-bold text-[#011d3b] mb-4">Our Philosophy</h3>
+                        <p class="text-gray-600">We believe in identifying the root cause, not just the symptom. By combining hands-on treatment with expert education, we ensure our patients don't just get better—they stay better.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Why Choose Us -->
+    <div class="bg-gray-50 py-20">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <h2 class="text-3xl font-bold text-center text-[#011d3b] mb-16">Why Choose Movement Science?</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-3xl shadow-sm hover:shadow-md transition text-center">
+                    <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-home text-2xl"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-4">Home Visit Expertise</h4>
+                    <p class="text-gray-600">We bring the clinic to you, ensuring professional care in the environment where you feel most comfortable.</p>
+                </div>
+                <div class="bg-white p-8 rounded-3xl shadow-sm hover:shadow-md transition text-center">
+                    <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-brain text-2xl"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-4">Specialised Care</h4>
+                    <p class="text-gray-600">Expertise in neurological, cardiorespiratory, and MSK conditions ensures a truly holistic recovery path.</p>
+                </div>
+                <div class="bg-white p-8 rounded-3xl shadow-sm hover:shadow-md transition text-center">
+                    <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-graduation-cap text-2xl"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-4">Evidence-Based</h4>
+                    <p class="text-gray-600">All treatments are rooted in the latest clinical research and tailored to your specific recovery goals.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+      <%- include('footer') %>
 </body>
 <style>
     * {
