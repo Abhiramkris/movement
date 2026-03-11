@@ -71,12 +71,13 @@ app.use(helmet({
     contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-            "script-src": ["'self'", "'unsafe-inline'", "https://cdn.tailwindcss.com", "https://code.jquery.com", "https://stackpath.bootstrapcdn.com", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"],
+            "script-src": ["'self'", "'unsafe-inline'", "https://cdn.tailwindcss.com", "https://code.jquery.com", "https://stackpath.bootstrapcdn.com", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://www.googletagmanager.com", "https://www.google-analytics.com", "https://ajax.googleapis.com", "https://www.google.com"],
             "script-src-attr": ["'self'", "'unsafe-inline'"],
-            "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com", "https://stackpath.bootstrapcdn.com", "https://cdn.jsdelivr.net"],
+            "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com", "https://stackpath.bootstrapcdn.com", "https://cdn.jsdelivr.net", "https://www.googletagmanager.com"],
             "font-src": ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
             "img-src": ["'self'", "data:", "https://*", "http://*"],
             "connect-src": ["'self'", "ws:", "wss:", "https://*"],
+            "frame-src": ["'self'", "https://www.youtube.com", "https://youtube.com", "https://www.google.com"],
         },
     },
 }));
