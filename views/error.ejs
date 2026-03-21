@@ -4,11 +4,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Error Page</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Error Page | Movement Science</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 
 <body>
+  <%- include('header') %>
+
   <div class="error-container">
     <div class="error-content">
       <div class="bouncing-icon">
@@ -19,11 +25,10 @@
         <%= typeof message !=='undefined' ? message : "We're sorry, but the page you requested could not be found." %>
       </p>
       <a href="/" class="btn-home">Go to Homepage</a>
-      <div class="error-gif">
-        <!-- <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExaWtobngxZGg3Ym02enZ2ZWw5NXkyN3B2eGh3NTBmMjVpd3JtNTd5YyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o6Zt6ML6BklcajjsA/giphy.webp" alt="Error"> -->
-      </div>
     </div>
   </div>
+
+  <%- include('footer') %>
 </body>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');

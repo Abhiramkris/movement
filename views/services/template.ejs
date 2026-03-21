@@ -17,6 +17,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/footer.css">
 
     <style>
         body {
@@ -217,73 +218,7 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-[#011d3b] text-white pt-20 pb-10 mt-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-                <!-- About -->
-                <div>
-                    <img src="/images/logo.png" alt="Logo" class="h-16 mb-6">
-                    <p class="text-blue-200 mb-6">Expert physiotherapy services focused on restoring movement and
-                        improving quality of life through personalized care.</p>
-                    <div class="flex space-x-4">
-                        <a href="https://www.facebook.com/movement.science.2024?mibextid=ZbWKwL" target="_blank"
-                            class="w-10 h-10 bg-white/10 flex items-center justify-center rounded-full hover:bg-blue-500 transition"><i
-                                class="fab fa-facebook-f"></i></a>
-                        <a href="https://x.com/movesscience" target="_blank"
-                            class="w-10 h-10 bg-white/10 flex items-center justify-center rounded-full hover:bg-blue-400 transition"><i
-                                class="fab fa-twitter"></i></a>
-                        <a href="https://www.instagram.com/movementsscience?igsh=MXJ5cXRzazNiYXNhYQ==" target="_blank"
-                            class="w-10 h-10 bg-white/10 flex items-center justify-center rounded-full hover:bg-pink-500 transition"><i
-                                class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-                <!-- Categories -->
-                <div>
-                    <h4 class="text-xl font-bold mb-6">Popular Category</h4>
-                    <ul class="space-y-4 text-blue-200">
-                        <li><a href="/admin/login" class="hover:text-white transition">Admin Login</a></li>
-                        <li><a href="/howhelp/index" class="hover:text-white transition">How we help</a></li>
-                        <li><a href="/services" class="hover:text-white transition">Services</a></li>
-                        <li><a href="/conditions" class="hover:text-white transition">Conditions</a></li>
-                    </ul>
-                </div>
-                <!-- Company -->
-                <div>
-                    <h4 class="text-xl font-bold mb-6">Our Company</h4>
-                    <ul class="space-y-4 text-blue-200">
-                        <li><a href="/about" class="hover:text-white transition">About Us</a></li>
-                        <li><a href="/callus" class="hover:text-white transition">Schedule a Call</a></li>
-                        <li><a href="/checkslot" class="hover:text-white transition">Book Appointment</a></li>
-                        <li><a href="/faq" class="hover:text-white transition">FAQ</a></li>
-                    </ul>
-                </div>
-                <!-- Contact -->
-                <div>
-                    <h4 class="text-xl font-bold mb-6">Contact Info</h4>
-                    <ul class="space-y-4 text-blue-200">
-                        <li class="flex items-start">
-                            <i class="fas fa-map-marker-alt mt-1.5 mr-3"></i>
-                            <span>Location map here</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-phone mr-3"></i>
-                            <a href="tel:+44 07930167674" class="hover:text-white transition">+44 07930167674</a>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-envelope mr-3"></i>
-                            <a href="mailto:info@movement-science.com"
-                                class="hover:text-white transition">info@movement-science.com</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="pt-8 border-t border-white/10 text-center text-blue-300 text-sm">
-                <p>&copy; 2024 Movement Science. All rights reserved. Created by <a href="#"
-                        class="underline">crem.create</a></p>
-            </div>
-        </div>
-    </footer>
+    <%- include('../footer') %>
 
 </body>
 
