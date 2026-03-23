@@ -37,7 +37,7 @@ router.post('/login',
 
             const token = jwt.sign(
                 { role: 'admin' },
-                process.env.JWT_SECRET,
+                process.env.JWT_SECRET || 'movement-science-jwt-secret-fallback',
                 { expiresIn: '12h' }
             );
 

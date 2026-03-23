@@ -306,7 +306,8 @@ router.get('/reschedule-success', (req, res) => {
 
 // Other Public Routes
 router.get('/services', (req, res) => {
-    res.render('services/index3');
+    const services = getServicesData();
+    res.render('services/index3', { services });
 });
 
 router.get('/services/:slug', (req, res) => {

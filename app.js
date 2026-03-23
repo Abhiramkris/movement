@@ -17,6 +17,9 @@ const app = express();
 const port = process.env.PORT || 3200;
 const server = http.createServer(app);
 
+// Trust proxy for Render/load balancers
+app.set('trust proxy', 1);
+
 /******************************************************************
  * WEBSOCKET SETUP
  ******************************************************************/
@@ -88,7 +91,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-const sessionSecret = process.env.SESSION_SECRET || 'fallback-random-secret';
+const sessionSecret = process.env.SESSION_SECRET || 'movement-science-session-secret-fallback';
+const jwtSecret = process.env.JWT_SECRET || 'movement-science-jwt-secret-fallback';
+
+// Set to app locals for use in routes if needed
+app.locals.jwtSecret = jwtSecret;
+
 app.use(session({
     secret: sessionSecret,
     resave: false,
@@ -96,7 +104,7 @@ app.use(session({
     cookie: {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        sameSite: 'lax', // Use 'lax' for better compatibility with some proxies
         maxAge: 24 * 60 * 60 * 1000
     }
 }));

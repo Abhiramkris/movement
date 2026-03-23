@@ -6,7 +6,7 @@
         "metaDescription": "Expert physiotherapy for alleviating aches and pains through personalized treatment plans and targeted rehabilitation.",
         "keywords": "physiotherapy, aches and pains, rehabilitation, pain management, physical therapy",
         "intro": "Musculoskeletal pain is one of the leading causes of physical disability. Our approach goes beyond temporary relief, addressing the biomechanical root causes of your discomfort to restore long-term function and well-being.",
-        "image": "https://images.unsplash.com/photo-1579126038374-6064e9370f0f?auto=format&fit=crop&q=80&w=2062",
+        "image": "/images/services/aches-and-pains.png",
         "contentSections": [
             {
                 "heading": "The Science of Pain Management",
@@ -30,7 +30,7 @@
         "metaDescription": "Comprehensive care coordination and specialized physical therapy to optimize patient outcomes and recovery journeys.",
         "keywords": "case management, physiotherapy, care coordination, rehabilitation, patient care",
         "intro": "Complex recoveries require more than just sessions; they require strategy. Our case management services provide a high-level overview of your journey, coordinating between consultants, family members, and specialized therapists to ensure no detail is missed.",
-        "image": "https://images.unsplash.com/photo-1581056771107-24ca5f033842?auto=format&fit=crop&q=80&w=2070",
+        "image": "/images/services/case-management.png",
         "contentSections": [
             {
                 "heading": "Comprehensive Care Coordination",
@@ -54,7 +54,7 @@
         "metaDescription": "Specialized physiotherapy for seniors to improve mobility, strength, and independence through personalized care.",
         "keywords": "geriatric physiotherapy, elderly care, mobility, fall prevention, senior health",
         "intro": "Geriatric physiotherapy is dedicated to enhancing the quality of life in our later years. We focus on reversing age-related decline, building the core stability and confidence needed to maintain your independence at home.",
-        "image": "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&q=80&w=2070",
+        "image": "/images/services/elderly-care.png",
         "contentSections": [
             {
                 "heading": "Combatting Sarcopenia and Stiffness",
@@ -78,7 +78,7 @@
         "metaDescription": "Essential post-operative rehabilitation to promote healing, restore range of motion, and build strength.",
         "keywords": "post-surgery physiotherapy, rehabilitation, recovery, surgical recovery, physical therapy",
         "intro": "Surgical success is only 50% of the journey; the other 50% is rehabilitation. Our post-operative physiotherapy programs are carefully timed to support your body's natural healing phases while safely restoring your mobility.",
-        "image": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&q=80&w=2070",
+        "image": "/images/services/post-surgery.png",
         "contentSections": [
             {
                 "heading": "Safe Range-of-Motion Restoration",
@@ -97,12 +97,12 @@
     },
     {
         "slug": "care-homes",
-        "title": "Physiotherapists Visits in Care Homes",
-        "metaTitle": "Physiotherapists Visits in Care Homes | Movement Science",
+        "title": "Home Visits",
+        "metaTitle": "Home Visits | Movement Science",
         "metaDescription": "Specialized physiotherapy services delivered in care home environments to enhance resident well-being and mobility.",
         "keywords": "care home physiotherapy, home visits, resident health, mobility support, care home health",
         "intro": "Consistent movement is vital in long-term care. Our on-site care home visits provide high-quality physiotherapy to residents, ensuring they remain active, independent, and socially engaged within their community.",
-        "image": "https://images.unsplash.com/photo-1586773860418-d3b9a8ec816e?auto=format&fit=crop&q=80&w=2073",
+        "image": "/images/services/care-homes.png",
         "contentSections": [
             {
                 "heading": "Resident Well-being and Mobility",
@@ -121,12 +121,12 @@
     },
     {
         "slug": "neurological",
-        "title": "Neurological Physiotherapists",
-        "metaTitle": "Neurological Physiotherapists | Movement Science",
+        "title": "Neurological Physiotherapy",
+        "metaTitle": "Neurological Physiotherapy | Movement Science",
         "metaDescription": "Specialized physiotherapy for neurological conditions to improve functional ability and quality of life.",
         "keywords": "neurological physiotherapy, stroke rehab, Parkinson's therapy, MS treatment, neuro rehab",
         "intro": "The nervous system is adaptable. Our neurological physiotherapy utilizes the principles of 'Neuroplasticity' to help the brain and body find new ways to communicate after injury or illness, restoring function and hope.",
-        "image": "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?auto=format&fit=crop&q=80&w=2089",
+        "image": "/images/services/neurological.png",
         "contentSections": [
             {
                 "heading": "Specialized Stroke Rehabilitation",
@@ -143,4 +143,5 @@
         ],
         "outro": "Our specialized neurological team is dedicated to providing long-term, compassionate care that helps you navigate even the most complex neurological challenges."
     }
+
 ]
