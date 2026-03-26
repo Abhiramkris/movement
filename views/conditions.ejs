@@ -25,6 +25,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <!-- cdn tailwing -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
   <!-- JavaScript Bundle with Popper -->
   <style>
@@ -128,22 +129,31 @@
   }
 }
 
-</style>     <!-- Hero Section -->
-    <div class="relative bg-gradient-to-r from-[#011d3b] to-[#023974] text-white py-24 overflow-hidden">
-        <div class="container mx-auto px-4 relative z-10">
+</style>    <!-- Hero Section -->
+    <div class="relative min-h-[450px] flex items-center overflow-hidden bg-[#011d3b]">
+        <!-- Background Image Container -->
+        <div class="absolute inset-0 z-0 h-full w-full">
+            <img src="https://images.unsplash.com/photo-1597452485669-2c7bb5fef90d?auto=format&fit=crop&q=80&w=2069" 
+                 alt="Background" 
+                 class="w-full h-full object-cover">
+            <!-- Blue Overlay Gradient -->
+            <div class="absolute inset-0 bg-gradient-to-r from-[#011d3b] via-[#011d3b]/80 to-transparent"></div>
+        </div>
+        
+        <!-- Content -->
+        <div class="container mx-auto px-4 relative z-10 text-white py-16 md:py-24">
             <div class="max-w-3xl">
-                <nav class="flex mb-4 text-blue-200 text-sm font-medium" aria-label="Breadcrumb">
+                <nav class="flex mb-6 text-blue-200 text-sm font-medium" aria-label="Breadcrumb">
                     <a href="/" class="hover:text-white transition">Home</a>
                     <span class="mx-2">/</span>
                     <span class="text-white">Conditions</span>
                 </nav>
-                <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">Conditions We <span class="text-blue-400">Treat</span></h1>
-                <p class="text-xl text-blue-100 leading-relaxed mb-0">Our highly-skilled and professional team designs personalised treatment plans to help you manage your condition, achieve your goals, and live a pain-free life.</p>
+                <h1 class="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">
+                    Conditions We <span class="text-blue-400">Treat</span>
+                </h1>
+                <p class="text-xl text-blue-100 leading-relaxed mb-4 font-semibold">Specialized Care for Your Well-being</p>
+                <p class="text-lg text-blue-50 leading-relaxed opacity-90 max-w-2xl">Our highly-skilled and professional team designs personalised treatment plans to help you manage your condition, achieve your goals, and live a pain-free life.</p>
             </div>
-        </div>
-        <!-- Decorative elements -->
-        <div class="absolute top-0 right-0 w-1/3 h-full opacity-20 pointer-events-none">
-            <img src="https://images.unsplash.com/photo-1597452485669-2c7bb5fef90d?auto=format&fit=crop&q=80&w=2069" alt="Background" class="w-full h-full object-cover">
         </div>
     </div>
 
