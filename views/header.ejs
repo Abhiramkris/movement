@@ -1,4 +1,13 @@
-<nav class="navbar navbar-expand-lg navbar-light">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.473.0/dist/umd/lucide.min.js"></script>
+<style>
+  /* Ensure the navbar has its original active state styling */
+  .nav-link.active {
+    color: #1d1acb !important;
+    font-weight: 700;
+  }
+</style>
+<nav class="navbar navbar-expand-lg navbar-light shadow-sm">
   <div class="container-fluid">
     <div class="navbar-brand-container d-flex align-items-center">
       <a class="navbar-brand" href="/">
@@ -15,22 +24,22 @@
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/">Home</a>
+          <a class="nav-link" href="/" data-path="/">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/howhelp/index">How we help</a>
+          <a class="nav-link" href="/howhelp/index" data-path="/howhelp">How we help</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/services">Services</a>
+          <a class="nav-link" href="/services" data-path="/services">Services</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/conditions">Conditions</a>
+          <a class="nav-link" href="/conditions" data-path="/conditions">Conditions</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/faq">FAQ</a>
+          <a class="nav-link" href="/faq" data-path="/faq">FAQ</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/about">About Us</a>
+          <a class="nav-link" href="/about" data-path="/about">About Us</a>
         </li>
       </ul>
       <div class="free-consultation">
@@ -39,10 +48,31 @@
     </div>
   </div>
 </nav>
+
 <script>
-  $(document).ready(function () {
-    $('.navbar-toggler').click(function () {
-      $('#navbarNav').collapse('toggle');
+  document.addEventListener('DOMContentLoaded', function () {
+    const currentPath = window.location.pathname;
+    const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+    
+    navLinks.forEach(link => {
+      const linkPath = link.getAttribute('data-path');
+      if (linkPath === '/' && currentPath === '/') {
+        link.classList.add('active');
+        link.setAttribute('aria-current', 'page');
+      } else if (linkPath !== '/' && currentPath.startsWith(linkPath)) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
     });
+
+    // Toggle logic for mobile using vanilla JS for reliability after removal of jQuery in some places
+    const toggler = document.querySelector('.navbar-toggler');
+    const collapse = document.querySelector('#navbarNav');
+    if (toggler && collapse) {
+      toggler.onclick = function() {
+        collapse.classList.toggle('show');
+      };
+    }
   });
 </script>

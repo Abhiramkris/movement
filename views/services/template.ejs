@@ -17,6 +17,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/nav.css">
     <link rel="stylesheet" href="/css/aura.css">
     <link rel="stylesheet" href="/css/footer.css">
 
@@ -56,72 +57,8 @@
 
 <body class="bg-gray-50 text-gray-900 leading-relaxed">
 
-    <!-- Navbar -->
-    <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-md shadow-sm h-20 flex items-center">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex justify-between items-center">
-            <div class="flex items-center">
-                <a href="/" class="flex items-center">
-                    <img src="/images/logo.png" alt="Logo" class="h-10 md:h-12 w-auto">
-                    <span
-                        class="ml-3 font-extrabold text-[#011343] text-lg md:text-xl tracking-tight hidden sm:block">MOVEMENT
-                        SCIENCE</span>
-                </a>
-            </div>
+<%- include('../header') %>
 
-            <!-- Desktop Menu -->
-            <div class="hidden md:flex space-x-8 font-medium">
-                <a href="/howhelp/index" class="text-gray-600 hover:text-blue-600 transition">How we help</a>
-                <a href="/services" class="text-blue-600 border-b-2 border-blue-600">Services</a>
-                <a href="/conditions" class="text-gray-600 hover:text-blue-600 transition">Conditions</a>
-                <a href="/faq" class="text-gray-600 hover:text-blue-600 transition">FAQ</a>
-                <a href="/about" class="text-gray-600 hover:text-blue-600 transition">About Us</a>
-            </div>
-
-            <div class="flex items-center space-x-3">
-                <a href="/checkslot"
-                    class="hidden sm:block bg-blue-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-blue-700 transition shadow-lg shadow-blue-200 text-sm">
-                    Book Now
-                </a>
-
-                <!-- Hamburger Button -->
-                <button id="mobile-menu-button"
-                    class="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition">
-                    <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="md:hidden">
-            <div class="px-4 py-6 space-y-4">
-                <a href="/howhelp/index" class="block text-lg text-gray-600">How we help</a>
-                <a href="/services" class="block text-lg font-bold text-blue-600">Services</a>
-                <a href="/conditions" class="block text-lg text-gray-600">Conditions</a>
-                <a href="/faq" class="block text-lg text-gray-600">FAQ</a>
-                <a href="/about" class="block text-lg text-gray-600">About Us</a>
-                <hr class="border-gray-100">
-                <a href="/checkslot"
-                    class="block w-full text-center bg-blue-600 text-white py-4 rounded-xl font-bold">Book Free
-                    Consultation</a>
-            </div>
-        </div>
-    </nav>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const menuBtn = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-
-            if (menuBtn && mobileMenu) {
-                menuBtn.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('active');
-                });
-            }
-        });
-    </script>
 
     <!-- Hero Section -->
     <section class="pt-32 pb-20 hero-gradient text-white overflow-hidden relative">

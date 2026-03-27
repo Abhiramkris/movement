@@ -111,6 +111,12 @@
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
+.card-icon svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 2px;
+}
+
 .card-body h4 {
   font-size: 17px;
   font-weight: 700;
