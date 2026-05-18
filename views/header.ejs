@@ -6,6 +6,23 @@
     color: #1d1acb !important;
     font-weight: 700;
   }
+  /* Override Tailwind CDN collapse utility conflict with Bootstrap navbar collapse */
+  @media (max-width: 991.98px) {
+    .navbar-collapse.collapse:not(.show) {
+      display: none !important;
+      visibility: hidden !important;
+    }
+    .navbar-collapse.collapse.show {
+      display: block !important;
+      visibility: visible !important;
+    }
+  }
+  @media (min-width: 992px) {
+    .navbar-expand-lg .navbar-collapse {
+      display: flex !important;
+      visibility: visible !important;
+    }
+  }
 </style>
 <nav class="navbar navbar-expand-lg navbar-light shadow-sm">
   <div class="container-fluid">
@@ -17,7 +34,7 @@
         <h5 style="margin: 0; font-weight: 800; color: rgb(1, 19, 67); font-family: 'Poppins', sans-serif; font-size: 1.2rem;">MOVEMENT SCIENCE</h5>
       </div>
     </div>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" data-toggle="collapse" data-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -66,13 +83,16 @@
       }
     });
 
-    // Toggle logic for mobile using vanilla JS for reliability after removal of jQuery in some places
+    // Debugging logs for navbar toggle
     const toggler = document.querySelector('.navbar-toggler');
-    const collapse = document.querySelector('#navbarNav');
-    if (toggler && collapse) {
-      toggler.onclick = function() {
-        collapse.classList.toggle('show');
-      };
+    const collapseElem = document.querySelector('#navbarNav');
+    if (toggler && collapseElem) {
+      toggler.addEventListener('click', function() {
+        console.log('[Navbar Debug] Toggler clicked. Current classes on #navbarNav:', collapseElem.className);
+        setTimeout(() => {
+          console.log('[Navbar Debug] Classes after toggle attempt (350ms later):', collapseElem.className);
+        }, 350);
+      });
     }
   });
 </script>
